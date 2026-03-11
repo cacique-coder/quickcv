@@ -1,0 +1,38 @@
+{% set step = 1 %}
+{% include "partials/wizard/progress.html" %}
+
+<form class="wizard-panel active" hx-post="/wizard/step/1/save" hx-target="#wizard-container" hx-swap="innerHTML">
+    <div class="panel-header">
+        <h2>Where are you applying?</h2>
+        <p class="hint">CV conventions vary significantly by country — this determines which sections, personal details, and formatting rules to follow.</p>
+    </div>
+
+    <div class="country-select-grid">
+        {% for r in regions %}
+        <label class="country-select-card" for="region-{{ r.code }}">
+            <input type="radio" name="region" id="region-{{ r.code }}" value="{{ r.code }}"
+                   {% if r.code == selected_region %}checked{% endif %}
+                   hx-get="/wizard/region-summary/{{ r.code }}"
+                   hx-target="#region-summary"
+                   hx-swap="innerHTML"
+                   hx-trigger="change">
+            <div class="country-select-inner">
+                <span class="country-select-flag">{{ r.flag }}</span>
+                <div class="country-select-info">
+                    <strong>{{ r.name }}</strong>
+                    <span class="country-select-meta">{{ r.language }} · {{ r.page_length }}</span>
+                </div>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+    <div id="region-summary">
+        {% include "partials/wizard/region_summary.html" %}
+    </div>
+
+    <div class="panel-actions">
+        <span></span>
+        <button type="submit" class="btn-next">Continue</button>
+    </div>
+</form>

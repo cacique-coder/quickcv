@@ -1,0 +1,102 @@
+<!-- Minimal: Ultra-clean, photo top-right when required. -->
+<style>
+    .cv-minimal { font-family: 'Arial', 'Helvetica', sans-serif; color: #222; max-width: 780px; margin: 0 auto; padding: 2rem; line-height: 1.5; }
+    .cv-minimal .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.8rem; }
+    .cv-minimal .cv-header-text { flex: 1; }
+    .cv-minimal .cv-name { font-size: 1.6rem; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.1em; }
+    .cv-minimal .cv-contact { font-size: 0.82rem; color: #555; margin-top: 0.4rem; }
+    .cv-minimal .cv-contact span + span::before { content: " | "; color: #aaa; }
+    .cv-minimal .cv-photo { width: 80px; height: 100px; object-fit: cover; border: 1px solid #ddd; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-minimal .cv-personal-details { font-size: 0.8rem; color: #777; margin-top: 0.3rem; }
+    .cv-minimal .cv-personal-details span + span::before { content: " | "; color: #ccc; }
+    .cv-minimal .cv-languages { font-size: 0.8rem; color: #777; margin-top: 0.2rem; }
+    .cv-minimal .cv-languages span + span::before { content: " | "; color: #ccc; }
+    .cv-minimal h2 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #222; margin-top: 1.5rem; margin-bottom: 0.6rem; border-bottom: 1px solid #222; padding-bottom: 0.2rem; }
+    .cv-minimal h3 { font-size: 0.9rem; margin: 0; font-weight: 600; }
+    .cv-minimal .job-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-minimal .job-sub { font-size: 0.85rem; color: #555; }
+    .cv-minimal .job-date { font-size: 0.82rem; color: #777; }
+    .cv-minimal ul { margin: 0.2rem 0 0.8rem 1.2rem; padding: 0; }
+    .cv-minimal li { font-size: 0.87rem; margin-bottom: 0.2rem; }
+    .cv-minimal .skills-line { font-size: 0.87rem; margin-bottom: 0.3rem; }
+    .cv-minimal .skills-line strong { font-weight: 600; }
+</style>
+<div class="cv-minimal">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            <p class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </p>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2>Summary</h2>
+    <p style="font-size: 0.87rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if experience %}
+    <h2>Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 0.9rem;">
+        <div class="job-row">
+            <h3>{{ job.title }}</h3>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        <p class="job-sub">{{ job.company }}{% if job.location %}, {{ job.location }}{% endif %}</p>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Skills</h2>
+    {% for group in skills_grouped %}
+    <p class="skills-line"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+    {% endfor %}
+    {% elif skills %}
+    <h2>Skills</h2>
+    <p class="skills-line">{{ skills | join(' · ') }}</p>
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.4rem;">
+        <div class="job-row">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <p class="job-sub">{{ edu.institution }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.87rem; margin-bottom: 0.4rem;"><strong>{{ ref.name }}</strong>, {{ ref.title }}, {{ ref.company }} — {{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

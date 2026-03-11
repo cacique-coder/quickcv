@@ -1,0 +1,18 @@
+{# Region-specific personal details shown below contact info.
+   Only renders fields that exist in the data AND are expected by the region.
+#}
+{% if dob or nationality or marital_status or visa_status or dependents %}
+<div class="cv-personal-details">
+    {% if dob %}<span>DOB: {{ dob }}</span>{% endif %}
+    {% if nationality %}<span>Nationality: {{ nationality }}</span>{% endif %}
+    {% if marital_status %}<span>Status: {{ marital_status }}</span>{% endif %}
+    {% if visa_status %}<span>Visa: {{ visa_status }}</span>{% endif %}
+    {% if dependents is defined and dependents is not none %}<span>Dependents: {{ dependents }}</span>{% endif %}
+    {% if availability %}<span>Available: {{ availability }}</span>{% endif %}
+</div>
+{% endif %}
+{% if languages %}
+<div class="cv-languages">
+    {% for lang in languages %}<span>{{ lang }}</span>{% endfor %}
+</div>
+{% endif %}

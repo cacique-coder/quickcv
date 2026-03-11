@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuillCV — ATS-Optimized CV Builder</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+</head>
+<body>
+    <header>
+        <nav style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 0.8rem; font-size: 0.85rem;">
+            <a href="/">Generate CV</a>
+            <a href="/demo">Browse Templates</a>
+        </nav>
+        <h1><a href="/" style="color: inherit; text-decoration: none;">QuillCV</a></h1>
+        <p class="subtitle">ATS-optimized CVs tailored to job descriptions</p>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

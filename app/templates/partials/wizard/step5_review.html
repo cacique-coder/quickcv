@@ -1,0 +1,168 @@
+{% set step = 5 %}
+{% include "partials/wizard/progress.html" %}
+
+<div id="generate-area" class="wizard-panel active">
+    <div id="step5-review">
+        <div class="panel-header">
+            <h2>Review & Generate</h2>
+            <p class="hint">Check your selections, then generate your tailored CV. You'll be able to fine-tune the result after.</p>
+        </div>
+
+        <div class="review-grid">
+            <div class="review-item">
+                <span class="review-label">Region</span>
+                <span class="review-value">{{ region_config.flag }} {{ region_config.name }}</span>
+            </div>
+            <div class="review-item">
+                <span class="review-label">Template</span>
+                <span class="review-value">{{ attempt.get('template_id', 'modern') | title }}</span>
+            </div>
+            {% if cv_filename %}
+            <div class="review-item">
+                <span class="review-label">CV File</span>
+                <span class="review-value">{{ cv_filename }}</span>
+            </div>
+            {% endif %}
+            {% if attempt.get('visa_status') %}
+            <div class="review-item">
+                <span class="review-label">Visa / Work Rights</span>
+                <span class="review-value">{{ attempt.visa_status }}</span>
+            </div>
+            {% endif %}
+            {% if attempt.get('self_description') %}
+            <div class="review-item review-item-wide">
+                <span class="review-label">Self Description</span>
+                <span class="review-value review-preview">{{ attempt.self_description[:200] }}{% if attempt.self_description|length > 200 %}...{% endif %}</span>
+            </div>
+            {% endif %}
+            {% if attempt.get('offer_appeal') %}
+            <div class="review-item review-item-wide">
+                <span class="review-label">What Attracts You</span>
+                <span class="review-value review-preview">{{ attempt.offer_appeal[:200] }}{% if attempt.offer_appeal|length > 200 %}...{% endif %}</span>
+            </div>
+            {% endif %}
+            {% if attempt.get('job_description') %}
+            <div class="review-item review-item-wide">
+                <span class="review-label">Job Description</span>
+                <span class="review-value review-preview">{{ attempt.job_description[:200] }}{% if attempt.job_description|length > 200 %}...{% endif %}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="review-note">
+            <p>Your uploaded CV will be parsed and combined with your personal details to generate an ATS-optimized CV for {{ region_config.name }}. No need to re-upload — your documents are saved.</p>
+        </div>
+
+        <div class="panel-actions panel-actions-center">
+            <button type="button" class="btn-back"
+                    hx-get="/wizard/step/4" hx-target="#wizard-container" hx-swap="innerHTML">Back</button>
+            <button type="button" class="btn-generate" id="btn-generate"
+                    hx-post="/analyze"
+                    hx-target="#generate-area"
+                    hx-swap="outerHTML"
+                    hx-disabled-elt="this"
+                    hx-on::before-request="startGenerateProgress()">
+                Generate CV
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function startGenerateProgress() {
+    const steps = [
+        { text: "Reading your CV", detail: "Parsing document structure" },
+        { text: "Extracting your profile", detail: "Skills, experience, education" },
+        { text: "Scanning the job description", detail: "Pulling keywords & requirements" },
+        { text: "Running ATS check", detail: "Scoring your original CV" },
+        { text: "Spotting the gaps", detail: "Finding missing keywords" },
+        { text: "Applying region rules", detail: "Formatting for your target country" },
+        { text: "Writing your new CV", detail: "This is the big one — AI at work" },
+        { text: "Crafting your summary", detail: "Matching your voice to the role" },
+        { text: "Polishing experience bullets", detail: "Quantifying achievements" },
+        { text: "Optimizing keywords", detail: "Weaving in what ATS wants to see" },
+        { text: "Rendering the template", detail: "Laying out your final design" },
+        { text: "Final ATS comparison", detail: "Scoring the result" },
+        { text: "Wrapping up", detail: "Almost ready..." },
+    ];
+
+    const panel = document.getElementById('step5-review');
+    panel.innerHTML = `
+        <div class="gen-progress">
+            <div class="gen-progress-header">
+                <svg class="gen-quill" viewBox="0 0 32 32" width="32" height="32">
+                    <path d="M26 3c-4 2-8 8-10 13s-3 10-4 13c0 0 2-3 5-6s6-5 6-5l-1-2c-2 1-5 4-7 7 1-4 3-9 5-13s5-8 8-9z"
+                          fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"
+                          class="gen-quill-path"/>
+                </svg>
+                <h2 class="gen-progress-title">Crafting your CV</h2>
+            </div>
+            <div class="gen-timeline" id="progress-steps"></div>
+            <div class="gen-progress-footer">
+                <div class="gen-pencil-line"><div class="gen-pencil-dot"></div></div>
+            </div>
+        </div>
+    `;
+
+    const container = document.getElementById('progress-steps');
+    let index = 0;
+
+    function addStep() {
+        if (index >= steps.length) return;
+        const step = steps[index];
+        const isLast = index === steps.length - 1;
+
+        const el = document.createElement('div');
+        el.className = 'gen-step';
+        el.innerHTML = `
+            <div class="gen-step-node">
+                <svg viewBox="0 0 24 24" width="20" height="20" class="gen-step-circle">
+                    <circle cx="12" cy="12" r="9" fill="none" stroke-width="2"
+                            stroke="var(--border)" class="gen-circle-bg"/>
+                    <circle cx="12" cy="12" r="9" fill="none" stroke-width="2"
+                            stroke="var(--accent)" class="gen-circle-draw"
+                            stroke-dasharray="56.5" stroke-dashoffset="56.5"
+                            stroke-linecap="round"/>
+                    <path d="M8 12.5l2.5 2.5 5-5" fill="none" stroke="var(--accent)"
+                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          class="gen-check-draw" stroke-dasharray="14" stroke-dashoffset="14"/>
+                </svg>
+            </div>
+            <div class="gen-step-content">
+                <span class="gen-step-text">${step.text}</span>
+                <span class="gen-step-detail">${step.detail}</span>
+            </div>
+        `;
+
+        container.appendChild(el);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            el.classList.add('gen-step-visible');
+        });
+
+        // Complete previous step
+        const allSteps = container.querySelectorAll('.gen-step');
+        if (allSteps.length > 1) {
+            const prev = allSteps[allSteps.length - 2];
+            prev.classList.add('gen-step-done');
+        }
+
+        // Keep the latest step in view
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        index++;
+        const delay = index <= 3 ? 1800 : index <= 6 ? 2500 : index <= 10 ? 3500 : 2000;
+        window._generateTimer = setTimeout(addStep, delay);
+    }
+
+    addStep();
+}
+
+document.addEventListener('htmx:beforeSwap', function() {
+    if (window._generateTimer) {
+        clearTimeout(window._generateTimer);
+        window._generateTimer = null;
+    }
+});
+</script>

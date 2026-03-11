@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# User uploads & logs
+app/uploads/attempts/
+app/logs/*.jsonl
+
+# Environment
+.env
+
+# Output artifacts
+output/
+
+# Personal source CVs
+source/

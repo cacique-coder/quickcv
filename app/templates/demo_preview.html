@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="demo-section">
+    <div class="breadcrumb">
+        <a href="/demo">All Countries</a> /
+        <a href="/demo/{{ region.code }}">{{ region.flag }} {{ region.name }}</a> /
+        <span>{{ template.name }} — {{ current_role.name }}</span>
+    </div>
+
+    <div class="preview-header">
+        <div>
+            <h2>{{ template.name }} — {{ region.flag }} {{ region.name }}</h2>
+            <p class="hint">{{ current_role.name }}: {{ current_role.description }}</p>
+        </div>
+        <a href="/demo/{{ region.code }}/{{ template.id }}/raw?role={{ current_role.id }}" target="_blank" class="btn-secondary">
+            Open Raw HTML
+        </a>
+    </div>
+
+    <!-- Role switcher -->
+    <div class="role-switcher">
+        {% for role in roles %}
+        <a href="/demo/{{ region.code }}/{{ template.id }}?role={{ role.id }}"
+           class="role-tab {% if role.id == current_role.id %}role-tab-active{% endif %}">
+            {{ role.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- CV Preview -->
+    <div class="demo-cv-frame">
+        <iframe src="/demo/{{ region.code }}/{{ template.id }}/raw?role={{ current_role.id }}" class="cv-iframe"></iframe>
+    </div>
+
+    <!-- Region notes sidebar -->
+    <div class="preview-notes">
+        <h3>{{ region.name }} Format Notes</h3>
+        <ul>
+            {% for note in region.notes %}
+            <li>{{ note }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>What's included in this demo</h3>
+        <ul class="included-list">
+            <li class="{% if region.include_photo in ['required', 'common'] %}inc-yes{% else %}inc-no{% endif %}">Photo placeholder</li>
+            <li class="{% if region.include_dob %}inc-yes{% else %}inc-no{% endif %}">Date of birth</li>
+            <li class="{% if region.include_nationality %}inc-yes{% else %}inc-no{% endif %}">Nationality</li>
+            <li class="{% if region.include_references %}inc-yes{% else %}inc-no{% endif %}">References</li>
+            <li class="{% if region.include_visa_status %}inc-yes{% else %}inc-no{% endif %}">Visa status</li>
+            <li class="{% if region.include_marital_status %}inc-yes{% else %}inc-no{% endif %}">Marital status</li>
+        </ul>
+
+        {% if region.sources %}
+        <h3>Sources</h3>
+        <ul class="source-list">
+            {% for src in region.sources %}
+            <li><a href="{{ src.url }}" target="_blank">{{ src.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="demo-section">
+    <div class="breadcrumb">
+        <a href="/demo">All Countries</a> / <span>{{ region.flag }} {{ region.name }}</span>
+    </div>
+
+    <div class="country-header">
+        <h2>{{ region.flag }} {{ region.name }} CV Format</h2>
+        <div class="country-details">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Language</span>
+                    <span class="detail-value">{{ region.language }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Length</span>
+                    <span class="detail-value">{{ region.page_length }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Date Format</span>
+                    <span class="detail-value">{{ region.date_format }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Paper Size</span>
+                    <span class="detail-value">{{ region.paper_size }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Photo</span>
+                    <span class="detail-value">{{ region.include_photo | title }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Spelling</span>
+                    <span class="detail-value">{{ region.spelling }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Region conventions -->
+    <div class="conventions-card">
+        <h3>Conventions & Rules</h3>
+        <ul>
+            {% for note in region.notes %}
+            <li>{{ note }}</li>
+            {% endfor %}
+        </ul>
+        <div class="field-flags">
+            <span class="field-flag {% if region.include_photo in ['required', 'common'] %}flag-yes{% else %}flag-no{% endif %}">Photo: {{ region.include_photo }}</span>
+            <span class="field-flag {% if region.include_dob %}flag-yes{% else %}flag-no{% endif %}">DOB: {{ "Yes" if region.include_dob else "No" }}</span>
+            <span class="field-flag {% if region.include_nationality %}flag-yes{% else %}flag-no{% endif %}">Nationality: {{ "Yes" if region.include_nationality else "No" }}</span>
+            <span class="field-flag {% if region.include_references %}flag-yes{% else %}flag-no{% endif %}">References: {{ "Yes" if region.include_references else "No" }}</span>
+            <span class="field-flag {% if region.include_visa_status %}flag-yes{% else %}flag-no{% endif %}">Visa Status: {{ "Yes" if region.include_visa_status else "No" }}</span>
+            <span class="field-flag {% if region.include_marital_status %}flag-yes{% else %}flag-no{% endif %}">Marital Status: {{ "Yes" if region.include_marital_status else "No" }}</span>
+        </div>
+    </div>
+
+    <!-- Template + Role matrix -->
+    <h3 class="section-heading">Templates for {{ region.name }}</h3>
+    <p class="hint" style="margin-bottom: 0.8rem;">Click any combination to see a full demo</p>
+
+    <div class="matrix-table-wrap">
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    {% for role in roles %}
+                    <th>{{ role.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for tpl in templates %}
+                <tr>
+                    <td class="matrix-tpl-name">
+                        <div class="template-preview template-preview-{{ tpl.id }}" style="height:40px;padding:0.3rem;margin-bottom:0.2rem;">
+                            <div class="tpl-mock-header" style="height:6px;margin-bottom:3px;"></div>
+                            <div class="tpl-mock-line w80" style="height:3px;margin-bottom:2px;"></div>
+                            <div class="tpl-mock-line w60" style="height:3px;margin-bottom:2px;"></div>
+                        </div>
+                        {{ tpl.name }}
+                    </td>
+                    {% for role in roles %}
+                    <td>
+                        <a href="/demo/{{ region.code }}/{{ tpl.id }}?role={{ role.id }}"
+                           class="matrix-link {% if role.hero_template == tpl.id %}matrix-hero{% endif %}"
+                           title="{{ tpl.name }} — {{ role.name }}">
+                            View
+                        </a>
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sources -->
+    {% if region.sources %}
+    <div class="sources-card">
+        <h3>Sources & References</h3>
+        <ul>
+            {% for src in region.sources %}
+            <li><a href="{{ src.url }}" target="_blank" rel="noopener">{{ src.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

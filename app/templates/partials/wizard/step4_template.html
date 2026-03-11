@@ -1,0 +1,52 @@
+{% set step = 4 %}
+{% include "partials/wizard/progress.html" %}
+
+<form class="wizard-panel active" hx-post="/wizard/step/4/save" hx-target="#wizard-container" hx-swap="innerHTML">
+
+    <div class="panel-header">
+        <h2>Choose a Template</h2>
+        <p class="hint">All templates are ATS-optimized. <a href="/demo">Browse full demos by country</a></p>
+    </div>
+
+    {% if recommendation_reason %}
+    <div class="ai-recommendation">
+        <span class="ai-rec-label">AI Recommendation</span>
+        <p>{{ recommendation_reason }}</p>
+    </div>
+    {% endif %}
+
+    <div class="template-grid">
+        {% set selected_tpl = attempt.get('template_id', recommended[0] if recommended else 'modern') %}
+        {% for tpl in templates %}
+        <label class="template-card {% if tpl.id in recommended %}template-recommended{% endif %}" for="tpl-{{ tpl.id }}">
+            <input type="radio" name="template_id" id="tpl-{{ tpl.id }}" value="{{ tpl.id }}"
+                   {% if tpl.id == selected_tpl %}checked{% endif %}>
+            <div class="template-card-inner">
+                {% if tpl.id in recommended %}
+                <span class="template-rec-badge">Recommended</span>
+                {% endif %}
+                <div class="template-preview template-preview-{{ tpl.id }}">
+                    <div class="tpl-mock-header"></div>
+                    <div class="tpl-mock-line w80"></div>
+                    <div class="tpl-mock-line w60"></div>
+                    <div class="tpl-mock-section"></div>
+                    <div class="tpl-mock-line w90"></div>
+                    <div class="tpl-mock-line w70"></div>
+                    <div class="tpl-mock-line w85"></div>
+                </div>
+                <div class="template-info">
+                    <strong>{{ tpl.name }}</strong>
+                    <p>{{ tpl.description }}</p>
+                    <span class="template-best">{{ tpl.best_for }}</span>
+                </div>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+    <div class="panel-actions">
+        <button type="button" class="btn-back"
+                hx-get="/wizard/step/3" hx-target="#wizard-container" hx-swap="innerHTML">Back</button>
+        <button type="submit" class="btn-next">Continue</button>
+    </div>
+</form>

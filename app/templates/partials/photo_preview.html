@@ -1,0 +1,11 @@
+<div class="photo-uploaded">
+    <img src="/photos/serve/{{ photo_path }}" alt="CV Photo" class="photo-thumb">
+    <div class="photo-meta">
+        <span class="photo-status">Uploaded</span>
+        {% if r2_synced %}
+        <span class="photo-cloud">Synced to cloud</span>
+        {% endif %}
+    </div>
+    <input type="hidden" name="photo_path" value="{{ photo_path }}">
+    <input type="hidden" name="user_id" value="{{ user_id }}">
+</div>

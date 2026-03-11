@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="demo-section">
+    <h2>CV Templates by Country</h2>
+    <p class="hint">Each country has specific formatting conventions. Browse demos to see how templates adapt to regional requirements.</p>
+
+    <div class="country-grid">
+        {% for region in regions %}
+        <a href="/demo/{{ region.code }}" class="country-card">
+            <span class="country-flag">{{ region.flag }}</span>
+            <div class="country-info">
+                <strong>{{ region.name }}</strong>
+                <span class="country-meta">{{ region.page_length }} · {{ region.date_format }}</span>
+                <div class="country-badges">
+                    {% if region.include_photo == "required" %}
+                    <span class="badge badge-required">Photo required</span>
+                    {% elif region.include_photo == "common" %}
+                    <span class="badge badge-common">Photo common</span>
+                    {% else %}
+                    <span class="badge badge-no">No photo</span>
+                    {% endif %}
+                    {% if region.include_references %}
+                    <span class="badge badge-common">References</span>
+                    {% endif %}
+                    {% if region.include_dob %}
+                    <span class="badge badge-common">DOB</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="template-overview">
+        <h2>Demo Roles</h2>
+        <p class="hint">Each role showcases a different template style and seniority level</p>
+        <div class="role-grid">
+            {% for role in roles %}
+            <div class="role-card">
+                <strong>{{ role.name }}</strong>
+                <p class="hint">{{ role.description }}</p>
+                <span class="role-hero">Best with: {{ role.hero_template | title }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="template-overview">
+        <h2>Available Templates</h2>
+        <div class="template-grid">
+            {% for tpl in templates %}
+            <div class="template-overview-card">
+                <div class="template-preview template-preview-{{ tpl.id }}">
+                    <div class="tpl-mock-header"></div>
+                    <div class="tpl-mock-line w80"></div>
+                    <div class="tpl-mock-line w60"></div>
+                    <div class="tpl-mock-section"></div>
+                    <div class="tpl-mock-line w90"></div>
+                    <div class="tpl-mock-line w70"></div>
+                    <div class="tpl-mock-line w85"></div>
+                </div>
+                <strong>{{ tpl.name }}</strong>
+                <p class="hint">{{ tpl.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

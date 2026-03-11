@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="wizard">
+    <div id="wizard-container"
+         hx-get="/wizard/step/1"
+         hx-trigger="load"
+         hx-swap="innerHTML">
+        <div class="htmx-indicator" style="display:block; padding: 3rem; text-align: center;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</section>
+
+<section id="results"></section>
+{% endblock %}

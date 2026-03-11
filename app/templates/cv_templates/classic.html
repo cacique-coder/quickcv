@@ -1,0 +1,103 @@
+<!-- Classic: Single-column, conservative. Photo top-right. -->
+<style>
+    .cv-classic { font-family: 'Georgia', 'Times New Roman', serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.5; }
+    .cv-classic .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 2px solid #2c3e50; padding-bottom: 1rem; }
+    .cv-classic .cv-header-text { flex: 1; }
+    .cv-classic .cv-name { font-size: 1.8rem; font-weight: 700; color: #2c3e50; margin: 0; letter-spacing: 0.02em; }
+    .cv-classic .cv-title { font-size: 1rem; color: #555; margin-top: 0.3rem; }
+    .cv-classic .cv-contact { font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
+    .cv-classic .cv-contact span { margin-right: 1rem; }
+    .cv-classic .cv-photo { width: 90px; height: 115px; object-fit: cover; border: 1px solid #ccc; border-radius: 3px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-classic .cv-personal-details { font-size: 0.82rem; color: #666; margin-top: 0.4rem; }
+    .cv-classic .cv-personal-details span { margin-right: 1rem; }
+    .cv-classic .cv-languages { font-size: 0.82rem; color: #666; margin-top: 0.2rem; }
+    .cv-classic .cv-languages span + span::before { content: " · "; color: #aaa; }
+    .cv-classic h2 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.08em; color: #2c3e50; border-bottom: 1px solid #ccc; padding-bottom: 0.3rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+    .cv-classic h3 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+    .cv-classic .job-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.2rem; }
+    .cv-classic .job-company { font-style: italic; color: #444; font-size: 0.9rem; }
+    .cv-classic .job-date { font-size: 0.85rem; color: #666; white-space: nowrap; }
+    .cv-classic ul { margin: 0.3rem 0 0.8rem 1.2rem; padding: 0; }
+    .cv-classic li { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .cv-classic .skills-list { display: flex; flex-wrap: wrap; gap: 0.3rem 1.5rem; list-style: none; margin-left: 0; }
+    .cv-classic .skills-list li::before { content: "• "; color: #2c3e50; }
+</style>
+<div class="cv-classic">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            <p class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </p>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2>Professional Summary</h2>
+    <p style="font-size: 0.9rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if experience %}
+    <h2>Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 1rem;">
+        <div class="job-header">
+            <h3>{{ job.title }}</h3>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        <p class="job-company">{{ job.company }}{% if job.location %}, {{ job.location }}{% endif %}</p>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills %}
+    <h2>Skills</h2>
+    <ul class="skills-list">
+        {% for skill in skills %}
+        <li>{{ skill }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-header">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <p class="job-company">{{ edu.institution }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

@@ -1,0 +1,42 @@
+<div class="template-picker">
+    <h2>Choose a Template</h2>
+    <p class="hint">All templates are ATS-optimized. <a href="/demo">Browse full demos by country →</a></p>
+
+    <div class="template-grid">
+        {% for tpl in templates %}
+        <label class="template-card" for="tpl-{{ tpl.id }}">
+            <input type="radio" name="template_id" id="tpl-{{ tpl.id }}" value="{{ tpl.id }}"
+                   {% if tpl.id == 'modern' %}checked{% endif %}>
+            <div class="template-card-inner">
+                <div class="template-preview template-preview-{{ tpl.id }}">
+                    <div class="tpl-mock-header"></div>
+                    <div class="tpl-mock-line w80"></div>
+                    <div class="tpl-mock-line w60"></div>
+                    <div class="tpl-mock-section"></div>
+                    <div class="tpl-mock-line w90"></div>
+                    <div class="tpl-mock-line w70"></div>
+                    <div class="tpl-mock-line w85"></div>
+                </div>
+                <div class="template-info">
+                    <strong>{{ tpl.name }}</strong>
+                    <p>{{ tpl.description }}</p>
+                    <span class="template-best">{{ tpl.best_for }}</span>
+                </div>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+    <div class="region-selector">
+        <label><strong>Target Region</strong></label>
+        <div class="region-options">
+            {% for r in regions %}
+            <label class="region-option">
+                <input type="radio" name="region" value="{{ r.code }}"
+                       {% if r.code == 'AU' %}checked{% endif %}>
+                {{ r.flag }} {{ r.name }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+</div>

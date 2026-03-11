@@ -1,0 +1,11 @@
+{# Shared photo block for CV templates.
+   Shows photo if region requires/expects it.
+   Expects: region (str), photo_url (str|None)
+   Photo-required regions: JP, DE, FR, AE, IN, NL, BR
+#}
+{% set photo_regions = ['JP', 'DE', 'FR', 'AE', 'IN', 'NL', 'BR'] %}
+{% if region in photo_regions %}
+<img src="{{ photo_url | default('/static/photo-placeholder.svg') }}"
+     alt="Professional photo"
+     class="cv-photo">
+{% endif %}

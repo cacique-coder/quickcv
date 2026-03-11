@@ -1,0 +1,198 @@
+/* Professional CV Template — AU Format, ATS-Optimized */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@page {
+  size: A4;
+  margin: 20mm 24mm 24mm 24mm;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fff;
+}
+
+.page {
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #2563eb;
+}
+
+.header h1 {
+  font-size: 22pt;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.header-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 9pt;
+  color: #4b5563;
+}
+
+.header-details a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* Section headings */
+h2 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Summary */
+.summary {
+  font-size: 9.5pt;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+/* Skills */
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 24px;
+}
+
+.skill-item {
+  font-size: 9pt;
+  padding: 2px 0;
+}
+
+.skill-item strong {
+  color: #111827;
+}
+
+/* Experience */
+.job {
+  margin-bottom: 14px;
+  page-break-inside: avoid;
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.job-title {
+  font-size: 10pt;
+  font-weight: 600;
+  color: #111827;
+}
+
+.job-date {
+  font-size: 8.5pt;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.job-company {
+  font-size: 9pt;
+  color: #4b5563;
+  margin-bottom: 4px;
+}
+
+.job ul {
+  padding-left: 16px;
+  margin-top: 4px;
+}
+
+.job li {
+  font-size: 9pt;
+  margin-bottom: 3px;
+  color: #374151;
+}
+
+/* Education */
+.education-item {
+  margin-bottom: 6px;
+}
+
+.education-item .degree {
+  font-weight: 600;
+  font-size: 9.5pt;
+  color: #111827;
+}
+
+.education-item .school {
+  font-size: 9pt;
+  color: #4b5563;
+}
+
+/* Tech stack pills */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+.tech-pill {
+  font-size: 8pt;
+  font-weight: 500;
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* Projects */
+.project {
+  margin-bottom: 10px;
+}
+
+.project-name {
+  font-weight: 600;
+  font-size: 9.5pt;
+  color: #111827;
+}
+
+.project-desc {
+  font-size: 9pt;
+  color: #374151;
+}
+
+/* Footer / References */
+.references {
+  font-size: 8.5pt;
+  color: #6b7280;
+  margin-top: 16px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

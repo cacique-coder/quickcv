@@ -1,0 +1,75 @@
+<div class="photo-section" id="photo-section">
+    <div class="form-group">
+        <label>CV Photo</label>
+        <p class="hint" id="photo-hint">Some countries expect a professional photo on your CV</p>
+
+        <div class="photo-region-info" id="photo-region-info"></div>
+
+        <div class="photo-upload-area" id="photo-upload-area">
+            <div id="photo-drop-zone" class="photo-drop-zone">
+                <input type="file" id="photo-input" name="photo"
+                       accept=".jpg,.jpeg,.png,.webp"
+                       hx-post="/photos/upload"
+                       hx-target="#photo-result"
+                       hx-swap="innerHTML"
+                       hx-encoding="multipart/form-data"
+                       hx-indicator="#photo-spinner">
+                <p>Click or drag a photo here</p>
+                <span class="hint">JPEG, PNG, or WebP — max 5MB</span>
+            </div>
+            <div id="photo-spinner" class="htmx-indicator">
+                <div class="spinner" style="width:24px;height:24px;border-width:2px;"></div>
+            </div>
+            <div id="photo-result"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show/hide photo section based on selected region
+function updatePhotoVisibility() {
+    const region = document.querySelector('input[name="region"]:checked');
+    if (!region) return;
+
+    const code = region.value;
+    const section = document.getElementById('photo-section');
+    const info = document.getElementById('photo-region-info');
+
+    const photoRules = {
+        'DE': { show: true, level: 'common', text: 'Germany: Photo is common and expected in many industries' },
+        'FR': { show: true, level: 'common', text: 'France: Photo is common for client-facing roles' },
+        'NL': { show: true, level: 'optional', text: 'Netherlands: Photo is optional but still seen' },
+        'IN': { show: true, level: 'common', text: 'India: Many employers expect a photo' },
+        'BR': { show: true, level: 'optional', text: 'Brazil: Photo is optional, becoming less common' },
+        'AE': { show: true, level: 'common', text: 'UAE: Photo is expected, especially for customer-facing roles' },
+        'JP': { show: true, level: 'required', text: 'Japan: Photo is required (passport-style headshot)' },
+        'AU': { show: false, level: 'no', text: '' },
+        'US': { show: false, level: 'no', text: '' },
+        'UK': { show: false, level: 'no', text: '' },
+        'CA': { show: false, level: 'no', text: '' },
+        'NZ': { show: false, level: 'no', text: '' },
+    };
+
+    const rule = photoRules[code] || { show: false, level: 'no', text: '' };
+
+    if (rule.show) {
+        section.style.display = 'block';
+        const levelClass = rule.level === 'required' ? 'photo-required' :
+                           rule.level === 'common' ? 'photo-common' : 'photo-optional';
+        info.innerHTML = '<span class="photo-level ' + levelClass + '">' + rule.text + '</span>';
+    } else {
+        section.style.display = 'none';
+        info.innerHTML = '';
+    }
+}
+
+// Listen for region radio changes
+document.addEventListener('change', function(e) {
+    if (e.target.name === 'region') {
+        updatePhotoVisibility();
+    }
+});
+
+// Initial state
+document.addEventListener('DOMContentLoaded', updatePhotoVisibility);
+</script>

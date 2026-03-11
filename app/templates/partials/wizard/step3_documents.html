@@ -1,0 +1,58 @@
+{% set step = 3 %}
+{% include "partials/wizard/progress.html" %}
+
+<form class="wizard-panel active" hx-post="/wizard/step/3/save" hx-target="#wizard-container" hx-swap="innerHTML" hx-indicator="#step3-loader" enctype="multipart/form-data">
+
+    <div class="panel-header">
+        <h2>Upload Your Documents</h2>
+        <p class="hint">Upload your existing CV and optionally additional documents. The AI will extract your experience, skills, and achievements from these to build your new CV.</p>
+    </div>
+
+    <div class="form-group">
+        <label>Your CV / Resume <span class="required">*</span></label>
+        <p class="hint">PDF, DOCX, or TXT — this is your primary document</p>
+        {% if cv_filename %}
+        <div class="stored-file">
+            <span class="stored-file-icon">&#128196;</span>
+            <span class="stored-file-name">{{ cv_filename }}</span>
+            <span class="stored-file-status">Saved from previous upload</span>
+        </div>
+        <p class="hint" style="margin-top: 0.4rem;">Upload a new file to replace it, or leave empty to keep the current one.</p>
+        <input type="file" name="cv_file" accept=".pdf,.docx,.doc,.txt,.md">
+        {% else %}
+        <input type="file" name="cv_file" accept=".pdf,.docx,.doc,.txt,.md" required>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label>Additional documents <span class="optional-label">(optional, up to 2)</span></label>
+        <p class="hint">Cover letters, old CVs, LinkedIn profile export — more context helps the AI understand your full background.</p>
+        <input type="file" name="extra_docs" accept=".pdf,.docx,.doc,.txt,.md" multiple>
+    </div>
+
+    <div class="form-section-divider">
+        <span>Target Job</span>
+    </div>
+
+    <div class="form-group">
+        <label for="job_description">Job Description <span class="required">*</span></label>
+        <p class="hint">Paste the full job posting — the AI uses this to tailor keywords, tone, and structure to match what the employer is looking for.</p>
+        <textarea id="job_description" name="job_description" rows="10"
+                  placeholder="Paste the job description here..." required>{{ attempt.get('job_description', '') }}</textarea>
+    </div>
+
+    <div class="panel-actions">
+        <button type="button" class="btn-back"
+                hx-get="/wizard/step/2" hx-target="#wizard-container" hx-swap="innerHTML">Back</button>
+        <button type="submit" class="btn-next"
+                hx-disabled-elt="this"
+                hx-on::before-request="this.innerHTML='Analyzing with AI...'; this.classList.add('btn-generating');">
+            Continue
+        </button>
+    </div>
+    <div class="ai-loading-hint htmx-indicator" id="step3-loader">
+        <div class="spinner"></div>
+        <p>Uploading documents and asking AI to recommend the best template for your role...</p>
+        <p class="hint">This may take 20-40 seconds</p>
+    </div>
+</form>
