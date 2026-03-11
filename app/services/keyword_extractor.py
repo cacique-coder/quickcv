@@ -25,14 +25,14 @@ Rules:
 - Prefer the specific term used in the posting (e.g., "React Native" not just "React")
 
 Output ONLY valid JSON, no markdown fences, no explanation:
-{
+{{
   "technical_skills": ["Python", "Node.js", "CI/CD", "AWS"],
   "tools_platforms": ["Sentry", "Jira", "Datadog"],
   "professional_skills": ["solutions engineering", "post-sales", "onboarding"],
   "soft_skills": ["presentation skills", "problem solving", "cross-functional collaboration"],
   "domain_knowledge": ["error monitoring", "software development lifecycle", "open-source"],
   "certifications": ["AWS Certified", "PMP"]
-}
+}}
 
 Only include categories that have relevant keywords. Empty categories should be omitted.
 
