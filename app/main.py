@@ -21,11 +21,13 @@ app.add_middleware(
     secret_key=os.environ.get("SESSION_SECRET", "quillcv-dev-secret-change-in-prod"),
 )
 
-# LLM client: use API if key is set, otherwise fall back to Claude Code CLI
+# LLM clients: primary (Sonnet) for CV generation, fast (Haiku) for lightweight tasks
 if os.environ.get("ANTHROPIC_API_KEY"):
-    app.state.llm = AnthropicAPIClient()
+    app.state.llm = AnthropicAPIClient(model="claude-sonnet-4-20250514")
+    app.state.llm_fast = AnthropicAPIClient(model="claude-haiku-4-5-20251001")
 else:
-    app.state.llm = ClaudeCodeClient()
+    app.state.llm = ClaudeCodeClient(model="sonnet")
+    app.state.llm_fast = ClaudeCodeClient(model="haiku")
 
 app.mount(
     "/static",

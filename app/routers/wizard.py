@@ -211,8 +211,8 @@ async def step4(request: Request):
         recommended = cached_rec["templates"]
         recommendation_reason = cached_rec["reason"]
     else:
-        # Call AI for recommendation
-        llm = request.app.state.llm
+        # Call AI for recommendation (fast model — lightweight task)
+        llm = request.app.state.llm_fast
         recommended, recommendation_reason = await _recommend_templates(
             llm, region, region_config.name, job_description
         )

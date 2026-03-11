@@ -70,10 +70,11 @@ async def analyze(request: Request):
     job_description = attempt.get("job_description", "")
 
     llm = request.app.state.llm
+    llm_fast = request.app.state.llm_fast
 
-    # Extract keywords with LLM (or fall back to regex)
+    # Extract keywords with LLM (fast model) or fall back to regex
     t0 = time.monotonic()
-    keyword_data = await extract_keywords_llm(job_description, llm)
+    keyword_data = await extract_keywords_llm(job_description, llm_fast)
     if keyword_data:
         job_keywords = keyword_data["all_keywords"]
         keyword_categories = keyword_data["categories"]
