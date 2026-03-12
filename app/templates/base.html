@@ -3,42 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuillCV — ATS-Optimized CV Builder</title>
+    <title>{% block title %}QuillCV — ATS-Optimized CV Builder{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats, keyword matching, and AI quality review.{% endblock %}">
+    <link rel="canonical" href="https://quillcv.com{{ request.url.path }}">
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}QuillCV — ATS-Optimized CV Builder{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats and AI quality review.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://quillcv.com{{ request.url.path }}">
+    <meta property="og:site_name" content="QuillCV">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}QuillCV — ATS-Optimized CV Builder{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats and AI quality review.{% endblock %}">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://unpkg.com">
     <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    {% block head_extra %}{% endblock %}
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "QuillCV",
+        "url": "https://quillcv.com",
+        "description": "ATS-optimized CV builder with 12 country formats"
+    }
+    </script>
+    {% endblock %}
 </head>
 <body>
     <header class="site-header">
         <nav class="site-nav">
-            <a href="/app" class="nav-link">Generate CV</a>
-            <a href="/demo" class="nav-link">Browse Templates</a>
-            <a href="/pricing" class="nav-link">Pricing</a>
-            {% if user %}
-                <span class="nav-credits" title="Credits remaining">{{ balance|default(0) }} credits</span>
-                <a href="/logout" class="nav-link">Sign Out</a>
-            {% else %}
-                <a href="/login" class="nav-link">Sign In</a>
-            {% endif %}
-        </nav>
-        <div class="brand">
-            <svg class="brand-quill" viewBox="0 0 80 60" width="36" height="27" aria-hidden="true">
-                <path d="M40 2 L68 54 C62 58, 54 56, 48 46 L40 30 L32 46 C26 56, 18 58, 12 54 Z"
-                      fill="var(--accent)"/>
-            </svg>
-            <div class="brand-text">
-                <h1 class="brand-name"><a href="/">QuillCV</a></h1>
-                <p class="brand-tagline">ATS-optimized CVs tailored to job descriptions</p>
+            <a href="/" class="site-logo">
+                <svg class="brand-quill" viewBox="0 0 80 60" width="28" height="21" aria-hidden="true">
+                    <path d="M40 2 L68 54 C62 58, 54 56, 48 46 L40 30 L32 46 C26 56, 18 58, 12 54 Z"
+                          fill="var(--accent)"/>
+                </svg>
+                QuillCV
+            </a>
+            <div class="site-nav-links">
+                <a href="/pricing" class="nav-link">Pricing</a>
+                <a href="/demo" class="nav-link">Templates</a>
+                {% if user %}
+                    <a href="/app" class="nav-link">My Account</a>
+                    <span class="nav-credits" title="Credits remaining">{{ balance|default(0) }} credits</span>
+                    <a href="/logout" class="nav-link">Sign Out</a>
+                {% else %}
+                    <a href="/login" class="nav-link" rel="nofollow">Sign In</a>
+                    <a href="/signup" class="btn-cta btn-cta--small">Get Started</a>
+                {% endif %}
             </div>
-        </div>
+        </nav>
         <!-- Sketchy underline -->
         <svg class="header-underline" viewBox="0 0 400 6" preserveAspectRatio="none" aria-hidden="true">
             <path d="M0 3 Q40 0, 80 3 T160 3 T240 3 T320 3 T400 3" fill="none"
                   stroke="var(--border)" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
     </header>
+    {% block app_nav %}{% endblock %}
     <main>
         {% block content %}{% endblock %}
     </main>
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/">Home</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/demo">Templates</a>
+            {% if user %}
+                <a href="/app">My Account</a>
+            {% else %}
+                <a href="/login" rel="nofollow">Sign In</a>
+            {% endif %}
+        </nav>
+        <p class="footer-copy">&copy; 2026 QuillCV. All rights reserved.</p>
+    </footer>
 </body>
 </html>

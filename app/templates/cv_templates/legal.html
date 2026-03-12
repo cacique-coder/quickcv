@@ -1,0 +1,133 @@
+<!-- Legal: Conservative, authoritative design with serif font. -->
+<style>
+    .cv-legal { font-family: Georgia, 'Times New Roman', serif; color: #1a202c; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.55; }
+    .cv-legal .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 2px solid #1a202c; padding-bottom: 1rem; }
+    .cv-legal .cv-header-text { flex: 1; }
+    .cv-legal .cv-name { font-size: 1.8rem; font-weight: 700; margin: 0; color: #1a202c; letter-spacing: 0.02em; }
+    .cv-legal .cv-title { font-size: 0.95rem; color: #4a5568; margin-top: 0.2rem; font-weight: 400; }
+    .cv-legal .cv-contact { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.82rem; color: #555; margin-top: 0.5rem; }
+    .cv-legal .cv-photo { width: 90px; height: 115px; object-fit: cover; border: 2px solid #2d3748; border-radius: 2px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-legal .cv-personal-details { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+    .cv-legal .cv-languages { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+    .cv-legal h2 { font-size: 0.92rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #1a202c; margin-top: 1.4rem; margin-bottom: 0.5rem; border-bottom: 1px solid #2d3748; padding-bottom: 0.2rem; }
+    .cv-legal h3 { font-size: 0.92rem; margin: 0; font-weight: 600; }
+    .cv-legal .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-legal .job-company { font-size: 0.88rem; color: #2d3748; font-weight: 500; }
+    .cv-legal .job-date { font-size: 0.82rem; color: #888; }
+    .cv-legal ul { margin: 0.2rem 0 0.7rem 1.2rem; padding: 0; }
+    .cv-legal li { font-size: 0.87rem; margin-bottom: 0.2rem; }
+    .cv-legal .bar-admissions { list-style: none; margin-left: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .cv-legal .bar-admissions li { background: #edf2f7; color: #1a202c; padding: 0.25rem 0.7rem; border-radius: 2px; font-size: 0.84rem; font-weight: 500; }
+    .cv-legal .practice-areas { display: flex; flex-wrap: wrap; gap: 0.3rem 0.5rem; list-style: none; margin-left: 0; padding: 0; }
+    .cv-legal .practice-areas li { font-size: 0.85rem; padding: 0.2rem 0.6rem; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 2px; }
+    .cv-legal .case-highlight { background: #f7fafc; border-left: 3px solid #2d3748; padding: 0.5rem 0.8rem; margin-bottom: 0.5rem; }
+    .cv-legal .case-highlight .case-type { font-weight: 600; font-size: 0.88rem; color: #1a202c; }
+    .cv-legal .case-highlight .case-outcome { font-size: 0.84rem; color: #2d3748; font-style: italic; }
+    .cv-legal .case-highlight p { font-size: 0.85rem; color: #444; margin: 0.15rem 0 0; }
+</style>
+<div class="cv-legal">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            <div class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </div>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2>Professional Summary</h2>
+    <p style="font-size: 0.88rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if bar_admissions %}
+    <h2>Bar Admissions</h2>
+    <ul class="bar-admissions">
+        {% for admission in bar_admissions %}
+        <li>{{ admission }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if experience %}
+    <h2>Professional Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 1rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if practice_areas %}
+    <h2>Practice Areas</h2>
+    <ul class="practice-areas">
+        {% for area in practice_areas %}
+        <li>{{ area }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if case_highlights %}
+    <h2>Notable Matters</h2>
+    {% for case in case_highlights %}
+    <div class="case-highlight">
+        <span class="case-type">{{ case.case_type }}</span>
+        {% if case.outcome %} — <span class="case-outcome">{{ case.outcome }}</span>{% endif %}
+        {% if case.description %}<p>{{ case.description }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills %}
+    <h2>Skills</h2>
+    <p style="font-size: 0.87rem;">{{ skills | join(' · ') }}</p>
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.88rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

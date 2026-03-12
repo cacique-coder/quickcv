@@ -1,0 +1,105 @@
+<!-- Elegant: Two-column sidebar layout, refined serif+sans typography. -->
+<style>
+    .cv-elegant { font-family: 'Georgia', 'Cambria', serif; color: #2d3748; max-width: 800px; margin: 0 auto; line-height: 1.55; display: flex; min-height: 100%; }
+    .cv-elegant .sidebar { width: 240px; background: #2d3748; color: #e2e8f0; padding: 1.5rem 1.2rem; flex-shrink: 0; }
+    .cv-elegant .sidebar .cv-photo { width: 100%; height: auto; aspect-ratio: 3/4; object-fit: cover; border-radius: 4px; border: 2px solid #4a5568; margin-bottom: 1.2rem; display: block; }
+    .cv-elegant .sidebar h2 { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #a0aec0; margin-top: 1.2rem; margin-bottom: 0.5rem; padding-bottom: 0.25rem; border-bottom: 1px solid #4a5568; }
+    .cv-elegant .sidebar .sidebar-contact-item { font-size: 0.82rem; margin-bottom: 0.4rem; line-height: 1.4; }
+    .cv-elegant .sidebar .sidebar-contact-label { display: block; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #a0aec0; margin-bottom: 0.1rem; }
+    .cv-elegant .sidebar .cv-personal-details { font-size: 0.8rem; color: #cbd5e0; margin-top: 0.3rem; }
+    .cv-elegant .sidebar .cv-personal-details span { display: block; margin-bottom: 0.2rem; }
+    .cv-elegant .sidebar .cv-languages { font-size: 0.8rem; color: #cbd5e0; margin-top: 0.2rem; }
+    .cv-elegant .sidebar .cv-languages span { display: block; margin-bottom: 0.15rem; }
+    .cv-elegant .sidebar .skill-tag { display: inline-block; background: #4a5568; color: #e2e8f0; padding: 0.15rem 0.5rem; border-radius: 2px; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.78rem; margin: 0.1rem 0.1rem 0.1rem 0; }
+    .cv-elegant .sidebar .cert-item { font-size: 0.82rem; margin-bottom: 0.3rem; line-height: 1.35; }
+    .cv-elegant .main { flex: 1; padding: 1.5rem 2rem; }
+    .cv-elegant .main .cv-name { font-size: 1.8rem; font-weight: 700; color: #1a202c; margin: 0; }
+    .cv-elegant .main .cv-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 1rem; color: #4a5568; margin-top: 0.2rem; font-weight: 400; font-style: italic; }
+    .cv-elegant .main h2 { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #2d3748; margin-top: 1.5rem; margin-bottom: 0.6rem; padding-bottom: 0.25rem; border-bottom: 2px solid #e2e8f0; }
+    .cv-elegant .main h3 { font-size: 0.93rem; margin: 0; font-weight: 600; color: #1a202c; }
+    .cv-elegant .main .job-meta { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+    .cv-elegant .main .job-company { font-size: 0.88rem; color: #4a5568; font-style: italic; }
+    .cv-elegant .main .job-date { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.8rem; color: #a0aec0; }
+    .cv-elegant .main ul { margin: 0.3rem 0 0.8rem 1.2rem; padding: 0; }
+    .cv-elegant .main li { font-size: 0.88rem; margin-bottom: 0.25rem; }
+</style>
+<div class="cv-elegant">
+    <div class="sidebar">
+        {% include "cv_templates/_photo.html" %}
+
+        <h2>Contact</h2>
+        {% include "cv_templates/_sidebar_contact.html" %}
+        {% include "cv_templates/_personal_details.html" %}
+
+        {% if skills_grouped %}
+        <h2>Skills</h2>
+        {% for group in skills_grouped %}
+        <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #a0aec0; margin: 0.6rem 0 0.2rem;">{{ group.category }}</p>
+        <div>{% for item in group['items'] %}<span class="skill-tag">{{ item }}</span>{% endfor %}</div>
+        {% endfor %}
+        {% elif skills %}
+        <h2>Skills</h2>
+        <div>{% for skill in skills %}<span class="skill-tag">{{ skill }}</span>{% endfor %}</div>
+        {% endif %}
+
+        {% if certifications %}
+        <h2>Certifications</h2>
+        {% for cert in certifications %}
+        <p class="cert-item">{{ cert }}</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="main">
+        <h1 class="cv-name">{{ name }}</h1>
+        {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+
+        {% if summary %}
+        <h2>Profile</h2>
+        <p style="font-size: 0.9rem;">{{ summary }}</p>
+        {% endif %}
+
+        {% if experience %}
+        <h2>Experience</h2>
+        {% for job in experience %}
+        <div style="margin-bottom: 1rem;">
+            <div class="job-meta">
+                <div>
+                    <h3>{{ job.title }}</h3>
+                    <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+                </div>
+                <span class="job-date">{{ job.date }}</span>
+            </div>
+            {% if job.bullets %}
+            <ul>
+                {% for bullet in job.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if education %}
+        <h2>Education</h2>
+        {% for edu in education %}
+        <div style="margin-bottom: 0.5rem;">
+            <div class="job-meta">
+                <div>
+                    <h3>{{ edu.degree }}</h3>
+                    <span class="job-company">{{ edu.institution }}</span>
+                </div>
+                <span class="job-date">{{ edu.date }}</span>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if references %}
+        <h2>References</h2>
+        {% for ref in references %}
+        <p style="font-size: 0.88rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>

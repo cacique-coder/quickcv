@@ -1,12 +1,17 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 
+from app.services.demo_data import get_demo_data, get_role, list_roles
 from app.services.template_registry import (
-    get_template, get_region, list_templates, list_regions,
+    get_region,
+    get_template,
+    list_regions,
+    list_templates,
+    list_templates_by_category,
 )
-from app.services.demo_data import get_demo_data, list_roles, get_role
 
 router = APIRouter(prefix="/demo")
 templates = Jinja2Templates(directory=Path(__file__).parent.parent / "templates")
@@ -23,6 +28,7 @@ async def demo_index(request: Request):
         "regions": list_regions(),
         "templates": list_templates(),
         "roles": list_roles(),
+        "page_description": f"Browse QuillCV's {len(list_templates())} professional CV templates across 12 country formats. See how templates adapt to regional conventions like photo requirements, page length, and date formats.",
     })
 
 
@@ -35,11 +41,27 @@ async def demo_country(request: Request, country_code: str):
         return HTMLResponse(f"Unknown country code: {country_code}", status_code=404)
 
     country_templates = list_templates(region=country_code)
+
+    # Group by category
+    available_ids = {t.id for t in country_templates}
+    grouped = {}
+    for cat in ["region", "universal", "industry", "specialty"]:
+        cat_templates = [t for t in list_templates_by_category(cat) if t.id in available_ids]
+        if cat_templates:
+            grouped[cat] = cat_templates
+
+    photo_note = (
+        "photo required" if region.include_photo == "required"
+        else f"photo {region.include_photo}" if region.include_photo != "no"
+        else "no photo"
+    )
     return templates.TemplateResponse("demo_country.html", {
         "request": request,
         "region": region,
         "templates": country_templates,
+        "grouped_templates": grouped,
         "roles": list_roles(),
+        "page_description": f"See how QuillCV templates adapt to {region.name} CV conventions. {region.page_length}, {region.date_format} dates, {photo_note}.",
     })
 
 
@@ -68,13 +90,15 @@ async def demo_preview(
 
     demo_data = get_demo_data(country_code, role)
 
+    current_role = selected_role or get_role("software-engineer")
     return templates.TemplateResponse("demo_preview.html", {
         "request": request,
         "region": region,
         "template": template,
         "demo": demo_data,
         "roles": list_roles(),
-        "current_role": selected_role or get_role("software-engineer"),
+        "current_role": current_role,
+        "page_description": f"Preview the {template.name} CV template formatted for {region.name}. {current_role.name} role demo with {region.name}-specific formatting conventions.",
     })
 
 

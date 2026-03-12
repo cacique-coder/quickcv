@@ -1,0 +1,15 @@
+{# Visual proficiency bars.
+   Expects: skills_rated (list of {name, level} where level is 1-5).
+#}
+{% if skills_rated %}
+<div class="skill-bars">
+    {% for skill in skills_rated %}
+    <div class="skill-bar-row">
+        <span class="skill-bar-label">{{ skill.name }}</span>
+        <div class="skill-bar-track">
+            <div class="skill-bar-fill" style="width: {{ (skill.level | int) * 20 }}%;"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,175 @@
+<!-- Gulf CV: UAE/Gulf comprehensive professional format. -->
+<style>
+    .cv-gulf { font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem; line-height: 1.55; font-size: 0.85rem; }
+    .cv-gulf .cv-header { background: #1a1a2e; color: white; padding: 1.5rem 1.8rem; margin: -1.5rem -2rem 1.2rem; display: flex; justify-content: space-between; align-items: flex-start; }
+    .cv-gulf .cv-header-text { flex: 1; }
+    .cv-gulf .cv-name { font-size: 1.8rem; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
+    .cv-gulf .cv-title { font-size: 1rem; color: #b8860b; margin-top: 0.2rem; font-weight: 500; }
+    .cv-gulf .cv-contact { display: flex; flex-wrap: wrap; gap: 0.3rem 1.3rem; font-size: 0.82rem; margin-top: 0.5rem; opacity: 0.85; }
+    .cv-gulf .cv-photo { width: 100px; height: 125px; object-fit: cover; border: 3px solid #b8860b; border-radius: 3px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-gulf .details-box { background: #f8f6f0; border: 1px solid #e8dcc8; border-left: 4px solid #b8860b; padding: 0.8rem 1rem; margin-bottom: 1.2rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem 1.5rem; }
+    .cv-gulf .details-box .detail { font-size: 0.83rem; }
+    .cv-gulf .details-box .detail-label { font-weight: 600; color: #1a1a2e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+    .cv-gulf h2 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #1a1a2e; margin-top: 1.4rem; margin-bottom: 0.5rem; border-bottom: 2px solid #b8860b; padding-bottom: 0.2rem; }
+    .cv-gulf h3 { font-size: 0.9rem; margin: 0; font-weight: 600; }
+    .cv-gulf .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-gulf .job-company { font-size: 0.85rem; color: #1a1a2e; font-weight: 500; }
+    .cv-gulf .job-date { font-size: 0.8rem; color: #888; }
+    .cv-gulf ul { margin: 0.2rem 0 0.6rem 1.2rem; padding: 0; }
+    .cv-gulf li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .cv-gulf .achievements { background: #fefcf6; padding: 0.8rem 1rem; border-radius: 3px; border-left: 3px solid #b8860b; }
+    .cv-gulf .achievements li { list-style: none; position: relative; padding-left: 1rem; }
+    .cv-gulf .achievements li::before { content: "★"; position: absolute; left: 0; color: #b8860b; font-size: 0.75rem; }
+    .cv-gulf .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 2rem; }
+    .cv-gulf .skills-grid .group { font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .cv-gulf .skills-grid .group strong { color: #1a1a2e; }
+</style>
+<div class="cv-gulf">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            <div class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </div>
+        </div>
+        <img src="{{ photo_url | default('/static/photo-placeholder.svg') }}"
+             alt="Professional photo"
+             class="cv-photo">
+    </div>
+
+    <div class="details-box">
+        {% if nationality %}
+        <div class="detail"><span class="detail-label">Nationality</span><br>{{ nationality }}</div>
+        {% endif %}
+        {% if visa_status %}
+        <div class="detail"><span class="detail-label">Visa Status</span><br>{{ visa_status }}</div>
+        {% endif %}
+        {% if dob %}
+        <div class="detail"><span class="detail-label">Date of Birth</span><br>{{ dob }}</div>
+        {% endif %}
+        {% if marital_status %}
+        <div class="detail"><span class="detail-label">Marital Status</span><br>{{ marital_status }}</div>
+        {% endif %}
+        {% if notice_period %}
+        <div class="detail"><span class="detail-label">Notice Period</span><br>{{ notice_period }}</div>
+        {% endif %}
+        {% if availability %}
+        <div class="detail"><span class="detail-label">Availability</span><br>{{ availability }}</div>
+        {% endif %}
+        {% if salary_expectation %}
+        <div class="detail"><span class="detail-label">Salary Expectation</span><br>{{ salary_expectation }}</div>
+        {% endif %}
+        {% if driving_license %}
+        <div class="detail"><span class="detail-label">Driving License</span><br>{{ driving_license }}</div>
+        {% endif %}
+        {% if dependents is defined and dependents is not none %}
+        <div class="detail"><span class="detail-label">Dependents</span><br>{{ dependents }}</div>
+        {% endif %}
+        {% if languages %}
+        <div class="detail"><span class="detail-label">Languages</span><br>{{ languages | join(', ') }}</div>
+        {% endif %}
+    </div>
+
+    {% if summary %}
+    <h2>Professional Summary</h2>
+    <p style="font-size: 0.87rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if key_achievements %}
+    <h2>Key Achievements</h2>
+    <ul class="achievements">
+        {% for ach in key_achievements %}
+        <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if experience %}
+    <h2>Professional Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 1rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.tech %}
+        <p style="font-size: 0.8rem; color: #666; margin-top: 0.1rem;">Technologies: {{ job.tech }}</p>
+        {% endif %}
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Skills & Competencies</h2>
+    <div class="skills-grid">
+        {% for group in skills_grouped %}
+        <p class="group"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+        {% endfor %}
+    </div>
+    {% elif skills %}
+    <h2>Skills & Competencies</h2>
+    <p style="font-size: 0.87rem;">{{ skills | join(' · ') }}</p>
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications & Training</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if languages_detailed %}
+    <h2>Languages</h2>
+    <ul>
+        {% for lang in languages_detailed %}
+        <li><strong>{{ lang.language }}</strong>{% if lang.level %} — {{ lang.level }}{% endif %}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if projects %}
+    <h2>Projects</h2>
+    {% for proj in projects %}
+    <div style="margin-bottom: 0.5rem;">
+        <h3>{{ proj.name }}{% if proj.url %} <span style="font-weight: 400; font-size: 0.8rem;">— {{ proj.url }}</span>{% endif %}</h3>
+        <p style="font-size: 0.84rem; color: #444;">{{ proj.description }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.87rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong><br>{{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

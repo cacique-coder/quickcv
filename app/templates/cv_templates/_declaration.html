@@ -1,0 +1,15 @@
+{# Declaration/signature block for India and Brazil.
+   Shows only when region is IN or BR.
+   Expects: region (str), name (str).
+#}
+{% set declaration_regions = ['IN', 'BR'] %}
+{% if region in declaration_regions %}
+<div class="cv-declaration">
+    <p>I hereby declare that the information furnished above is true, complete, and correct to the best of my knowledge and belief.</p>
+    <div class="cv-declaration-sig">
+        <div class="cv-declaration-line"></div>
+        <span class="cv-declaration-name">{{ name }}</span>
+        <span class="cv-declaration-date">Date: _______________</span>
+    </div>
+</div>
+{% endif %}

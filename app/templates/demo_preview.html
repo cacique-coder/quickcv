@@ -1,5 +1,26 @@
 {% extends "base.html" %}
 
+{% block title %}{{ template.name }} CV Template — {{ region.flag }} {{ region.name }} | QuillCV{% endblock %}
+{% block meta_description %}Preview the {{ template.name }} CV template formatted for {{ region.name }}. {{ current_role.name }} role demo with {{ region.name }}-specific formatting conventions.{% endblock %}
+{% block og_title %}{{ template.name }} Template — {{ region.name }} CV | QuillCV{% endblock %}
+{% block og_description %}Preview the {{ template.name }} CV template for {{ region.name }}. See how QuillCV adapts templates to local conventions.{% endblock %}
+{% block twitter_title %}{{ template.name }} Template — {{ region.name }} CV | QuillCV{% endblock %}
+{% block twitter_description %}Preview the {{ template.name }} CV template for {{ region.name }}. See how QuillCV adapts templates to local conventions.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Templates", "item": "https://quillcv.com/demo"},
+        {"@type": "ListItem", "position": 2, "name": "{{ region.name }}", "item": "https://quillcv.com/demo/{{ region.code|lower }}"},
+        {"@type": "ListItem", "position": 3, "name": "{{ template.name }}", "item": "https://quillcv.com/demo/{{ region.code|lower }}/{{ template.id }}"}
+    ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <section class="demo-section">
     <div class="breadcrumb">
@@ -10,12 +31,15 @@
 
     <div class="preview-header">
         <div>
-            <h2>{{ template.name }} — {{ region.flag }} {{ region.name }}</h2>
+            <h1>{{ template.name }} — {{ region.flag }} {{ region.name }}</h1>
             <p class="hint">{{ current_role.name }}: {{ current_role.description }}</p>
         </div>
-        <a href="/demo/{{ region.code }}/{{ template.id }}/raw?role={{ current_role.id }}" target="_blank" class="btn-secondary">
-            Open Raw HTML
-        </a>
+        <div class="preview-actions">
+            <a href="/signup?next=/app%3Ftemplate%3D{{ template.id }}%26region%3D{{ region.code }}" class="btn-secondary">
+                Use This Template
+            </a>
+            <span class="free-badge">Free — create an account to start</span>
+        </div>
     </div>
 
     <!-- Role switcher -->
@@ -30,7 +54,7 @@
 
     <!-- CV Preview -->
     <div class="demo-cv-frame">
-        <iframe src="/demo/{{ region.code }}/{{ template.id }}/raw?role={{ current_role.id }}" class="cv-iframe"></iframe>
+        <iframe src="/demo/{{ region.code }}/{{ template.id }}/raw?role={{ current_role.id }}" class="cv-iframe" loading="lazy"></iframe>
     </div>
 
     <!-- Region notes sidebar -->
@@ -56,10 +80,19 @@
         <h3>Sources</h3>
         <ul class="source-list">
             {% for src in region.sources %}
-            <li><a href="{{ src.url }}" target="_blank">{{ src.title }}</a></li>
+            <li><a href="{{ src.url }}" target="_blank" rel="noopener noreferrer">{{ src.title }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
+    </div>
+
+    <!-- CTA -->
+    <div class="demo-cta">
+        <h2>Like this template? Use it free</h2>
+        <p>Sign up and use this template in the builder — fill it in yourself for free, or let QuillCV's AI tailor it to your job description and {{ region.name }} formatting conventions.</p>
+        <div class="demo-cta-buttons">
+            <a href="/signup?next=/app%3Ftemplate%3D{{ template.id }}%26region%3D{{ region.code }}" class="btn-cta">Use This Template</a>
+        </div>
     </div>
 </section>
 {% endblock %}

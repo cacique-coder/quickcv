@@ -1,0 +1,16 @@
+{# Citation-formatted publication list.
+   Expects: publications (list of strings OR list of {title, journal, year, authors}).
+#}
+{% if publications %}
+<ul class="cv-publications">
+    {% for pub in publications %}
+    <li>
+        {% if pub is string %}
+            {{ pub }}
+        {% else %}
+            {% if pub.authors %}{{ pub.authors }}. {% endif %}{% if pub.title %}<em>{{ pub.title }}</em>{% endif %}{% if pub.journal %}. {{ pub.journal }}{% endif %}{% if pub.year %} ({{ pub.year }}){% endif %}.
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}

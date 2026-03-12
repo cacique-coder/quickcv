@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+{% from "macros/ui.html" import form_group, text_input, text_area, select_input, section_divider, info_card, repeatable_entry %}
+
+{% block app_nav %}{% include "partials/app_nav.html" %}{% endblock %}
+
+{% block content %}
+<div class="builder-page">
+    <div class="builder-header">
+        <h2>Manual CV Builder</h2>
+        <p class="hint">Fill in your details, pick a template, and download a beautifully formatted CV. Free — no account or credits needed.</p>
+    </div>
+
+    <form id="builder-form" class="builder-layout"
+          hx-post="/builder/preview"
+          hx-target="#builder-preview"
+          hx-swap="innerHTML">
+
+        <div class="builder-form-col">
+            <!-- Template & Region -->
+            <fieldset>
+                <legend>Template & Region</legend>
+                <div class="form-row">
+                    {% call form_group("Template") %}
+                        {{ select_input("template_id", options=template_options, selected=selected_template) }}
+                    {% endcall %}
+                    {% call form_group("Region") %}
+                        <select name="region" class="input-field" onchange="updateRegionFields()">
+                            {% for value, label in region_options %}
+                            <option value="{{ value }}" {% if value == selected_region %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endcall %}
+                </div>
+                <div id="region-hint" class="hint" style="margin-top: 0.4rem;"></div>
+            </fieldset>
+
+            <!-- Personal Info -->
+            <fieldset>
+                <legend>Personal Info</legend>
+                <div class="form-row">
+                    <div class="form-group form-group--wide">
+                        {{ text_input("name", placeholder="Jane Smith", value=cv_data.name) }}
+                    </div>
+                    <div class="form-group form-group--wide">
+                        {{ text_input("title", placeholder="Senior Software Engineer", value=cv_data.title) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    {{ text_input("email", type="email", placeholder="jane@example.com", value=cv_data.email) }}
+                    {{ text_input("phone", type="tel", placeholder="+61 400 000 000", value=cv_data.phone) }}
+                    {{ text_input("location", placeholder="Sydney, Australia", value=cv_data.location) }}
+                </div>
+                <div class="form-row">
+                    {{ text_input("linkedin", placeholder="linkedin.com/in/janesmith", value=cv_data.linkedin) }}
+                    {{ text_input("github", placeholder="github.com/janesmith", value=cv_data.github) }}
+                    {{ text_input("portfolio", placeholder="janesmith.dev", value=cv_data.portfolio) }}
+                </div>
+            </fieldset>
+
+            <!-- Region-specific: Photo -->
+            <fieldset id="section-photo" class="region-conditional" style="display:none;">
+                <legend>CV Photo</legend>
+                <p class="hint" id="photo-level-hint"></p>
+                <div class="photo-drop-zone">
+                    <input type="file" name="photo" accept=".jpg,.jpeg,.png,.webp"
+                           hx-post="/photos/upload"
+                           hx-target="#photo-result"
+                           hx-swap="innerHTML"
+                           hx-encoding="multipart/form-data"
+                           hx-indicator="#photo-spinner">
+                    <p>Click or drag a photo here</p>
+                    <span class="hint">JPEG, PNG, or WebP — max 5MB</span>
+                </div>
+                <div id="photo-spinner" class="htmx-indicator">
+                    <div class="spinner" style="width:24px;height:24px;border-width:2px;"></div>
+                </div>
+                <div id="photo-result"></div>
+            </fieldset>
+
+            <!-- Region-specific: Personal Details -->
+            <fieldset id="section-personal-details" class="region-conditional" style="display:none;">
+                <legend>Personal Details</legend>
+                <p class="hint">These fields are expected on CVs in your selected region.</p>
+                <div class="form-row">
+                    <div id="field-dob" class="form-group region-conditional" style="display:none;">
+                        <label>Date of Birth</label>
+                        {{ text_input("dob", placeholder="15/03/1990", value=cv_data.dob) }}
+                    </div>
+                    <div id="field-nationality" class="form-group region-conditional" style="display:none;">
+                        <label>Nationality</label>
+                        {{ text_input("nationality", placeholder="Australian", value=cv_data.nationality) }}
+                    </div>
+                    <div id="field-marital" class="form-group region-conditional" style="display:none;">
+                        <label>Marital Status</label>
+                        {{ text_input("marital_status", placeholder="Single", value=cv_data.marital_status) }}
+                    </div>
+                </div>
+                <div id="field-visa" class="form-group region-conditional" style="display:none; margin-top: 0.6rem;">
+                    <label>Visa / Work Rights</label>
+                    {{ text_input("visa_status", placeholder="Full working rights, PR, Visa subclass 482...", value=cv_data.visa_status) }}
+                </div>
+            </fieldset>
+
+            <!-- Summary -->
+            <fieldset>
+                <legend>Professional Summary</legend>
+                {% call form_group("Summary", hint="2-4 sentences highlighting your key strengths and career focus.") %}
+                    {{ text_area("summary", rows=3, placeholder="Experienced software engineer with 8+ years building scalable web applications...", value=cv_data.summary) }}
+                {% endcall %}
+            </fieldset>
+
+            <!-- Experience -->
+            <fieldset>
+                <legend>Experience</legend>
+                <div id="experience-entries">
+                    {% set exps = cv_data.experience if cv_data.experience else [{}] %}
+                    {% for exp in exps %}
+                    {% call repeatable_entry(index=loop.index0, removable=not loop.first) %}
+                        <div class="form-row">
+                            <div class="form-group form-group--wide">
+                                {{ text_input("exp_title_" ~ loop.index0, placeholder="Senior Software Engineer", value=exp.get('title', '')) }}
+                            </div>
+                            {{ text_input("exp_date_" ~ loop.index0, placeholder="Jan 2022 – Present", value=exp.get('date', '')) }}
+                        </div>
+                        <div class="form-row">
+                            {{ text_input("exp_company_" ~ loop.index0, placeholder="Acme Corp", value=exp.get('company', '')) }}
+                            {{ text_input("exp_location_" ~ loop.index0, placeholder="Sydney", value=exp.get('location', '')) }}
+                            {{ text_input("exp_tech_" ~ loop.index0, placeholder="Python, FastAPI, PostgreSQL", value=exp.get('tech', '')) }}
+                        </div>
+                        {% call form_group("Achievements", hint="One per line") %}
+                            {{ text_area("exp_bullets_" ~ loop.index0, rows=3, placeholder="Led migration of legacy system to microservices, reducing deploy time by 60%", value=exp.get('bullets', [])|join('\n')) }}
+                        {% endcall %}
+                    {% endcall %}
+                    {% endfor %}
+                </div>
+                <button type="button" class="repeatable-add" onclick="addExperience()">+ Add Experience</button>
+            </fieldset>
+
+            <!-- Skills -->
+            <fieldset>
+                <legend>Skills</legend>
+                {% call form_group("Skills", hint="Comma-separated") %}
+                    {{ text_input("skills", placeholder="Python, JavaScript, AWS, Docker, PostgreSQL, React", value=cv_data.skills|join(', ')) }}
+                {% endcall %}
+            </fieldset>
+
+            <!-- Education -->
+            <fieldset>
+                <legend>Education</legend>
+                <div id="education-entries">
+                    {% set edus = cv_data.education if cv_data.education else [{}] %}
+                    {% for edu in edus %}
+                    {% call repeatable_entry(index=loop.index0, removable=not loop.first) %}
+                        <div class="form-row">
+                            <div class="form-group form-group--wide">
+                                {{ text_input("edu_degree_" ~ loop.index0, placeholder="Bachelor of Computer Science", value=edu.get('degree', '')) }}
+                            </div>
+                            {{ text_input("edu_institution_" ~ loop.index0, placeholder="University of Sydney", value=edu.get('institution', '')) }}
+                            {{ text_input("edu_date_" ~ loop.index0, placeholder="2018", value=edu.get('date', '')) }}
+                        </div>
+                    {% endcall %}
+                    {% endfor %}
+                </div>
+                <button type="button" class="repeatable-add" onclick="addEducation()">+ Add Education</button>
+            </fieldset>
+
+            <!-- Certifications -->
+            <fieldset>
+                <legend>Certifications</legend>
+                {% call form_group("Certifications", hint="One per line") %}
+                    {{ text_area("certifications", rows=2, placeholder="AWS Solutions Architect Professional (2024)\nCertified Kubernetes Administrator (2023)", value=cv_data.certifications|join('\n')) }}
+                {% endcall %}
+            </fieldset>
+
+            <!-- References (region-conditional) -->
+            <fieldset id="section-references" class="region-conditional" style="display:none;">
+                <legend>References</legend>
+                <p class="hint">References are expected on CVs in your selected region.</p>
+                <div id="reference-entries">
+                    {% set refs = cv_data.references if cv_data.references else [{}] %}
+                    {% for ref in refs %}
+                    {% call repeatable_entry(index=loop.index0, removable=not loop.first) %}
+                        <div class="form-row">
+                            {{ text_input("ref_name_" ~ loop.index0, placeholder="John Doe", value=ref.get('name', '')) }}
+                            {{ text_input("ref_title_" ~ loop.index0, placeholder="Engineering Manager", value=ref.get('title', '')) }}
+                            {{ text_input("ref_company_" ~ loop.index0, placeholder="Acme Corp", value=ref.get('company', '')) }}
+                            {{ text_input("ref_contact_" ~ loop.index0, placeholder="john@acme.com", value=ref.get('contact', '')) }}
+                        </div>
+                    {% endcall %}
+                    {% endfor %}
+                </div>
+                <button type="button" class="repeatable-add" onclick="addReference()">+ Add Reference</button>
+            </fieldset>
+
+            <!-- Languages -->
+            <fieldset>
+                <legend>Languages</legend>
+                {% call form_group("Languages", hint="Comma-separated") %}
+                    {{ text_input("languages", placeholder="English (Native), Spanish (Professional), French (Basic)", value=cv_data.languages|join(', ')) }}
+                {% endcall %}
+            </fieldset>
+
+            <div class="builder-actions">
+                <button type="submit" class="btn-generate">Preview CV</button>
+            </div>
+        </div>
+
+        <div class="builder-preview-col">
+            <div class="builder-preview-sticky">
+                <div class="builder-preview-header">
+                    <h3>Preview</h3>
+                    <a href="/builder/download-pdf" class="btn-download builder-download-btn" id="download-btn" style="display:none;" download>Download PDF</a>
+                </div>
+                <div id="builder-preview" class="builder-preview-area">
+                    <p class="builder-preview-empty">Fill in your details and click "Preview CV" to see your formatted CV here.</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+var REGION_FIELDS = {{ region_fields_json | safe }};
+
+var expCount = {{ (cv_data.experience|length) or 1 }};
+var eduCount = {{ (cv_data.education|length) or 1 }};
+var refCount = {{ (cv_data.references|length) or 1 }};
+
+function updateRegionFields() {
+    var region = document.querySelector('select[name="region"]').value;
+    var fields = REGION_FIELDS[region] || {};
+
+    // Photo section
+    toggle('section-photo', fields.photo);
+    var photoHint = document.getElementById('photo-level-hint');
+    if (photoHint) {
+        var levelText = {
+            'required': 'A professional photo is required for CVs in this region.',
+            'common': 'A professional photo is common and expected in this region.',
+            'optional': 'A photo is optional but sometimes included in this region.'
+        };
+        photoHint.textContent = levelText[fields.photo_level] || '';
+    }
+
+    // Personal details section — show if any sub-field is needed
+    var hasPersonalDetails = fields.dob || fields.nationality || fields.marital || fields.visa;
+    toggle('section-personal-details', hasPersonalDetails);
+    toggle('field-dob', fields.dob);
+    toggle('field-nationality', fields.nationality);
+    toggle('field-marital', fields.marital);
+    toggle('field-visa', fields.visa);
+
+    // References section
+    toggle('section-references', fields.references);
+
+    // Region hint
+    var hints = [];
+    if (fields.photo) hints.push('Photo (' + fields.photo_level + ')');
+    if (fields.dob) hints.push('Date of birth');
+    if (fields.nationality) hints.push('Nationality');
+    if (fields.marital) hints.push('Marital status');
+    if (fields.visa) hints.push('Visa/work rights');
+    if (fields.references) hints.push('References');
+
+    var hintEl = document.getElementById('region-hint');
+    if (hints.length > 0) {
+        hintEl.textContent = 'This region expects: ' + hints.join(', ');
+    } else {
+        hintEl.textContent = 'This region has no extra field requirements.';
+    }
+}
+
+function toggle(id, show) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = show ? '' : 'none';
+}
+
+function _inputHtml(name, placeholder) {
+    return '<input type="text" name="' + name + '" class="input-field" placeholder="' + placeholder + '">';
+}
+function _textareaHtml(name, rows, placeholder) {
+    return '<textarea name="' + name + '" rows="' + rows + '" placeholder="' + placeholder + '"></textarea>';
+}
+
+function addExperience() {
+    var i = expCount++;
+    var container = document.getElementById('experience-entries');
+    var div = document.createElement('div');
+    div.className = 'repeatable-entry';
+    div.innerHTML = '<button type="button" class="repeatable-remove" onclick="this.closest(\'.repeatable-entry\').remove()">Remove</button>'
+        + '<div class="form-row"><div class="form-group form-group--wide">' + _inputHtml('exp_title_' + i, 'Senior Software Engineer') + '</div>'
+        + _inputHtml('exp_date_' + i, 'Jan 2022 – Present') + '</div>'
+        + '<div class="form-row">' + _inputHtml('exp_company_' + i, 'Acme Corp')
+        + _inputHtml('exp_location_' + i, 'Sydney')
+        + _inputHtml('exp_tech_' + i, 'Python, FastAPI') + '</div>'
+        + '<div class="form-group"><label>Achievements</label><p class="hint">One per line</p>'
+        + _textareaHtml('exp_bullets_' + i, 3, 'Led migration of legacy system...') + '</div>';
+    container.appendChild(div);
+    div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function addEducation() {
+    var i = eduCount++;
+    var container = document.getElementById('education-entries');
+    var div = document.createElement('div');
+    div.className = 'repeatable-entry';
+    div.innerHTML = '<button type="button" class="repeatable-remove" onclick="this.closest(\'.repeatable-entry\').remove()">Remove</button>'
+        + '<div class="form-row"><div class="form-group form-group--wide">' + _inputHtml('edu_degree_' + i, 'Bachelor of Computer Science') + '</div>'
+        + _inputHtml('edu_institution_' + i, 'University of Sydney')
+        + _inputHtml('edu_date_' + i, '2018') + '</div>';
+    container.appendChild(div);
+}
+
+function addReference() {
+    var i = refCount++;
+    var container = document.getElementById('reference-entries');
+    var div = document.createElement('div');
+    div.className = 'repeatable-entry';
+    div.innerHTML = '<button type="button" class="repeatable-remove" onclick="this.closest(\'.repeatable-entry\').remove()">Remove</button>'
+        + '<div class="form-row">' + _inputHtml('ref_name_' + i, 'John Doe')
+        + _inputHtml('ref_title_' + i, 'Engineering Manager')
+        + _inputHtml('ref_company_' + i, 'Acme Corp')
+        + _inputHtml('ref_contact_' + i, 'john@acme.com') + '</div>';
+    container.appendChild(div);
+}
+
+document.body.addEventListener('htmx:afterSwap', function(e) {
+    if (e.detail.target.id === 'builder-preview') {
+        document.getElementById('download-btn').style.display = '';
+    }
+});
+
+// Initialize on page load
+updateRegionFields();
+</script>
+
+{% if dev_mode %}
+<button type="button" class="btn-dev-fill" onclick="devFillBuilder()">Dev: Fill form</button>
+<script>
+function devFillBuilder() {
+    var fields = {
+        name: "Sarah Chen",
+        title: "Senior Full-Stack Engineer",
+        email: "sarah.chen@example.com",
+        phone: "+61 412 345 678",
+        location: "Sydney, Australia",
+        linkedin: "linkedin.com/in/sarahchen",
+        github: "github.com/sarahchen",
+        portfolio: "sarahchen.dev",
+        summary: "Full-stack engineer with 8+ years of experience building high-traffic web applications. Specialising in Python/FastAPI backends and React frontends. Passionate about clean architecture, developer experience, and mentoring junior engineers. Led a team of 6 to deliver a platform serving 2M+ monthly users.",
+        skills: "Python, TypeScript, FastAPI, React, PostgreSQL, Redis, Docker, Kubernetes, AWS, Terraform, GraphQL, REST APIs",
+        languages: "English (Native), Mandarin (Professional), Japanese (Basic)",
+        certifications: "AWS Solutions Architect Professional (2024)\nCertified Kubernetes Administrator (2023)\nGoogle Cloud Professional Cloud Architect (2022)",
+        // Region-specific
+        visa_status: "Full working rights — Australian Citizen",
+        dob: "15/03/1990",
+        nationality: "Australian",
+        marital_status: "Single",
+    };
+
+    for (var key in fields) {
+        var el = document.querySelector('[name="' + key + '"]');
+        if (el) el.value = fields[key];
+    }
+
+    // Experience 0
+    var exp0 = {
+        exp_title_0: "Senior Full-Stack Engineer",
+        exp_date_0: "Mar 2022 – Present",
+        exp_company_0: "Canva",
+        exp_location_0: "Sydney",
+        exp_tech_0: "Python, FastAPI, React, TypeScript, PostgreSQL, Kubernetes",
+        exp_bullets_0: "Led migration of monolithic API to microservices architecture, reducing p95 latency from 800ms to 120ms\nDesigned and shipped real-time collaboration feature used by 500K+ users within first quarter\nEstablished code review standards and mentored 4 junior engineers, all promoted within 18 months\nReduced CI/CD pipeline time from 25 min to 8 min by parallelising test suites and optimising Docker builds"
+    };
+    for (var key in exp0) {
+        var el = document.querySelector('[name="' + key + '"]');
+        if (el) el.value = exp0[key];
+    }
+
+    // Add second experience
+    addExperience();
+    var exp1 = {
+        exp_title_1: "Software Engineer",
+        exp_date_1: "Jan 2019 – Feb 2022",
+        exp_company_1: "Atlassian",
+        exp_location_1: "Sydney",
+        exp_tech_1: "Java, Spring Boot, React, AWS, DynamoDB",
+        exp_bullets_1: "Built and maintained microservices handling 10M+ API requests per day for Jira Cloud\nImplemented feature flagging system that reduced release risk and enabled 3x faster feature rollouts\nLed cross-team initiative to standardise error handling, reducing customer-reported bugs by 40%\nContributed to open-source internal tooling adopted by 12 teams across the organisation"
+    };
+    for (var key in exp1) {
+        var el = document.querySelector('[name="' + key + '"]');
+        if (el) el.value = exp1[key];
+    }
+
+    // Add third experience
+    addExperience();
+    var exp2 = {
+        exp_title_2: "Junior Developer",
+        exp_date_2: "Jul 2016 – Dec 2018",
+        exp_company_2: "Tyro Payments",
+        exp_location_2: "Sydney",
+        exp_tech_2: "Ruby on Rails, PostgreSQL, React, AWS",
+        exp_bullets_2: "Developed payment processing features handling $2M+ daily transaction volume\nBuilt internal admin dashboard used by 50+ support staff, reducing ticket resolution time by 30%\nMigrated legacy jQuery frontend to React, improving page load times by 60%"
+    };
+    for (var key in exp2) {
+        var el = document.querySelector('[name="' + key + '"]');
+        if (el) el.value = exp2[key];
+    }
+
+    // Education 0
+    var edu0 = {
+        edu_degree_0: "Bachelor of Computer Science (Honours)",
+        edu_institution_0: "University of New South Wales",
+        edu_date_0: "2016"
+    };
+    for (var key in edu0) {
+        var el = document.querySelector('[name="' + key + '"]');
+        if (el) el.value = edu0[key];
+    }
+
+    // References 0
+    var ref0 = {
+        ref_name_0: "James Park",
+        ref_title_0: "Engineering Manager",
+        ref_company_0: "Canva",
+        ref_contact_0: "james.park@example.com"
+    };
+    for (var key in ref0) {
+        var el = document.querySelector('[name="' + key + '"]');
+        if (el) el.value = ref0[key];
+    }
+
+    // Set region to AU to show references + visa
+    document.querySelector('select[name="region"]').value = 'AU';
+    updateRegionFields();
+}
+</script>
+{% endif %}
+{% endblock %}

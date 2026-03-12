@@ -1,0 +1,157 @@
+<!-- Nonprofit: Impact-focused format, earth tone accent. -->
+<style>
+    .cv-nonprofit { font-family: 'Calibri', 'Helvetica Neue', Arial, sans-serif; color: #1c1917; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+    .cv-nonprofit .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 3px solid #92400e; padding-bottom: 1rem; }
+    .cv-nonprofit .cv-header-text { flex: 1; }
+    .cv-nonprofit .cv-name { font-size: 1.8rem; font-weight: 700; margin: 0; color: #92400e; }
+    .cv-nonprofit .cv-title { font-size: 0.95rem; color: #78350f; margin-top: 0.2rem; font-weight: 500; }
+    .cv-nonprofit .cv-contact { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.82rem; color: #555; margin-top: 0.5rem; }
+    .cv-nonprofit .cv-photo { width: 90px; height: 115px; object-fit: cover; border: 2px solid #92400e; border-radius: 4px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-nonprofit .cv-personal-details { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+    .cv-nonprofit .cv-languages { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+    .cv-nonprofit h2 { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #92400e; margin-top: 1.4rem; margin-bottom: 0.5rem; border-bottom: 2px solid #fef3c7; padding-bottom: 0.25rem; }
+    .cv-nonprofit h3 { font-size: 0.92rem; margin: 0; font-weight: 600; }
+    .cv-nonprofit .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-nonprofit .job-company { font-size: 0.88rem; color: #92400e; font-weight: 500; }
+    .cv-nonprofit .job-date { font-size: 0.82rem; color: #888; }
+    .cv-nonprofit ul { margin: 0.2rem 0 0.7rem 1.2rem; padding: 0; }
+    .cv-nonprofit li { font-size: 0.87rem; margin-bottom: 0.2rem; }
+    .cv-nonprofit .impact-highlights { list-style: none; margin-left: 0; padding: 0; }
+    .cv-nonprofit .impact-highlights li { background: #fffbeb; border-left: 3px solid #92400e; padding: 0.4rem 0.8rem; margin-bottom: 0.3rem; font-size: 0.87rem; }
+    .cv-nonprofit .fundraising-table { width: 100%; border-collapse: collapse; margin-top: 0.3rem; margin-bottom: 0.5rem; font-size: 0.85rem; }
+    .cv-nonprofit .fundraising-table th { background: #92400e; color: white; padding: 0.4rem 0.8rem; text-align: left; font-size: 0.82rem; font-weight: 600; }
+    .cv-nonprofit .fundraising-table td { padding: 0.35rem 0.8rem; border-bottom: 1px solid #e5e7eb; }
+    .cv-nonprofit .fundraising-table tr:nth-child(even) td { background: #fffbeb; }
+    .cv-nonprofit .community-list li { margin-bottom: 0.3rem; }
+</style>
+<div class="cv-nonprofit">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            <div class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </div>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2>Professional Summary</h2>
+    <p style="font-size: 0.88rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if key_achievements %}
+    <h2>Impact Highlights</h2>
+    <ul class="impact-highlights">
+        {% for ach in key_achievements %}
+        <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if experience %}
+    <h2>Professional Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 1rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if fundraising_metrics %}
+    <h2>Fundraising</h2>
+    <table class="fundraising-table">
+        <thead>
+            <tr>
+                <th>Campaign</th>
+                <th>Raised</th>
+                <th>Goal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fm in fundraising_metrics %}
+            <tr>
+                <td>{{ fm.campaign }}</td>
+                <td>{{ fm.raised }}</td>
+                <td>{{ fm.goal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if community_impact %}
+    <h2>Community Impact</h2>
+    <ul class="community-list">
+        {% for impact in community_impact %}
+        <li>{{ impact }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if grant_writing %}
+    <h2>Grant Writing</h2>
+    <ul>
+        {% for grant in grant_writing %}
+        <li>{{ grant }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Skills</h2>
+    {% for group in skills_grouped %}
+    <p style="font-size: 0.87rem;"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+    {% endfor %}
+    {% elif skills %}
+    <h2>Skills</h2>
+    <p style="font-size: 0.87rem;">{{ skills | join(' · ') }}</p>
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.88rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

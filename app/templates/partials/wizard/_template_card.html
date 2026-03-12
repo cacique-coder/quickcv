@@ -1,0 +1,23 @@
+<label class="template-card {% if tpl.id in recommended %}template-recommended{% endif %}" for="tpl-{{ tpl.id }}">
+    <input type="radio" name="template_id" id="tpl-{{ tpl.id }}" value="{{ tpl.id }}"
+           {% if tpl.id == selected_tpl %}checked{% endif %}>
+    <div class="template-card-inner">
+        {% if tpl.id in recommended %}
+        <span class="template-rec-badge">Recommended</span>
+        {% endif %}
+        <div class="template-preview template-preview-{{ tpl.id }}">
+            <div class="tpl-mock-header"></div>
+            <div class="tpl-mock-line w80"></div>
+            <div class="tpl-mock-line w60"></div>
+            <div class="tpl-mock-section"></div>
+            <div class="tpl-mock-line w90"></div>
+            <div class="tpl-mock-line w70"></div>
+            <div class="tpl-mock-line w85"></div>
+        </div>
+        <div class="template-info">
+            <strong>{{ tpl.name }}</strong>
+            <p>{{ tpl.description }}</p>
+            <span class="template-best">{{ tpl.best_for }}</span>
+        </div>
+    </div>
+</label>

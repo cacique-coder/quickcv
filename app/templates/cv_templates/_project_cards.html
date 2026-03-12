@@ -1,0 +1,18 @@
+{# Project showcase cards.
+   Reuses the standard `projects` variable (list of {name, url, description, tech}).
+#}
+{% if projects %}
+<div class="project-cards">
+    {% for proj in projects %}
+    <div class="project-card">
+        <h3 class="project-card-name">{{ proj.name }}{% if proj.url %} <a href="{{ proj.url }}" class="project-card-url">{{ proj.url }}</a>{% endif %}</h3>
+        {% if proj.description %}<p class="project-card-desc">{{ proj.description }}</p>{% endif %}
+        {% if proj.tech %}
+        <div class="project-card-tags">
+            {% for t in proj.tech %}<span class="project-card-tag">{{ t }}</span>{% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

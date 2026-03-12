@@ -1,0 +1,23 @@
+{# Timeline connector job entry.
+   Expects a `job` variable (single experience entry with title, company, location, date, bullets).
+#}
+<div class="timeline-entry">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+        <div class="timeline-meta">
+            <div>
+                <h3 class="timeline-job-title">{{ job.title }}</h3>
+                <span class="timeline-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="timeline-date">{{ job.date }}</span>
+        </div>
+        {% if job.tech %}<p class="timeline-tech">{{ job.tech }}</p>{% endif %}
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>

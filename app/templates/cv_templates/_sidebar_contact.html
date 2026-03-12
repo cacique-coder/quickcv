@@ -1,0 +1,11 @@
+{# Contact info block for sidebar layouts.
+   Uses: name, email, phone, location, linkedin, github, portfolio.
+#}
+<div class="sidebar-contact">
+    {% if email %}<div class="sidebar-contact-item"><span class="sidebar-contact-label">Email</span><span>{{ email }}</span></div>{% endif %}
+    {% if phone %}<div class="sidebar-contact-item"><span class="sidebar-contact-label">Phone</span><span>{{ phone }}</span></div>{% endif %}
+    {% if location %}<div class="sidebar-contact-item"><span class="sidebar-contact-label">Location</span><span>{{ location }}</span></div>{% endif %}
+    {% if linkedin %}<div class="sidebar-contact-item"><span class="sidebar-contact-label">LinkedIn</span><span>{{ linkedin }}</span></div>{% endif %}
+    {% if github %}<div class="sidebar-contact-item"><span class="sidebar-contact-label">GitHub</span><span>{{ github }}</span></div>{% endif %}
+    {% if portfolio %}<div class="sidebar-contact-item"><span class="sidebar-contact-label">Portfolio</span><span>{{ portfolio }}</span></div>{% endif %}
+</div>

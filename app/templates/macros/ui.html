@@ -1,6 +1,6 @@
 {#
   QuillCV — Reusable UI Component Macros
-  Usage: {% from "macros/ui.html" import form_group, badge, wizard_nav, section_divider, info_card %}
+  Usage: {% from "macros/ui.html" import form_group, text_input, text_area, select_input, badge, wizard_nav, section_divider, info_card, repeatable_entry %}
 #}
 
 
@@ -63,6 +63,36 @@
 <input type="file" name="{{ name }}" accept="{{ accept }}"
        {% if required %}required{% endif %} {% if multiple %}multiple{% endif %}>
 {% endif %}
+{% endmacro %}
+
+
+{# ── Select Input ─────────────────────────────────────────── #}
+{# Renders a styled select dropdown.
+   Usage: {{ select_input("region", options=[("US", "United States"), ("AU", "Australia")], selected="US") }}
+#}
+{% macro select_input(name, options=[], selected="") %}
+<select name="{{ name }}" class="input-field">
+    {% for value, label in options %}
+    <option value="{{ value }}" {% if value == selected %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
+
+{# ── Repeatable Entry ────────────────────────────────────── #}
+{# Wraps a dynamic form entry with an optional remove button.
+   Usage:
+     {% call repeatable_entry(index=0, removable=false) %}
+       {{ text_input("exp_title_0", ...) }}
+     {% endcall %}
+#}
+{% macro repeatable_entry(index=0, removable=false) %}
+<div class="repeatable-entry" data-index="{{ index }}">
+    {% if removable %}
+    <button type="button" class="repeatable-remove" onclick="this.closest('.repeatable-entry').remove()">Remove</button>
+    {% endif %}
+    {{ caller() }}
+</div>
 {% endmacro %}
 
 

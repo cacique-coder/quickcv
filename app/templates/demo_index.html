@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
+{% block title %}CV Templates by Country — QuillCV | {{ templates|length }} Templates, 12 Country Formats{% endblock %}
+{% block meta_description %}Browse QuillCV's {{ templates|length }} professional CV templates across 12 country formats. See how templates adapt to regional conventions like photo requirements, page length, and date formats.{% endblock %}
+{% block og_title %}CV Templates by Country — QuillCV{% endblock %}
+{% block og_description %}Browse {{ templates|length }} ATS-optimized CV templates across 12 country formats. Australian CVs, US resumes, Japanese rirekisho, and more.{% endblock %}
+{% block twitter_title %}CV Templates by Country — QuillCV{% endblock %}
+{% block twitter_description %}Browse {{ templates|length }} ATS-optimized CV templates across 12 country formats. Australian CVs, US resumes, Japanese rirekisho, and more.{% endblock %}
+
 {% block content %}
 <section class="demo-section">
-    <h2>CV Templates by Country</h2>
-    <p class="hint">Each country has specific formatting conventions. Browse demos to see how templates adapt to regional requirements.</p>
+    <h1>CV Templates by Country</h1>
+    <p class="demo-intro">Every country has unique CV expectations. Australian employers expect 2-3 pages with detailed work history. Japanese companies require a specific rirekisho format with a photo. American hiring managers want a tight 1-page resume. QuillCV handles all of this automatically — pick your target country and template to see a full demo.</p>
+    <p class="demo-free-note">All templates are <strong>free to use</strong>. Sign up and fill one in yourself, or let QuillCV's AI tailor it to your job description and target country.</p>
 
     <div class="country-grid">
         {% for region in regions %}
@@ -65,6 +73,13 @@
             </div>
             {% endfor %}
         </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="demo-cta">
+        <h2>Ready to build your CV?</h2>
+        <p>QuillCV tailors your experience to match the job description and local formatting conventions — automatically.</p>
+        <a href="/signup" class="btn-cta">Start Building Your CV</a>
     </div>
 </section>
 {% endblock %}

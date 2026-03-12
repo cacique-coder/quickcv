@@ -1,0 +1,161 @@
+<!-- Lebenslauf: German tabular CV with photo top-right. -->
+<style>
+    .cv-lebenslauf { font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.5; font-size: 0.85rem; }
+    .cv-lebenslauf .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .cv-lebenslauf .cv-header-text { flex: 1; }
+    .cv-lebenslauf .cv-name { font-size: 1.8rem; font-weight: 700; margin: 0; color: #1a1a1a; }
+    .cv-lebenslauf .cv-title { font-size: 1rem; color: #555; margin-top: 0.2rem; font-weight: 400; }
+    .cv-lebenslauf .cv-photo { width: 100px; height: 130px; object-fit: cover; border: 1px solid #ccc; margin-left: 2rem; flex-shrink: 0; }
+    .cv-lebenslauf h2 { font-size: 0.92rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #333; margin-top: 1.3rem; margin-bottom: 0.6rem; border-bottom: 1.5px solid #333; padding-bottom: 0.2rem; }
+    .cv-lebenslauf .tabular { display: grid; grid-template-columns: 25% 75%; gap: 0; }
+    .cv-lebenslauf .tabular .date-col { font-size: 0.83rem; color: #555; padding: 0.25rem 1rem 0.25rem 0; border-right: 1px solid #ddd; text-align: right; }
+    .cv-lebenslauf .tabular .content-col { padding: 0.25rem 0 0.25rem 1rem; }
+    .cv-lebenslauf .tabular .content-col strong { font-weight: 600; }
+    .cv-lebenslauf .tabular .content-col .sub { font-size: 0.82rem; color: #666; }
+    .cv-lebenslauf .personal-table { display: grid; grid-template-columns: 25% 75%; gap: 0; font-size: 0.85rem; }
+    .cv-lebenslauf .personal-table .label { padding: 0.2rem 1rem 0.2rem 0; border-right: 1px solid #ddd; text-align: right; color: #555; font-weight: 500; }
+    .cv-lebenslauf .personal-table .value { padding: 0.2rem 0 0.2rem 1rem; }
+    .cv-lebenslauf ul { margin: 0.2rem 0 0.3rem 1.2rem; padding: 0; }
+    .cv-lebenslauf li { font-size: 0.84rem; margin-bottom: 0.15rem; }
+    .cv-lebenslauf .lang-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 0.3rem; }
+    .cv-lebenslauf .lang-table td { padding: 0.2rem 0.5rem; }
+    .cv-lebenslauf .signature { margin-top: 2.5rem; font-size: 0.85rem; color: #555; }
+    .cv-lebenslauf .signature .line { border-top: 1px solid #333; width: 250px; margin-top: 2rem; padding-top: 0.3rem; }
+</style>
+<div class="cv-lebenslauf">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+        </div>
+        <img src="{{ photo_url | default('/static/photo-placeholder.svg') }}"
+             alt="Bewerbungsfoto"
+             class="cv-photo">
+    </div>
+
+    <h2>Persönliche Daten</h2>
+    <div class="personal-table">
+        {% if location %}
+        <div class="label">Adresse</div>
+        <div class="value">{{ location }}</div>
+        {% endif %}
+        {% if phone %}
+        <div class="label">Telefon</div>
+        <div class="value">{{ phone }}</div>
+        {% endif %}
+        {% if email %}
+        <div class="label">E-Mail</div>
+        <div class="value">{{ email }}</div>
+        {% endif %}
+        {% if dob %}
+        <div class="label">Geburtsdatum</div>
+        <div class="value">{{ dob }}</div>
+        {% endif %}
+        {% if nationality %}
+        <div class="label">Staatsangehörigkeit</div>
+        <div class="value">{{ nationality }}</div>
+        {% endif %}
+        {% if marital_status %}
+        <div class="label">Familienstand</div>
+        <div class="value">{{ marital_status }}</div>
+        {% endif %}
+        {% if linkedin %}
+        <div class="label">LinkedIn</div>
+        <div class="value">{{ linkedin }}</div>
+        {% endif %}
+        {% if driving_license %}
+        <div class="label">Führerschein</div>
+        <div class="value">{{ driving_license }}</div>
+        {% endif %}
+    </div>
+
+    {% if experience %}
+    <h2>Berufserfahrung</h2>
+    {% for job in experience %}
+    <div class="tabular" style="margin-bottom: 0.7rem;">
+        <div class="date-col">{{ job.date }}</div>
+        <div class="content-col">
+            <strong>{{ job.title }}</strong><br>
+            <span class="sub">{{ job.company }}{% if job.location %}, {{ job.location }}{% endif %}</span>
+            {% if job.bullets %}
+            <ul>
+                {% for bullet in job.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if education %}
+    <h2>Ausbildung</h2>
+    {% for edu in education %}
+    <div class="tabular" style="margin-bottom: 0.5rem;">
+        <div class="date-col">{{ edu.date }}</div>
+        <div class="content-col">
+            <strong>{{ edu.degree }}</strong><br>
+            <span class="sub">{{ edu.institution }}</span>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills_grouped or skills %}
+    <h2>Kenntnisse</h2>
+    {% if skills_grouped %}
+        {% for group in skills_grouped %}
+        <div class="tabular" style="margin-bottom: 0.3rem;">
+            <div class="date-col" style="font-weight: 500; color: #333;">{{ group.category }}</div>
+            <div class="content-col">{{ group['items'] | join(', ') }}</div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="font-size: 0.85rem;">{{ skills | join(' · ') }}</p>
+    {% endif %}
+    {% endif %}
+
+    {% if languages_detailed or languages %}
+    <h2>Sprachen</h2>
+    {% if languages_detailed %}
+        {% for lang in languages_detailed %}
+        <div class="tabular" style="margin-bottom: 0.2rem;">
+            <div class="date-col" style="font-weight: 500; color: #333;">{{ lang.language }}</div>
+            <div class="content-col">{% if lang.level %}{{ lang.level }}{% else %}Hören: {{ lang.listening }}, Lesen: {{ lang.reading }}, Schreiben: {{ lang.writing }}, Sprechen: {{ lang.speaking }}{% endif %}</div>
+        </div>
+        {% endfor %}
+    {% elif languages %}
+        {% for lang in languages %}
+        <p style="font-size: 0.85rem; margin: 0.15rem 0;">{{ lang }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Zertifikate</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if projects %}
+    <h2>Projekte</h2>
+    {% for proj in projects %}
+    <div class="tabular" style="margin-bottom: 0.5rem;">
+        <div class="date-col"></div>
+        <div class="content-col">
+            <strong>{{ proj.name }}</strong>{% if proj.url %} <span class="sub">— {{ proj.url }}</span>{% endif %}<br>
+            <span class="sub">{{ proj.description }}</span>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="signature">
+        <p>{{ location }}, den _______________</p>
+        <div class="line">{{ name }}</div>
+    </div>
+</div>

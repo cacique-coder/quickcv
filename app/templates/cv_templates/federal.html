@@ -1,0 +1,138 @@
+<!-- Federal: Formal government format, minimal color, very conservative. -->
+<style>
+    .cv-federal { font-family: 'Times New Roman', Georgia, serif; color: #111827; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+    .cv-federal .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 2px solid #0c1445; padding-bottom: 1rem; }
+    .cv-federal .cv-header-text { flex: 1; }
+    .cv-federal .cv-name { font-size: 1.7rem; font-weight: 700; margin: 0; color: #0c1445; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cv-federal .cv-title { font-size: 0.95rem; color: #374151; margin-top: 0.2rem; font-weight: 400; }
+    .cv-federal .cv-gs-grade { font-size: 0.88rem; color: #0c1445; font-weight: 600; margin-top: 0.15rem; }
+    .cv-federal .cv-contact { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.82rem; color: #555; margin-top: 0.5rem; }
+    .cv-federal .cv-photo { width: 90px; height: 115px; object-fit: cover; border: 2px solid #1f2937; border-radius: 2px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-federal .cv-personal-details { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+    .cv-federal .cv-languages { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+    .cv-federal h2 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #0c1445; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid #0c1445; padding-bottom: 0.2rem; }
+    .cv-federal h3 { font-size: 0.9rem; margin: 0; font-weight: 600; }
+    .cv-federal .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-federal .job-company { font-size: 0.87rem; color: #374151; font-weight: 500; }
+    .cv-federal .job-date { font-size: 0.82rem; color: #6b7280; }
+    .cv-federal ul { margin: 0.2rem 0 0.7rem 1.2rem; padding: 0; }
+    .cv-federal li { font-size: 0.87rem; margin-bottom: 0.25rem; }
+    .cv-federal .clearances { list-style: none; margin-left: 0; padding: 0; }
+    .cv-federal .clearances li { background: #f3f4f6; border-left: 3px solid #0c1445; padding: 0.35rem 0.8rem; margin-bottom: 0.3rem; font-size: 0.87rem; font-weight: 500; }
+    .cv-federal .ksa-entry { margin-bottom: 0.8rem; }
+    .cv-federal .ksa-factor { font-weight: 700; font-size: 0.88rem; color: #0c1445; }
+    .cv-federal .ksa-description { font-size: 0.86rem; color: #374151; margin-top: 0.15rem; line-height: 1.55; }
+    .cv-federal .experience-detail { margin-bottom: 1.2rem; }
+    .cv-federal .experience-detail .hours-grade { font-size: 0.82rem; color: #6b7280; margin-top: 0.1rem; }
+</style>
+<div class="cv-federal">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            {% if gs_grade %}<p class="cv-gs-grade">{{ gs_grade }}</p>{% endif %}
+            <div class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </div>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2>Professional Summary</h2>
+    <p style="font-size: 0.87rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if security_clearances %}
+    <h2>Security Clearances</h2>
+    <ul class="clearances">
+        {% for clearance in security_clearances %}
+        <li>{{ clearance }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if ksas %}
+    <h2>Knowledge, Skills &amp; Abilities (KSAs)</h2>
+    {% for ksa in ksas %}
+    <div class="ksa-entry">
+        <div class="ksa-factor">{{ ksa.factor }}</div>
+        <div class="ksa-description">{{ ksa.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if experience %}
+    <h2>Professional Experience</h2>
+    {% for job in experience %}
+    <div class="experience-detail">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications &amp; Training</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Skills</h2>
+    {% for group in skills_grouped %}
+    <p style="font-size: 0.87rem;"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+    {% endfor %}
+    {% elif skills %}
+    <h2>Skills</h2>
+    <p style="font-size: 0.87rem;">{{ skills | join(' · ') }}</p>
+    {% endif %}
+
+    {% if key_achievements %}
+    <h2>Key Achievements</h2>
+    <ul>
+        {% for ach in key_achievements %}
+        <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.87rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

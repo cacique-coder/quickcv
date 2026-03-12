@@ -1,0 +1,10 @@
+{# Professional licenses/registrations list.
+   Expects: licenses (list of strings).
+#}
+{% if licenses %}
+<ul class="cv-licenses">
+    {% for license in licenses %}
+    <li>{{ license }}</li>
+    {% endfor %}
+</ul>
+{% endif %}

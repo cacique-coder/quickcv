@@ -1,119 +1,358 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuillCV — ATS-Optimized CVs That Get You Interviews</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-</head>
-<body>
-    <header class="landing-header">
-        <nav class="landing-nav">
-            <a href="/" class="landing-logo">
-                <svg class="brand-quill" viewBox="0 0 80 60" width="28" height="21" aria-hidden="true">
-                    <path d="M40 2 L68 54 C62 58, 54 56, 48 46 L40 30 L32 46 C26 56, 18 58, 12 54 Z"
-                          fill="var(--accent)"/>
-                </svg>
-                QuillCV
-            </a>
-            <div class="landing-nav-links">
-                <a href="/pricing" class="nav-link">Pricing</a>
-                <a href="/demo" class="nav-link">Templates</a>
-                <a href="/login" class="nav-link">Sign In</a>
-                <a href="/signup" class="btn-cta btn-cta--small">Get Started</a>
-            </div>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <main class="landing">
-        <!-- Hero -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    CVs that pass ATS filters<br>
-                    <span class="hero-accent">and land interviews</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Paste a job description, upload your CV, and get an ATS-optimized version
-                    tailored to the role — formatted for your target country.
+{% block title %}QuillCV — ATS-Optimized CVs That Get You Interviews{% endblock %}
+
+{% block meta_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats, keyword matching, and AI-powered quality review. Alpha pricing: $29 for 50 generations.{% endblock %}
+
+{% block og_title %}QuillCV — ATS-Optimized CVs That Get You Interviews{% endblock %}
+{% block og_description %}Paste a job description, upload your CV, and get an ATS-optimized version tailored to the role — formatted for your target country.{% endblock %}
+
+{% block twitter_title %}QuillCV — ATS-Optimized CVs That Get You Interviews{% endblock %}
+{% block twitter_description %}Paste a job description, upload your CV, and get an ATS-optimized version tailored to the role — formatted for your target country.{% endblock %}
+
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "QuillCV",
+    "url": "https://quillcv.com",
+    "description": "ATS-optimized CV builder that tailors your CV to job descriptions with 12 country formats",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+        "@type": "Offer",
+        "price": "29",
+        "priceCurrency": "USD",
+        "description": "Alpha pack — 50 CV generations"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="landing">
+    <!-- Hero -->
+    <section class="hero">
+        <!-- Floating doodles around hero -->
+        <svg class="hero-doodle hero-doodle--star-1" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2 L14 9 L21 9 L15.5 13.5 L17.5 21 L12 16.5 L6.5 21 L8.5 13.5 L3 9 L10 9 Z" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" style="stroke-dasharray: 60; stroke-dashoffset: 0;"/>
+        </svg>
+        <svg class="hero-doodle hero-doodle--star-2" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3 L13.5 10 L20 10 L15 14 L17 21 L12 17 L7 21 L9 14 L4 10 L10.5 10 Z" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <svg class="hero-doodle hero-doodle--arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M5 35 C10 25, 15 15, 35 8" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M28 5 L36 8 L30 14" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <svg class="hero-doodle hero-doodle--exclaim" width="14" height="30" viewBox="0 0 14 30" fill="none" aria-hidden="true">
+            <path d="M7 2 C6 4, 8 8, 7 18" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <circle cx="7" cy="25" r="2" fill="#fbbf24"/>
+        </svg>
+
+        <div class="hero-content">
+            <h1 class="hero-title">
+                CVs that pass <abbr title="Applicant Tracking System">ATS</abbr> filters<br>
+                <span class="hero-accent">
+                    and land interviews
+                    <!-- Hand-drawn squiggly underline -->
+                    <svg class="sketch-underline" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M0 8 C25 2, 50 12, 75 6 S125 10, 150 5 S200 11, 225 4 S275 9, 300 6" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+                    </svg>
+                </span>
+            </h1>
+            <p class="hero-subtitle">
+                Paste a job description, upload your CV, and get a version optimized for
+                Applicant Tracking Systems — tailored to the role and formatted for your target country.
+            </p>
+            <p class="hero-tagline handwritten">Crafted by hand, powered by AI</p>
+            <div class="hero-cta">
+                <a href="/signup" class="btn-cta">
+                    Start Building Your CV
+                    <!-- Small arrow doodle next to CTA -->
+                    <svg class="btn-arrow-doodle" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+                        <path d="M2 7 C6 7, 10 7, 14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M12 3 L17 7 L12 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                </a>
+                <p class="hero-note">
+                    {% if spots_remaining > 0 %}
+                        <span class="handwritten hero-note-alpha">Alpha pricing!</span>
+                        <strong>$29 for 50 generations</strong> — {{ spots_remaining }} spots left
+                    {% else %}
+                        Join the waitlist for post-alpha access
+                    {% endif %}
                 </p>
-                <div class="hero-cta">
-                    <a href="/signup" class="btn-cta">Start Building Your CV</a>
-                    <p class="hero-note">
-                        {% if spots_remaining > 0 %}
-                            Alpha pricing: <strong>$29 for 50 generations</strong> — {{ spots_remaining }} spots left
-                        {% else %}
-                            Join the waitlist for post-alpha access
-                        {% endif %}
-                    </p>
-                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- How it works -->
-        <section class="how-it-works">
-            <h2 class="section-title">How it works</h2>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>Paste the job description</h3>
-                    <p>We extract key skills, requirements, and keywords the ATS will scan for.</p>
+    <!-- Wavy section divider -->
+    <svg class="section-divider" viewBox="0 0 1200 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 10 C50 4, 100 16, 150 10 S250 4, 300 10 S400 16, 450 10 S550 4, 600 10 S700 16, 750 10 S850 4, 900 10 S1000 16, 1050 10 S1150 4, 1200 10" stroke="var(--border)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- How it works -->
+    <section class="how-it-works">
+        <h2 class="section-title">
+            How it works
+            <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 4 C20 1, 40 7, 60 3 S100 6, 120 3 S160 7, 180 2 S195 5, 200 4" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+        </h2>
+        <div class="steps-grid">
+            <div class="step-card sticky-note sticky-note--yellow">
+                <div class="step-number-doodle">
+                    <!-- Hand-drawn circle with number -->
+                    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+                        <path d="M26 4 C40 3, 49 12, 48 26 C49 40, 38 49, 26 48 C12 49, 3 40, 4 26 C3 12, 14 3, 26 4" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    <span>1</span>
                 </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>Upload your CV</h3>
-                    <p>PDF, DOCX, or plain text. We parse your experience, skills, and achievements.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>Get your tailored CV</h3>
-                    <p>AI rewrites your CV to match the job — download as PDF or raw HTML. Includes ATS scoring and quality review.</p>
-                </div>
+                <h3>Paste the job description</h3>
+                <p>We extract key skills, requirements, and keywords the ATS will scan for.</p>
             </div>
-        </section>
-
-        <!-- Features -->
-        <section class="features">
-            <h2 class="section-title">Built for real-world job applications</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>ATS Optimization</h3>
-                    <p>Your CV is structured and worded to pass Applicant Tracking Systems — not just look good to humans.</p>
+            <div class="step-card sticky-note sticky-note--blue">
+                <div class="step-number-doodle">
+                    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+                        <path d="M26 3 C42 4, 50 14, 49 26 C50 42, 38 50, 26 49 C10 50, 2 38, 3 26 C2 10, 12 2, 26 3" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    <span>2</span>
                 </div>
-                <div class="feature-card">
-                    <h3>Keyword Matching</h3>
-                    <p>We extract keywords from the job description and ensure they appear naturally in your CV.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>12 Country Formats</h3>
-                    <p>AU, US, UK, CA, NZ, DE, FR, NL, IN, BR, AE, JP — each with the right conventions for that market.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Quality Review</h3>
-                    <p>AI flags weak certifications, irrelevant skills, and poor phrasing — with options to fix or override.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>6 Professional Templates</h3>
-                    <p>Clean, ATS-friendly designs. Download as PDF or grab the raw HTML to tweak yourself.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Credits Never Expire</h3>
-                    <p>No subscriptions during alpha. Buy credits once, use them whenever you need.</p>
-                </div>
+                <h3>Upload your CV</h3>
+                <p>PDF, DOCX, or plain text. We parse your experience, skills, and achievements.</p>
             </div>
-        </section>
+            <div class="step-card sticky-note sticky-note--green">
+                <div class="step-number-doodle">
+                    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+                        <path d="M26 5 C38 2, 50 10, 49 26 C48 40, 40 50, 26 49 C14 48, 4 42, 3 26 C4 14, 10 4, 26 5" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    <span>3</span>
+                </div>
+                <h3>Get your tailored CV</h3>
+                <p>AI rewrites your CV to match the job — download as PDF or raw HTML. Includes ATS scoring and quality review.</p>
+            </div>
+        </div>
+        <!-- Hand-drawn connecting arrows between steps (desktop only) -->
+        <div class="step-arrows" aria-hidden="true">
+            <svg class="step-arrow step-arrow--1" width="60" height="30" viewBox="0 0 60 30" fill="none">
+                <path d="M5 15 C15 5, 30 25, 45 12" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+                <path d="M40 7 L47 12 L40 18" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
+            </svg>
+            <svg class="step-arrow step-arrow--2" width="60" height="30" viewBox="0 0 60 30" fill="none">
+                <path d="M5 15 C15 25, 30 5, 45 18" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+                <path d="M40 13 L47 18 L40 24" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
+            </svg>
+        </div>
+    </section>
 
-        <!-- CTA -->
-        <section class="final-cta">
-            <h2>Stop getting filtered out by ATS</h2>
-            <p>Join {{ spots_remaining }} remaining alpha spots and get 50 CV generations for $29.</p>
-            <a href="/signup" class="btn-cta">Create Your Account</a>
-        </section>
-    </main>
+    <!-- Wavy section divider -->
+    <svg class="section-divider" viewBox="0 0 1200 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 10 C50 16, 100 4, 150 10 S250 16, 300 10 S400 4, 450 10 S550 16, 600 10 S700 4, 750 10 S850 16, 900 10 S1000 4, 1050 10 S1150 16, 1200 10" stroke="var(--border)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
 
-    <footer class="landing-footer">
-        <p>&copy; 2026 QuillCV. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+    <!-- Features -->
+    <section class="features">
+        <h2 class="section-title">
+            Built for real-world job applications
+            <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 5 C30 1, 60 7, 90 4 S140 8, 170 3 S195 6, 200 4" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+        </h2>
+        <div class="features-grid">
+            <div class="feature-card sticky-note sticky-note--pink">
+                <!-- Doodle icon: target -->
+                <svg class="feature-doodle" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                    <circle cx="14" cy="14" r="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+                    <circle cx="14" cy="14" r="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="14" cy="14" r="1.5" fill="currentColor"/>
+                </svg>
+                <h3>ATS Optimization</h3>
+                <p>Your CV is structured and worded to pass Applicant Tracking Systems — not just look good to humans.</p>
+            </div>
+            <div class="feature-card sticky-note sticky-note--yellow">
+                <!-- Doodle icon: key -->
+                <svg class="feature-doodle" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                    <circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M15 15 L24 24 M21 21 L24 18 M19 19 L22 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <h3>Keyword Matching</h3>
+                <p>We extract keywords from the job description and ensure they appear naturally in your CV.</p>
+            </div>
+            <div class="feature-card sticky-note sticky-note--blue">
+                <!-- Doodle icon: globe -->
+                <svg class="feature-doodle" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                    <circle cx="14" cy="14" r="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M3 14 L25 14 M14 3 C10 8, 10 20, 14 25 M14 3 C18 8, 18 20, 14 25" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+                </svg>
+                <h3>12 Country Formats</h3>
+                <p>AU, US, UK, CA, NZ, DE, FR, NL, IN, BR, AE, JP — each with the right conventions for that market.</p>
+            </div>
+            <div class="feature-card sticky-note sticky-note--green">
+                <!-- Doodle icon: checkmark shield -->
+                <svg class="feature-doodle" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                    <path d="M14 3 L24 8 L24 16 C24 22, 14 26, 14 26 C14 26, 4 22, 4 16 L4 8 Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M9 14 L13 18 L19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+                <h3>Quality Review</h3>
+                <p>AI flags weak certifications, irrelevant skills, and poor phrasing — with options to fix or override.</p>
+            </div>
+            <div class="feature-card sticky-note sticky-note--lavender">
+                <!-- Doodle icon: document/template -->
+                <svg class="feature-doodle" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                    <path d="M6 4 L18 4 L22 8 L22 24 L6 24 Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M18 4 L18 8 L22 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M10 13 L18 13 M10 17 L16 17" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+                <h3>All Free Templates</h3>
+                <p>All templates are free to use. Sign up, pick a template, and fill it in yourself — or let AI tailor one to your job description.</p>
+            </div>
+            <div class="feature-card sticky-note sticky-note--peach">
+                <!-- Doodle icon: infinity/no-expire -->
+                <svg class="feature-doodle" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                    <path d="M8 14 C8 10, 12 8, 14 12 C16 16, 20 10, 20 14 C20 18, 16 20, 14 16 C12 12, 8 18, 8 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </svg>
+                <h3>Credits Never Expire</h3>
+                <p>No subscriptions during alpha. Buy credits once, use them whenever you need.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wavy section divider -->
+    <svg class="section-divider" viewBox="0 0 1200 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 10 C50 4, 100 16, 150 10 S250 4, 300 10 S400 16, 450 10 S550 4, 600 10 S700 16, 750 10 S850 4, 900 10 S1000 16, 1050 10 S1150 4, 1200 10" stroke="var(--border)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Who is this for -->
+    <section class="who-section">
+        <h2 class="section-title">
+            Built for people who are serious about landing the job
+            <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 4 C25 8, 50 1, 75 5 S125 2, 150 6 S180 1, 200 4" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+        </h2>
+        <div class="who-grid">
+            <div class="who-card">
+                <span class="handwritten who-card-label">for the global citizen</span>
+                <h3>International job seekers</h3>
+                <p>Applying in Australia? The US? Japan? Each country has different CV conventions — page length, photo requirements, date formats, even what personal details to include. QuillCV handles all 12 country formats automatically.</p>
+            </div>
+            <div class="who-card">
+                <span class="handwritten who-card-label">for the bold move</span>
+                <h3>Career changers</h3>
+                <p>Switching industries means reframing your experience. QuillCV's AI rewrites your achievements to match the language and keywords your target role's ATS is scanning for.</p>
+            </div>
+            <div class="who-card">
+                <span class="handwritten who-card-label">for the builders</span>
+                <h3>Tech professionals</h3>
+                <p>Tech roles demand specific keyword matching — frameworks, languages, certifications. QuillCV extracts these from the job description and weaves them naturally into your CV.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wavy section divider -->
+    <svg class="section-divider" viewBox="0 0 1200 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 10 C50 16, 100 4, 150 10 S250 16, 300 10 S400 4, 450 10 S550 16, 600 10 S700 4, 750 10 S850 16, 900 10 S1000 4, 1050 10 S1150 16, 1200 10" stroke="var(--border)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- How we're different -->
+    <section class="comparison-section">
+        <h2 class="section-title">
+            Not another generic resume builder
+            <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 6 C20 2, 45 7, 70 3 S110 8, 140 4 S175 7, 200 3" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+        </h2>
+        <div class="comparison-table-wrap notebook-paper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Generic builders</th>
+                        <th class="comparison-highlight">QuillCV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tailored to job description</td>
+                        <td>
+                            <!-- Hand-drawn X -->
+                            <svg class="hand-x" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/></svg>
+                            One CV for all jobs
+                        </td>
+                        <td class="comparison-highlight">
+                            <!-- Hand-drawn checkmark -->
+                            <svg class="hand-check" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            AI rewrites per job posting
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ATS keyword matching</td>
+                        <td>
+                            <svg class="hand-x" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/></svg>
+                            Manual or basic
+                        </td>
+                        <td class="comparison-highlight">
+                            <svg class="hand-check" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Automatic extraction &amp; scoring
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Country-specific formatting</td>
+                        <td>
+                            <svg class="hand-x" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/></svg>
+                            US-only templates
+                        </td>
+                        <td class="comparison-highlight">
+                            <svg class="hand-check" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            12 countries with local conventions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Quality review</td>
+                        <td>
+                            <svg class="hand-x" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/></svg>
+                            None
+                        </td>
+                        <td class="comparison-highlight">
+                            <svg class="hand-check" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            AI flags weak points with fix suggestions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pricing</td>
+                        <td>
+                            <svg class="hand-x" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/></svg>
+                            $15–30/month subscription
+                        </td>
+                        <td class="comparison-highlight">
+                            <svg class="hand-check" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            $29 one-time, credits never expire
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Wavy section divider -->
+    <svg class="section-divider" viewBox="0 0 1200 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 10 C50 4, 100 16, 150 10 S250 4, 300 10 S400 16, 450 10 S550 4, 600 10 S700 16, 750 10 S850 4, 900 10 S1000 16, 1050 10 S1150 4, 1200 10" stroke="var(--border)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- CTA -->
+    <section class="final-cta">
+        <h2>Stop getting filtered out by ATS</h2>
+        <p>Join {{ spots_remaining }} remaining alpha spots and get 50 CV generations for $29.</p>
+        <!-- Hand-drawn arrow pointing to CTA -->
+        <div class="cta-annotation" aria-hidden="true">
+            <svg class="cta-arrow" width="80" height="60" viewBox="0 0 80 60" fill="none">
+                <path d="M10 5 C20 15, 35 40, 55 45 C60 46, 65 44, 70 40" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <path d="M63 42 L71 38 L68 47" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span class="handwritten cta-annotation-text">that's $0.58 each!</span>
+        </div>
+        <a href="/signup" class="btn-cta">Create Your Account</a>
+    </section>
+</div>
+{% endblock %}

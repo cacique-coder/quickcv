@@ -1,0 +1,25 @@
+{# Revenue/quota achievement table.
+   Expects: quota_metrics (list of {period, target, achieved, percentage}).
+#}
+{% if quota_metrics %}
+<table class="sales-metrics">
+    <thead>
+        <tr>
+            <th>Period</th>
+            <th>Target</th>
+            <th>Achieved</th>
+            <th>%</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in quota_metrics %}
+        <tr>
+            <td>{{ m.period }}</td>
+            <td>{{ m.target }}</td>
+            <td>{{ m.achieved }}</td>
+            <td class="{% if m.percentage | int >= 100 %}metric-exceed{% elif m.percentage | int >= 80 %}metric-meet{% else %}metric-below{% endif %}">{{ m.percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

@@ -1,0 +1,27 @@
+{# CEFR self-assessment table.
+   Expects: languages_detailed (list of {language, listening, reading, writing, speaking} with CEFR levels A1-C2).
+#}
+{% if languages_detailed %}
+<table class="language-grid">
+    <thead>
+        <tr>
+            <th>Language</th>
+            <th>Listening</th>
+            <th>Reading</th>
+            <th>Writing</th>
+            <th>Speaking</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lang in languages_detailed %}
+        <tr>
+            <td class="lang-name">{{ lang.language }}</td>
+            <td>{{ lang.listening }}</td>
+            <td>{{ lang.reading }}</td>
+            <td>{{ lang.writing }}</td>
+            <td>{{ lang.speaking }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

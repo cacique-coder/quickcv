@@ -1,0 +1,7 @@
+<nav class="app-nav">
+    <a href="/app" class="app-nav-link {% if request.url.path == '/app' %}app-nav-link--active{% endif %}">Generate CV</a>
+    <a href="/builder" class="app-nav-link {% if request.url.path == '/builder' %}app-nav-link--active{% endif %}">CV Builder</a>
+    <a href="/my-cvs" class="app-nav-link {% if request.url.path == '/my-cvs' %}app-nav-link--active{% endif %}">My CVs</a>
+    <a href="/pricing" class="app-nav-link {% if request.url.path == '/pricing' %}app-nav-link--active{% endif %}">Buy Credits</a>
+    <span class="app-nav-credits">{{ balance|default(0) }} credits</span>
+</nav>

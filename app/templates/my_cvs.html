@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block app_nav %}{% include "partials/app_nav.html" %}{% endblock %}
+
+{% block title %}My CVs — QuillCV{% endblock %}
+
+{% block content %}
+<div class="my-cvs-page">
+    <div class="my-cvs-header">
+        <h2>My CVs</h2>
+        <p class="hint">All your saved CVs in one place. Preview, download, or re-edit.</p>
+    </div>
+
+    {% if saved_cvs %}
+    <div class="my-cvs-grid">
+        {% for cv in saved_cvs %}
+        <div class="cv-card">
+            <div class="cv-card-header">
+                <h3 class="cv-card-label">{{ cv.label or "Untitled CV" }}</h3>
+                {% if cv.job_title %}
+                <span class="cv-card-job">{{ cv.job_title }}</span>
+                {% endif %}
+            </div>
+            <div class="cv-card-meta">
+                <span class="cv-card-source">{{ "AI Generated" if cv.source == "ai" else "Manual" }}</span>
+                <span class="cv-card-template">{{ cv.template_id | title }}</span>
+                <span class="cv-card-region">{{ cv.region }}</span>
+                <span class="cv-card-date">{{ cv.created_at.strftime("%d %b %Y") }}</span>
+            </div>
+            <div class="cv-card-actions">
+                <a href="/my-cvs/{{ cv.id }}/preview" class="btn-secondary" target="_blank">Preview</a>
+                <a href="/my-cvs/{{ cv.id }}/download" class="btn-primary">Download PDF</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="my-cvs-empty">
+        <p>You haven't saved any CVs yet.</p>
+        <div class="my-cvs-empty-actions">
+            <a href="/builder" class="btn-primary">Build a CV</a>
+            <a href="/app" class="btn-secondary">Generate with AI</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

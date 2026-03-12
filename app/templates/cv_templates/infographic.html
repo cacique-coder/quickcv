@@ -1,0 +1,149 @@
+<!-- Infographic: Visual skill bars, icon-style headers, modern grid layout. -->
+<style>
+    .cv-infographic { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; color: #2d3748; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.5; }
+    .cv-infographic .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid #6b46c1; }
+    .cv-infographic .cv-header-text { flex: 1; }
+    .cv-infographic .cv-name { font-size: 1.9rem; font-weight: 800; color: #2d3748; margin: 0; }
+    .cv-infographic .cv-title { font-size: 1rem; color: #6b46c1; margin-top: 0.2rem; font-weight: 500; }
+    .cv-infographic .cv-contact { display: flex; flex-wrap: wrap; gap: 0.4rem 1.3rem; font-size: 0.83rem; color: #4a5568; margin-top: 0.5rem; }
+    .cv-infographic .cv-photo { width: 92px; height: 118px; object-fit: cover; border-radius: 6px; border: 3px solid #6b46c1; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-infographic .cv-personal-details { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.82rem; color: #718096; margin-top: 0.4rem; }
+    .cv-infographic .cv-languages { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.82rem; color: #718096; margin-top: 0.2rem; }
+    .cv-infographic h2 { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6b46c1; margin-top: 1.5rem; margin-bottom: 0.6rem; padding-bottom: 0.3rem; border-bottom: 2px solid #e9d8fd; }
+    .cv-infographic h2::before { margin-right: 0.4rem; }
+    .cv-infographic h2.sec-summary::before { content: "//"; }
+    .cv-infographic h2.sec-skills::before { content: "::"; }
+    .cv-infographic h2.sec-experience::before { content: ">>"; }
+    .cv-infographic h2.sec-education::before { content: "[]"; }
+    .cv-infographic h2.sec-certs::before { content: "++"; }
+    .cv-infographic h2.sec-projects::before { content: "<>"; }
+    .cv-infographic h3 { font-size: 0.93rem; margin: 0; font-weight: 600; color: #1a202c; }
+    .cv-infographic .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2rem; }
+    .cv-infographic .job-meta { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+    .cv-infographic .job-company { font-size: 0.87rem; color: #6b46c1; font-weight: 500; }
+    .cv-infographic .job-date { font-size: 0.8rem; color: #a0aec0; }
+    .cv-infographic ul { margin: 0.3rem 0 0.7rem 1.1rem; padding: 0; }
+    .cv-infographic li { font-size: 0.87rem; margin-bottom: 0.2rem; }
+    /* Skill bars (used by _skill_bars.html partial) */
+    .cv-infographic .skill-bars { margin-bottom: 0.5rem; }
+    .cv-infographic .skill-bar-row { display: flex; align-items: center; margin-bottom: 0.4rem; }
+    .cv-infographic .skill-bar-label { font-size: 0.83rem; font-weight: 500; width: 130px; flex-shrink: 0; color: #2d3748; }
+    .cv-infographic .skill-bar-track { flex: 1; height: 8px; background: #e9d8fd; border-radius: 4px; overflow: hidden; }
+    .cv-infographic .skill-bar-fill { height: 100%; background: #6b46c1; border-radius: 4px; }
+    /* Flat skills fallback */
+    .cv-infographic .skills-grid { display: flex; flex-wrap: wrap; gap: 0.35rem; list-style: none; margin-left: 0; }
+    .cv-infographic .skills-grid li { background: #faf5ff; color: #6b46c1; padding: 0.2rem 0.65rem; border-radius: 3px; font-size: 0.82rem; font-weight: 500; border: 1px solid #e9d8fd; }
+</style>
+<div class="cv-infographic">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            <div class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+                {% if github %}<span>{{ github }}</span>{% endif %}
+                {% if portfolio %}<span>{{ portfolio }}</span>{% endif %}
+            </div>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2 class="sec-summary">Profile</h2>
+    <p style="font-size: 0.9rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if skills_rated %}
+    <h2 class="sec-skills">Skills</h2>
+    {% include "cv_templates/_skill_bars.html" %}
+    {% elif skills_grouped %}
+    <h2 class="sec-skills">Skills</h2>
+    <div class="two-col">
+        {% for group in skills_grouped %}
+        <div>
+            <p style="font-size: 0.82rem; font-weight: 700; color: #6b46c1; margin: 0 0 0.15rem;">{{ group.category }}</p>
+            <p style="font-size: 0.83rem; color: #444; margin: 0;">{{ group['items'] | join(', ') }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif skills %}
+    <h2 class="sec-skills">Skills</h2>
+    <ul class="skills-grid">
+        {% for skill in skills %}
+        <li>{{ skill }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if experience %}
+    <h2 class="sec-experience">Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 1rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if projects %}
+    <h2 class="sec-projects">Projects</h2>
+    <div class="two-col">
+        {% for proj in projects %}
+        <div>
+            <h3>{{ proj.name }}</h3>
+            {% if proj.description %}<p style="font-size: 0.84rem; color: #555; margin: 0.1rem 0;">{{ proj.description }}</p>{% endif %}
+            {% if proj.tech %}
+            <p style="font-size: 0.8rem; color: #6b46c1; margin: 0.1rem 0;">{{ proj.tech | join(', ') }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if education %}
+    <h2 class="sec-education">Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ edu.degree }}</h3>
+                <span class="job-company">{{ edu.institution }}</span>
+            </div>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2 class="sec-certs">Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.87rem; margin-bottom: 0.4rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

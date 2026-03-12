@@ -1,0 +1,135 @@
+<!-- Healthcare: Clean professional medical layout, teal accent. -->
+<style>
+    .cv-healthcare { font-family: 'Calibri', 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.55; }
+    .cv-healthcare .cv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid #0d9488; }
+    .cv-healthcare .cv-header-text { flex: 1; }
+    .cv-healthcare .cv-name { font-size: 1.8rem; font-weight: 700; margin: 0; color: #0d9488; }
+    .cv-healthcare .cv-title { font-size: 0.95rem; color: #555; margin-top: 0.2rem; font-weight: 500; }
+    .cv-healthcare .cv-contact { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.82rem; color: #555; margin-top: 0.5rem; }
+    .cv-healthcare .cv-photo { width: 90px; height: 115px; object-fit: cover; border: 2px solid #0d9488; border-radius: 4px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-healthcare .cv-personal-details { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+    .cv-healthcare .cv-languages { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+    .cv-healthcare h2 { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #0d9488; margin-top: 1.4rem; margin-bottom: 0.5rem; border-bottom: 2px solid #ccfbf1; padding-bottom: 0.25rem; }
+    .cv-healthcare h3 { font-size: 0.92rem; margin: 0; font-weight: 600; }
+    .cv-healthcare .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-healthcare .job-company { font-size: 0.88rem; color: #0d9488; font-weight: 500; }
+    .cv-healthcare .job-date { font-size: 0.82rem; color: #888; }
+    .cv-healthcare ul { margin: 0.2rem 0 0.7rem 1.2rem; padding: 0; }
+    .cv-healthcare li { font-size: 0.87rem; margin-bottom: 0.2rem; }
+    .cv-healthcare .cv-licenses { list-style: none; margin-left: 0; padding: 0; }
+    .cv-healthcare .cv-licenses li { background: #f0fdfa; border-left: 3px solid #0d9488; padding: 0.4rem 0.8rem; margin-bottom: 0.3rem; font-size: 0.87rem; }
+    .cv-healthcare .clinical-entry { margin-bottom: 0.8rem; }
+    .cv-healthcare .clinical-entry p { font-size: 0.85rem; color: #444; margin: 0.15rem 0; }
+</style>
+<div class="cv-healthcare">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+            <div class="cv-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if location %}<span>{{ location }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+            </div>
+            {% include "cv_templates/_personal_details.html" %}
+        </div>
+        {% include "cv_templates/_photo.html" %}
+    </div>
+
+    {% if summary %}
+    <h2>Professional Summary</h2>
+    <p style="font-size: 0.88rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if licenses %}
+    <h2>Licenses &amp; Registrations</h2>
+    {% include "cv_templates/_licenses.html" %}
+    {% endif %}
+
+    {% if clinical_experience %}
+    <h2>Clinical Experience</h2>
+    {% for clin in clinical_experience %}
+    <div class="clinical-entry">
+        <div class="job-meta">
+            <h3>{{ clin.role }}</h3>
+            <span class="job-date">{{ clin.date }}</span>
+        </div>
+        <span class="job-company">{{ clin.facility }}</span>
+        {% if clin.description %}
+        <p>{{ clin.description }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if experience %}
+    <h2>Professional Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 1rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if continuing_education %}
+    <h2>Continuing Education</h2>
+    <ul>
+        {% for ce in continuing_education %}
+        <li>{{ ce }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Skills</h2>
+    {% for group in skills_grouped %}
+    <p style="font-size: 0.87rem;"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+    {% endfor %}
+    {% elif skills %}
+    <h2>Skills</h2>
+    <p style="font-size: 0.87rem;">{{ skills | join(' · ') }}</p>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.88rem; margin-bottom: 0.5rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+</div>

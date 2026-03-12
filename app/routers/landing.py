@@ -1,8 +1,9 @@
 """Landing page and public routes."""
 
+from pathlib import Path
+
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 
 from app.auth.dependencies import get_current_user
 from app.database import async_session
@@ -30,6 +31,7 @@ async def landing(request: Request):
     return templates.TemplateResponse("landing.html", {
         "request": request,
         "spots_remaining": spots_remaining,
+        "page_description": "Build ATS-optimized CVs tailored to job descriptions. 12 country formats, keyword matching, and AI-powered quality review. Alpha pricing: $29 for 50 generations.",
     })
 
 
@@ -46,7 +48,7 @@ async def app_page(request: Request):
     async with async_session() as db:
         balance = await get_balance(db, user.id)
 
-    from app.services.template_registry import list_templates, list_regions
+    from app.services.template_registry import list_regions, list_templates
     return templates.TemplateResponse("index.html", {
         "request": request,
         "user": user,

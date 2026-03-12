@@ -1,30 +1,155 @@
 {% extends "base.html" %}
 
+{% block title %}Pricing — QuillCV | $29 for 50 ATS-Optimized CV Generations{% endblock %}
+{% block meta_description %}QuillCV pricing — $29 for 50 ATS-optimized CV generations during alpha. Credits never expire. No subscriptions required.{% endblock %}
+{% block og_title %}QuillCV Pricing — $29 for 50 CV Generations{% endblock %}
+{% block og_description %}Alpha pricing: $29 for 50 ATS-optimized CV generations. Credits never expire. All 6 templates, 12 country formats included.{% endblock %}
+{% block twitter_title %}QuillCV Pricing — $29 for 50 CV Generations{% endblock %}
+{% block twitter_description %}Alpha pricing: $29 for 50 ATS-optimized CV generations. Credits never expire. All 6 templates, 12 country formats included.{% endblock %}
+
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Do QuillCV credits expire?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Alpha credits never expire. Use them whenever you need, no pressure."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What counts as one CV generation?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "One generation = one tailored CV output. You can review, apply quality fixes, and download the PDF — all for one credit."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I buy more credits later?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Top-up packs are available right now — 10, 25, or 50 credits. Credits never expire."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do QuillCV templates cost anything?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No — all templates are completely free. Sign up, pick one, and fill it in yourself at no cost. Credits are only used when AI generates a tailored CV for you."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I edit my CV manually after generation?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely, and it's free. Once your CV is generated you can edit the content directly — no credits used. Credits only cover the initial AI generation."
+            }
+        }
+    ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
-<section class="pricing-page">
-    <h2 class="section-title">Credit packs, no subscriptions*</h2>
+<section class="pricing-page pricing-page--crafted">
+    <!-- Floating doodles -->
+    <svg class="pricing-doodle pricing-doodle--star-1" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2 L14 9 L21 9 L15.5 13.5 L17.5 21 L12 16.5 L6.5 21 L8.5 13.5 L3 9 L10 9 Z" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <svg class="pricing-doodle pricing-doodle--star-2" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3 L13.5 10 L20 10 L15 14 L17 21 L12 17 L7 21 L9 14 L4 10 L10.5 10 Z" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <svg class="pricing-doodle pricing-doodle--exclaim" width="12" height="26" viewBox="0 0 14 30" fill="none" aria-hidden="true">
+        <path d="M7 2 C6 4, 8 8, 7 18" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <circle cx="7" cy="25" r="2" fill="#fbbf24"/>
+    </svg>
+
+    <h1 class="section-title">
+        Credit packs, no subscriptions*
+        <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 4 C20 1, 40 7, 60 3 S100 6, 120 3 S160 7, 180 2 S195 5, 200 4" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+    </h1>
     <p class="pricing-subtitle">Credits never expire. Use them whenever you need.<br>
     <small style="color: var(--text-muted);">*Business/team subscriptions may be available later.</small></p>
 
+    <div class="pricing-value-anchor pricing-value-anchor--crafted">
+        That's just
+        <span class="value-highlight">
+            <strong>$0.58 per tailored CV</strong>
+            <!-- Hand-drawn circle highlight -->
+            <svg class="value-circle-doodle" viewBox="0 0 200 60" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                <ellipse cx="100" cy="30" rx="95" ry="26" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4" stroke-dasharray="6 4"/>
+            </svg>
+        </span>
+        — less than a cup of coffee for a CV that could land your next role.
+    </div>
+
     <div class="pricing-cards">
-        <div class="pricing-card pricing-card--featured">
-            <div class="pricing-badge">Alpha — Founders Cohort</div>
+        <div class="pricing-card pricing-card--featured sticky-note sticky-note--lavender">
+            <div class="pricing-badge pricing-badge--sketchy">
+                <!-- Sketchy border badge -->
+                Alpha — Founders Cohort
+            </div>
             <div class="pricing-price">
                 <span class="pricing-amount">$29</span>
                 <span class="pricing-period">one-time</span>
+                <!-- Curvy arrow annotation -->
+                <span class="pricing-annotation pricing-annotation--price" aria-hidden="true">
+                    <svg class="annotation-arrow" width="50" height="40" viewBox="0 0 50 40" fill="none">
+                        <path d="M45 5 C40 10, 30 25, 15 30" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                        <path d="M20 25 L13 31 L22 33" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                    <span class="handwritten annotation-text">seriously.</span>
+                </span>
             </div>
-            <ul class="pricing-features">
-                <li>50 CV generations</li>
-                <li>All 6 templates</li>
-                <li>12 country formats</li>
-                <li>ATS scoring & keyword analysis</li>
-                <li>AI quality review & fixes</li>
-                <li>PDF & raw HTML download</li>
-                <li><strong>Credits never expire</strong></li>
+            <ul class="pricing-features pricing-features--checks">
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    50 CV generations
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    All 6 templates
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    12 country formats
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    ATS scoring & keyword analysis
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    AI quality review & fixes
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    PDF & raw HTML download
+                </li>
+                <li class="pricing-feature--highlight">
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <strong>Credits never expire</strong>
+                    <!-- Hand-drawn star doodle -->
+                    <svg class="feature-star-doodle" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 2 L14 9 L21 9 L15.5 13.5 L17.5 21 L12 16.5 L6.5 21 L8.5 13.5 L3 9 L10 9 Z" stroke="var(--yellow)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="rgba(251, 191, 36, 0.15)"/>
+                    </svg>
+                </li>
             </ul>
             <div class="pricing-spots">
                 {% if spots_remaining > 0 %}
                     <span class="spots-count">{{ spots_remaining }}</span> of 100 spots remaining
+                    <span class="handwritten pricing-annotation--hurry" aria-hidden="true">going fast!</span>
                 {% else %}
                     <span class="spots-count">Sold out</span>
                 {% endif %}
@@ -32,10 +157,22 @@
             {% if user %}
                 {% if balance > 0 %}
                     <p class="pricing-balance">You have <strong>{{ balance }}</strong> credits remaining</p>
-                    <a href="/app" class="btn-cta btn-cta--full">Go to App</a>
+                    <a href="/app" class="btn-cta btn-cta--full">
+                        Go to App
+                        <svg class="btn-arrow-doodle" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+                            <path d="M2 7 C6 7, 10 7, 14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M12 3 L17 7 L12 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </a>
                 {% elif stripe_enabled and spots_remaining > 0 %}
                     <form method="post" action="/checkout/alpha">
-                        <button type="submit" class="btn-cta btn-cta--full">Buy Alpha Pack</button>
+                        <button type="submit" class="btn-cta btn-cta--full">
+                            Buy Alpha Pack
+                            <svg class="btn-arrow-doodle" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+                                <path d="M2 7 C6 7, 10 7, 14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M12 3 L17 7 L12 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                        </button>
                     </form>
                 {% elif spots_remaining == 0 %}
                     <button class="btn-cta btn-cta--full btn-cta--disabled" disabled>Sold Out</button>
@@ -43,27 +180,106 @@
                     <p class="pricing-note">Payments coming soon</p>
                 {% endif %}
             {% else %}
-                <a href="/signup" class="btn-cta btn-cta--full">Create Account</a>
+                <a href="/signup" class="btn-cta btn-cta--full">
+                    Create Account
+                    <svg class="btn-arrow-doodle" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+                        <path d="M2 7 C6 7, 10 7, 14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M12 3 L17 7 L12 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                </a>
             {% endif %}
         </div>
 
-        <div class="pricing-card">
+        <div class="pricing-card sticky-note sticky-note--blue">
             <div class="pricing-badge pricing-badge--muted">Post-Alpha</div>
             <div class="pricing-price">
                 <span class="pricing-amount">Credit Packs</span>
             </div>
-            <ul class="pricing-features">
-                <li>Same features — no premium tiers</li>
-                <li>Buy more credits anytime</li>
-                <li>No subscriptions for personal accounts</li>
-                <li><strong>Alpha founders get discounted rates</strong></li>
+            <ul class="pricing-features pricing-features--checks">
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Same features — no premium tiers
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Buy more credits anytime
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    No subscriptions for personal accounts
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <strong>Alpha founders get discounted rates</strong>
+                </li>
             </ul>
-            <p class="pricing-note">Pricing based on alpha feedback</p>
+            <p class="pricing-note handwritten" style="font-size: 1.1rem; color: var(--text-muted);">Pricing based on alpha feedback</p>
         </div>
     </div>
 
-    <div class="pricing-faq">
-        <h3>Common questions</h3>
+    {% if user and stripe_enabled %}
+    <div class="pricing-topup">
+        <h2 class="section-title" style="font-size: 1.5rem; margin-top: 3rem;">
+            Need more credits?
+            <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 5 C30 1, 60 7, 90 4 S140 8, 170 3 S195 6, 200 4" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+        </h2>
+        <p class="pricing-subtitle">Top up anytime. Same features, no expiry.</p>
+        <div class="pricing-cards pricing-cards--topup">
+            {% for pack_id, pack in topup_packs.items() %}
+            <div class="pricing-card sticky-note sticky-note--{{ ['yellow', 'green', 'peach'][loop.index0 % 3] }}">
+                <div class="pricing-price">
+                    <span class="pricing-amount">${{ "%.0f"|format(pack.price_cents / 100) }}</span>
+                    <span class="pricing-period">one-time</span>
+                </div>
+                <ul class="pricing-features pricing-features--checks">
+                    <li>
+                        <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <strong>{{ pack.credits }}</strong> CV generations
+                    </li>
+                    <li>
+                        <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        {{ pack.per_credit }} per CV
+                    </li>
+                    <li>
+                        <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Credits never expire
+                    </li>
+                </ul>
+                <form method="post" action="/checkout/topup/{{ pack_id }}">
+                    <button type="submit" class="btn-cta btn-cta--full">
+                        Buy {{ pack.credits }} Credits
+                        <svg class="btn-arrow-doodle" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+                            <path d="M2 7 C6 7, 10 7, 14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M12 3 L17 7 L12 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Wavy divider before FAQ -->
+    <svg class="section-divider" viewBox="0 0 1200 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 10 C50 4, 100 16, 150 10 S250 4, 300 10 S400 16, 450 10 S550 4, 600 10 S700 16, 750 10 S850 4, 900 10 S1000 16, 1050 10 S1150 4, 1200 10" stroke="var(--border)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <div class="pricing-faq pricing-faq--notebook">
+        <h3>
+            <!-- Hand-drawn question mark doodle -->
+            <svg class="faq-doodle faq-doodle--left" width="24" height="32" viewBox="0 0 24 32" fill="none" aria-hidden="true">
+                <path d="M6 8 C6 3, 18 3, 18 8 C18 13, 12 12, 12 18" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <circle cx="12" cy="24" r="1.5" fill="var(--accent)"/>
+            </svg>
+            Common questions
+            <svg class="faq-doodle faq-doodle--right" width="24" height="32" viewBox="0 0 24 32" fill="none" aria-hidden="true">
+                <path d="M6 8 C6 3, 18 3, 18 8 C18 13, 12 12, 12 18" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <circle cx="12" cy="24" r="1.5" fill="#a78bfa"/>
+            </svg>
+        </h3>
         <div class="faq-item">
             <h4>Do credits expire?</h4>
             <p>No. Alpha credits never expire. Use them whenever you need, no pressure.</p>
@@ -74,11 +290,15 @@
         </div>
         <div class="faq-item">
             <h4>Can I buy more credits later?</h4>
-            <p>Yes. Extra credits will be available at $0.50-1.00 per generation after the alpha pack.</p>
+            <p>Yes! Top-up packs are available right now — 10, 25, or 50 credits. Credits never expire.</p>
         </div>
         <div class="faq-item">
-            <h4>What if I want a refund?</h4>
-            <p>If you haven't used any credits, we'll refund you in full. Contact us within 30 days.</p>
+            <h4>Do templates cost anything?</h4>
+            <p>No — all templates are completely free. Sign up, pick one, and fill it in yourself at no cost. Credits are only used when AI generates a tailored CV for you.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Can I edit my CV manually after generation?</h4>
+            <p>Absolutely, and it's free. Once your CV is generated you can edit the content directly — no credits used. Credits only cover the initial AI generation.</p>
         </div>
     </div>
 </section>

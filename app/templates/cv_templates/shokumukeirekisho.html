@@ -1,0 +1,137 @@
+<!-- Shokumukeirekisho: Japanese 職務経歴書 — detailed work history. -->
+<style>
+    .cv-shokumu { font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem; line-height: 1.55; font-size: 0.85rem; }
+    .cv-shokumu .form-title { text-align: center; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.2em; margin-bottom: 0.3rem; }
+    .cv-shokumu .form-meta { text-align: right; font-size: 0.8rem; color: #555; margin-bottom: 1.2rem; }
+    .cv-shokumu .cv-name-line { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+    .cv-shokumu h2 { font-size: 0.9rem; font-weight: 700; color: #1a1a1a; border-bottom: 2px solid #333; padding-bottom: 0.2rem; margin-top: 1.5rem; margin-bottom: 0.7rem; letter-spacing: 0.05em; }
+    .cv-shokumu .company-block { margin-bottom: 1.2rem; border-left: 3px solid #ddd; padding-left: 1rem; }
+    .cv-shokumu .company-name { font-size: 0.95rem; font-weight: 700; margin: 0; }
+    .cv-shokumu .company-meta { font-size: 0.82rem; color: #666; margin: 0.1rem 0 0.3rem; }
+    .cv-shokumu .company-meta span { margin-right: 1rem; }
+    .cv-shokumu .role-title { font-size: 0.88rem; font-weight: 600; margin: 0.5rem 0 0.2rem; color: #333; }
+    .cv-shokumu ul { margin: 0.2rem 0 0.5rem 1.2rem; padding: 0; }
+    .cv-shokumu li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .cv-shokumu .skills-section { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
+    .cv-shokumu .skill-tag { display: inline-block; background: #f0f0f0; color: #333; padding: 0.15rem 0.5rem; border-radius: 2px; font-size: 0.8rem; }
+    .cv-shokumu .self-pr { background: #fafafa; border: 1px solid #ddd; padding: 0.8rem 1rem; border-radius: 3px; margin-top: 0.4rem; font-size: 0.85rem; }
+    .cv-shokumu .grouped-skills { margin-top: 0.3rem; }
+    .cv-shokumu .grouped-skills .group { margin-bottom: 0.3rem; font-size: 0.85rem; }
+    .cv-shokumu .grouped-skills .group strong { color: #333; }
+</style>
+<div class="cv-shokumu">
+    <p class="form-title">職 務 経 歴 書</p>
+    <p class="form-meta">{{ name }}</p>
+
+    {% if summary %}
+    <h2>職務要約</h2>
+    <div class="self-pr">{{ summary }}</div>
+    {% endif %}
+
+    {% if experience %}
+    <h2>職務経歴</h2>
+    {% for job in experience %}
+    <div class="company-block">
+        <p class="company-name">{{ job.company }}</p>
+        <p class="company-meta">
+            <span>{{ job.date }}</span>
+            {% if job.location %}<span>{{ job.location }}</span>{% endif %}
+        </p>
+        <p class="role-title">{{ job.title }}</p>
+        {% if job.tech %}
+        <p style="font-size: 0.8rem; color: #666; margin: 0.1rem 0 0.3rem;">使用技術: {{ job.tech }}</p>
+        {% endif %}
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if key_achievements %}
+    <h2>主な実績</h2>
+    <ul>
+        {% for ach in key_achievements %}
+        <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>活かせる経験・知識・技術</h2>
+    <div class="grouped-skills">
+        {% for group in skills_grouped %}
+        <p class="group"><strong>{{ group.category }}:</strong> {{ group['items'] | join('、') }}</p>
+        {% endfor %}
+    </div>
+    {% elif skills %}
+    <h2>活かせる経験・知識・技術</h2>
+    <div class="skills-section">
+        {% for skill in skills %}
+        <span class="skill-tag">{{ skill }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if certifications %}
+    <h2>資格・免許</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if licenses %}
+    <h2>免許</h2>
+    <ul>
+        {% for lic in licenses %}
+        <li>{{ lic }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if languages or languages_detailed %}
+    <h2>語学力</h2>
+    <ul>
+        {% if languages_detailed %}
+            {% for lang in languages_detailed %}
+            <li>{{ lang.language }}{% if lang.level %} — {{ lang.level }}{% endif %}</li>
+            {% endfor %}
+        {% elif languages %}
+            {% for lang in languages %}
+            <li>{{ lang }}</li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    {% endif %}
+
+    {% if education %}
+    <h2>学歴</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.3rem; font-size: 0.85rem;">
+        <span style="color: #666;">{{ edu.date }}</span> — {{ edu.institution }} {{ edu.degree }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if motivation_statement %}
+    <h2>自己PR</h2>
+    <div class="self-pr">{{ motivation_statement }}</div>
+    {% endif %}
+
+    {% if projects %}
+    <h2>プロジェクト</h2>
+    {% for proj in projects %}
+    <div class="company-block">
+        <p class="company-name">{{ proj.name }}</p>
+        {% if proj.url %}<p style="font-size: 0.8rem; color: #666;">{{ proj.url }}</p>{% endif %}
+        <p style="font-size: 0.85rem;">{{ proj.description }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>

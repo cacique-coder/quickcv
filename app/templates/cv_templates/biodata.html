@@ -1,0 +1,179 @@
+<!-- Biodata: Indian format with prominent personal details and declaration. -->
+<style>
+    .cv-biodata { font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem; line-height: 1.55; font-size: 0.85rem; }
+    .cv-biodata .cv-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #b22222; padding-bottom: 1rem; margin-bottom: 1.2rem; }
+    .cv-biodata .cv-header-text { flex: 1; }
+    .cv-biodata .cv-name { font-size: 1.7rem; font-weight: 700; margin: 0; color: #1a1a1a; }
+    .cv-biodata .cv-title { font-size: 0.95rem; color: #555; margin-top: 0.15rem; }
+    .cv-biodata .cv-photo { width: 95px; height: 120px; object-fit: cover; border: 2px solid #b22222; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-biodata .personal-box { background: #fdf5f5; border: 1px solid #e8d0d0; border-radius: 4px; padding: 0.8rem 1rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 2rem; }
+    .cv-biodata .personal-box .detail { font-size: 0.84rem; }
+    .cv-biodata .personal-box .detail-label { font-weight: 600; color: #555; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.02em; }
+    .cv-biodata h2 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #b22222; margin-top: 1.3rem; margin-bottom: 0.5rem; border-bottom: 1.5px solid #b22222; padding-bottom: 0.2rem; }
+    .cv-biodata h3 { font-size: 0.9rem; margin: 0; font-weight: 600; }
+    .cv-biodata .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-biodata .job-company { font-size: 0.85rem; color: #b22222; }
+    .cv-biodata .job-date { font-size: 0.8rem; color: #888; }
+    .cv-biodata ul { margin: 0.2rem 0 0.6rem 1.2rem; padding: 0; }
+    .cv-biodata li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .cv-biodata .skills-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .cv-biodata .skills-list span { background: #fdf5f5; border: 1px solid #e8d0d0; padding: 0.15rem 0.5rem; border-radius: 2px; font-size: 0.82rem; }
+    .cv-biodata .declaration { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.84rem; }
+    .cv-biodata .declaration p { margin-bottom: 0.5rem; }
+    .cv-biodata .signature-area { margin-top: 1.5rem; display: flex; justify-content: space-between; font-size: 0.84rem; color: #555; }
+    .cv-biodata .signature-line { border-top: 1px solid #333; width: 200px; padding-top: 0.3rem; text-align: center; }
+</style>
+<div class="cv-biodata">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+        </div>
+        <img src="{{ photo_url | default('/static/photo-placeholder.svg') }}"
+             alt="Professional photo"
+             class="cv-photo">
+    </div>
+
+    <div class="personal-box">
+        {% if email %}
+        <div class="detail"><span class="detail-label">Email</span><br>{{ email }}</div>
+        {% endif %}
+        {% if phone %}
+        <div class="detail"><span class="detail-label">Phone</span><br>{{ phone }}</div>
+        {% endif %}
+        {% if location %}
+        <div class="detail"><span class="detail-label">Address</span><br>{{ location }}</div>
+        {% endif %}
+        {% if dob %}
+        <div class="detail"><span class="detail-label">Date of Birth</span><br>{{ dob }}</div>
+        {% endif %}
+        {% if nationality %}
+        <div class="detail"><span class="detail-label">Nationality</span><br>{{ nationality }}</div>
+        {% endif %}
+        {% if marital_status %}
+        <div class="detail"><span class="detail-label">Marital Status</span><br>{{ marital_status }}</div>
+        {% endif %}
+        {% if languages %}
+        <div class="detail"><span class="detail-label">Languages</span><br>{{ languages | join(', ') }}</div>
+        {% endif %}
+        {% if linkedin %}
+        <div class="detail"><span class="detail-label">LinkedIn</span><br>{{ linkedin }}</div>
+        {% endif %}
+        {% if visa_status %}
+        <div class="detail"><span class="detail-label">Visa Status</span><br>{{ visa_status }}</div>
+        {% endif %}
+        {% if notice_period %}
+        <div class="detail"><span class="detail-label">Notice Period</span><br>{{ notice_period }}</div>
+        {% endif %}
+    </div>
+
+    {% if summary %}
+    <h2>Objective</h2>
+    <p style="font-size: 0.87rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.6rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if experience %}
+    <h2>Professional Experience</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 0.9rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Skills</h2>
+    {% for group in skills_grouped %}
+    <p style="font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+    {% endfor %}
+    {% elif skills %}
+    <h2>Skills</h2>
+    <div class="skills-list">
+        {% for skill in skills %}
+        <span>{{ skill }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if key_achievements %}
+    <h2>Key Achievements</h2>
+    <ul>
+        {% for ach in key_achievements %}
+        <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if projects %}
+    <h2>Projects</h2>
+    {% for proj in projects %}
+    <div style="margin-bottom: 0.5rem;">
+        <h3>{{ proj.name }}{% if proj.url %} <span style="font-weight: 400; font-size: 0.8rem;">— {{ proj.url }}</span>{% endif %}</h3>
+        <p style="font-size: 0.84rem; color: #444;">{{ proj.description }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if languages_detailed %}
+    <h2>Languages</h2>
+    <ul>
+        {% for lang in languages_detailed %}
+        <li>{{ lang.language }}{% if lang.level %} — {{ lang.level }}{% endif %}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if references %}
+    <h2>References</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.85rem; margin-bottom: 0.4rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+
+    <div class="declaration">
+        <p>{% if declaration %}{{ declaration }}{% else %}I hereby declare that the above-mentioned information is true to the best of my knowledge and belief.{% endif %}</p>
+        <div class="signature-area">
+            <div>
+                <span>{{ location }}, Date: _______________</span>
+            </div>
+            <div class="signature-line">
+                {{ name }}
+            </div>
+        </div>
+    </div>
+</div>

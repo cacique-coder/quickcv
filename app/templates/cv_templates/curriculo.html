@@ -1,0 +1,175 @@
+<!-- Currículo: Brazilian CV standard format. -->
+<style>
+    .cv-curriculo { font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 1.5rem 2rem; line-height: 1.55; font-size: 0.85rem; }
+    .cv-curriculo .cv-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #006633; padding-bottom: 1rem; margin-bottom: 1.2rem; }
+    .cv-curriculo .cv-header-text { flex: 1; }
+    .cv-curriculo .cv-name { font-size: 1.7rem; font-weight: 700; margin: 0; color: #006633; }
+    .cv-curriculo .cv-title { font-size: 0.95rem; color: #555; margin-top: 0.15rem; }
+    .cv-curriculo .cv-photo { width: 90px; height: 115px; object-fit: cover; border: 2px solid #006633; border-radius: 3px; margin-left: 1.5rem; flex-shrink: 0; }
+    .cv-curriculo .personal-info { background: #f5faf7; border: 1px solid #d4e8dc; border-radius: 4px; padding: 0.7rem 1rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 2rem; font-size: 0.84rem; }
+    .cv-curriculo .personal-info .detail-label { font-weight: 600; color: #006633; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.02em; }
+    .cv-curriculo h2 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #006633; margin-top: 1.3rem; margin-bottom: 0.5rem; border-bottom: 2px solid #006633; padding-bottom: 0.2rem; }
+    .cv-curriculo h3 { font-size: 0.9rem; margin: 0; font-weight: 600; }
+    .cv-curriculo .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-curriculo .job-company { font-size: 0.85rem; color: #006633; font-weight: 500; }
+    .cv-curriculo .job-date { font-size: 0.8rem; color: #888; }
+    .cv-curriculo ul { margin: 0.2rem 0 0.6rem 1.2rem; padding: 0; }
+    .cv-curriculo li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .cv-curriculo .skills-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .cv-curriculo .skills-list span { background: #f5faf7; border: 1px solid #d4e8dc; padding: 0.15rem 0.5rem; border-radius: 2px; font-size: 0.82rem; }
+    .cv-curriculo .declaration { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.84rem; color: #555; }
+    .cv-curriculo .signature-area { margin-top: 1.5rem; text-align: center; font-size: 0.84rem; color: #555; }
+    .cv-curriculo .signature-line { border-top: 1px solid #333; width: 250px; margin: 2rem auto 0; padding-top: 0.3rem; }
+</style>
+<div class="cv-curriculo">
+    <div class="cv-header">
+        <div class="cv-header-text">
+            <h1 class="cv-name">{{ name }}</h1>
+            {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+        </div>
+        <img src="{{ photo_url | default('/static/photo-placeholder.svg') }}"
+             alt="Foto profissional"
+             class="cv-photo">
+    </div>
+
+    <div class="personal-info">
+        {% if email %}
+        <div><span class="detail-label">E-mail</span><br>{{ email }}</div>
+        {% endif %}
+        {% if phone %}
+        <div><span class="detail-label">Telefone</span><br>{{ phone }}</div>
+        {% endif %}
+        {% if location %}
+        <div><span class="detail-label">Endereço</span><br>{{ location }}</div>
+        {% endif %}
+        {% if dob %}
+        <div><span class="detail-label">Data de Nascimento</span><br>{{ dob }}</div>
+        {% endif %}
+        {% if nationality %}
+        <div><span class="detail-label">Nacionalidade</span><br>{{ nationality }}</div>
+        {% endif %}
+        {% if marital_status %}
+        <div><span class="detail-label">Estado Civil</span><br>{{ marital_status }}</div>
+        {% endif %}
+        {% if linkedin %}
+        <div><span class="detail-label">LinkedIn</span><br>{{ linkedin }}</div>
+        {% endif %}
+        {% if driving_license %}
+        <div><span class="detail-label">Habilitação</span><br>{{ driving_license }}</div>
+        {% endif %}
+    </div>
+
+    {% if summary %}
+    <h2>Objetivo</h2>
+    <p style="font-size: 0.87rem;">{{ summary }}</p>
+    {% endif %}
+
+    {% if experience %}
+    <h2>Experiência Profissional</h2>
+    {% for job in experience %}
+    <div style="margin-bottom: 0.9rem;">
+        <div class="job-meta">
+            <div>
+                <h3>{{ job.title }}</h3>
+                <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+            </div>
+            <span class="job-date">{{ job.date }}</span>
+        </div>
+        {% if job.bullets %}
+        <ul>
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if education %}
+    <h2>Formação Acadêmica</h2>
+    {% for edu in education %}
+    <div style="margin-bottom: 0.5rem;">
+        <div class="job-meta">
+            <h3>{{ edu.degree }}</h3>
+            <span class="job-date">{{ edu.date }}</span>
+        </div>
+        <span class="job-company">{{ edu.institution }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if skills_grouped %}
+    <h2>Competências</h2>
+    {% for group in skills_grouped %}
+    <p style="font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>{{ group.category }}:</strong> {{ group['items'] | join(', ') }}</p>
+    {% endfor %}
+    {% elif skills %}
+    <h2>Competências</h2>
+    <div class="skills-list">
+        {% for skill in skills %}
+        <span>{{ skill }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if languages_detailed or languages %}
+    <h2>Idiomas</h2>
+    {% if languages_detailed %}
+        <ul>
+        {% for lang in languages_detailed %}
+            <li>{{ lang.language }}{% if lang.level %} — {{ lang.level }}{% endif %}</li>
+        {% endfor %}
+        </ul>
+    {% elif languages %}
+        <ul>
+        {% for lang in languages %}
+            <li>{{ lang }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certificações</h2>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if key_achievements %}
+    <h2>Principais Realizações</h2>
+    <ul>
+        {% for ach in key_achievements %}
+        <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if projects %}
+    <h2>Projetos</h2>
+    {% for proj in projects %}
+    <div style="margin-bottom: 0.5rem;">
+        <h3>{{ proj.name }}{% if proj.url %} <span style="font-weight: 400; font-size: 0.8rem;">— {{ proj.url }}</span>{% endif %}</h3>
+        <p style="font-size: 0.84rem; color: #444;">{{ proj.description }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if references %}
+    <h2>Referências</h2>
+    {% for ref in references %}
+    <p style="font-size: 0.85rem; margin-bottom: 0.4rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+    {% endfor %}
+    {% endif %}
+
+    <div class="declaration">
+        <p>{% if declaration %}{{ declaration }}{% else %}Declaro que as informações acima são verdadeiras e de minha inteira responsabilidade.{% endif %}</p>
+        <div class="signature-area">
+            <p>{{ location }}, _____ de _______________ de _______</p>
+            <div class="signature-line">{{ name }}</div>
+        </div>
+    </div>
+</div>

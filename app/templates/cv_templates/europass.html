@@ -1,0 +1,202 @@
+<!-- Europass: EU standard CV with sidebar and CEFR language grid. -->
+<style>
+    .cv-europass { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; line-height: 1.5; font-size: 0.85rem; display: grid; grid-template-columns: 240px 1fr; min-height: 100%; }
+    .cv-europass .sidebar { background: #f0f4f8; padding: 1.5rem 1.2rem; border-right: 3px solid #003399; }
+    .cv-europass .sidebar .cv-photo { width: 100px; height: 125px; object-fit: cover; border: 2px solid #003399; border-radius: 3px; display: block; margin: 0 auto 1rem; }
+    .cv-europass .sidebar h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #003399; margin-top: 1.2rem; margin-bottom: 0.4rem; border-bottom: 1px solid #003399; padding-bottom: 0.15rem; }
+    .cv-europass .sidebar .info-item { font-size: 0.82rem; margin-bottom: 0.3rem; color: #333; }
+    .cv-europass .sidebar .info-label { font-size: 0.72rem; text-transform: uppercase; color: #666; letter-spacing: 0.03em; }
+    .cv-europass .sidebar .lang-grid { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin-top: 0.3rem; }
+    .cv-europass .sidebar .lang-grid th { background: #003399; color: white; padding: 0.2rem 0.3rem; text-align: center; font-weight: 500; }
+    .cv-europass .sidebar .lang-grid td { border: 1px solid #ccc; padding: 0.2rem 0.3rem; text-align: center; font-size: 0.72rem; }
+    .cv-europass .sidebar .lang-grid .lang-name { text-align: left; font-weight: 600; background: #e8edf3; }
+    .cv-europass .sidebar .lang-simple { font-size: 0.82rem; margin: 0.15rem 0; }
+    .cv-europass .sidebar .skill-list { list-style: none; margin: 0; padding: 0; }
+    .cv-europass .sidebar .skill-list li { font-size: 0.82rem; margin-bottom: 0.2rem; padding-left: 0.6rem; position: relative; }
+    .cv-europass .sidebar .skill-list li::before { content: "▪"; position: absolute; left: 0; color: #003399; }
+    .cv-europass .main { padding: 1.5rem 1.5rem 1.5rem 1.8rem; }
+    .cv-europass .main .cv-name { font-size: 1.6rem; font-weight: 700; margin: 0; color: #003399; }
+    .cv-europass .main .cv-title { font-size: 0.95rem; color: #555; margin-top: 0.15rem; font-weight: 400; }
+    .cv-europass .main h2 { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #003399; margin-top: 1.4rem; margin-bottom: 0.5rem; border-bottom: 2px solid #003399; padding-bottom: 0.2rem; }
+    .cv-europass .main h3 { font-size: 0.88rem; margin: 0; font-weight: 600; }
+    .cv-europass .main .job-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .cv-europass .main .job-company { font-size: 0.84rem; color: #003399; }
+    .cv-europass .main .job-date { font-size: 0.8rem; color: #888; }
+    .cv-europass .main ul { margin: 0.2rem 0 0.6rem 1.2rem; padding: 0; }
+    .cv-europass .main li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+</style>
+<div class="cv-europass">
+    <div class="sidebar">
+        <img src="{{ photo_url | default('/static/photo-placeholder.svg') }}"
+             alt="Photo"
+             class="cv-photo">
+
+        <h3>Personal Information</h3>
+        {% if email %}
+        <div class="info-item"><span class="info-label">Email</span><br>{{ email }}</div>
+        {% endif %}
+        {% if phone %}
+        <div class="info-item"><span class="info-label">Phone</span><br>{{ phone }}</div>
+        {% endif %}
+        {% if location %}
+        <div class="info-item"><span class="info-label">Address</span><br>{{ location }}</div>
+        {% endif %}
+        {% if linkedin %}
+        <div class="info-item"><span class="info-label">LinkedIn</span><br>{{ linkedin }}</div>
+        {% endif %}
+        {% if github %}
+        <div class="info-item"><span class="info-label">GitHub</span><br>{{ github }}</div>
+        {% endif %}
+        {% if portfolio %}
+        <div class="info-item"><span class="info-label">Website</span><br>{{ portfolio }}</div>
+        {% endif %}
+        {% if dob %}
+        <div class="info-item"><span class="info-label">Date of Birth</span><br>{{ dob }}</div>
+        {% endif %}
+        {% if nationality %}
+        <div class="info-item"><span class="info-label">Nationality</span><br>{{ nationality }}</div>
+        {% endif %}
+
+        {% if languages_detailed or languages %}
+        <h3>Languages</h3>
+        {% if languages_detailed %}
+            {# Check if any detailed language has CEFR-style fields #}
+            {% set has_cefr = languages_detailed | selectattr('listening', 'defined') | list | length > 0 %}
+            {% if has_cefr %}
+            <table class="lang-grid">
+                <tr>
+                    <th></th>
+                    <th colspan="2">Understanding</th>
+                    <th colspan="2">Speaking</th>
+                    <th>Writing</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>Listen</th>
+                    <th>Read</th>
+                    <th>Interact</th>
+                    <th>Produce</th>
+                    <th></th>
+                </tr>
+                {% for lang in languages_detailed %}
+                <tr>
+                    <td class="lang-name">{{ lang.language }}</td>
+                    {% if lang.listening %}
+                    <td>{{ lang.listening }}</td>
+                    <td>{{ lang.reading }}</td>
+                    <td>{{ lang.speaking }}</td>
+                    <td>{{ lang.speaking }}</td>
+                    <td>{{ lang.writing }}</td>
+                    {% else %}
+                    <td colspan="5" style="text-align: center;">{{ lang.level }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                {% for lang in languages_detailed %}
+                <p class="lang-simple"><strong>{{ lang.language }}</strong>: {{ lang.level }}</p>
+                {% endfor %}
+            {% endif %}
+        {% elif languages %}
+            {% for lang in languages %}
+            <p class="lang-simple">{{ lang }}</p>
+            {% endfor %}
+        {% endif %}
+        {% endif %}
+
+        {% if skills %}
+        <h3>Digital Skills</h3>
+        <ul class="skill-list">
+            {% for skill in skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if driving_license %}
+        <h3>Driving Licence</h3>
+        <p class="info-item">{{ driving_license }}</p>
+        {% endif %}
+    </div>
+
+    <div class="main">
+        <h1 class="cv-name">{{ name }}</h1>
+        {% if title %}<p class="cv-title">{{ title }}</p>{% endif %}
+
+        {% if summary %}
+        <h2>Personal Statement</h2>
+        <p style="font-size: 0.85rem;">{{ summary }}</p>
+        {% endif %}
+
+        {% if experience %}
+        <h2>Work Experience</h2>
+        {% for job in experience %}
+        <div style="margin-bottom: 0.9rem;">
+            <div class="job-meta">
+                <div>
+                    <h3>{{ job.title }}</h3>
+                    <span class="job-company">{{ job.company }}{% if job.location %} — {{ job.location }}{% endif %}</span>
+                </div>
+                <span class="job-date">{{ job.date }}</span>
+            </div>
+            {% if job.bullets %}
+            <ul>
+                {% for bullet in job.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if education %}
+        <h2>Education and Training</h2>
+        {% for edu in education %}
+        <div style="margin-bottom: 0.5rem;">
+            <div class="job-meta">
+                <h3>{{ edu.degree }}</h3>
+                <span class="job-date">{{ edu.date }}</span>
+            </div>
+            <span class="job-company">{{ edu.institution }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if certifications %}
+        <h2>Certifications</h2>
+        <ul>
+            {% for cert in certifications %}
+            <li>{{ cert }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if key_achievements %}
+        <h2>Key Achievements</h2>
+        <ul>
+            {% for ach in key_achievements %}
+            <li>{{ ach }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if projects %}
+        <h2>Projects</h2>
+        {% for proj in projects %}
+        <div style="margin-bottom: 0.5rem;">
+            <h3>{{ proj.name }}{% if proj.url %} <span style="font-weight: 400; font-size: 0.8rem;">— {{ proj.url }}</span>{% endif %}</h3>
+            <p style="font-size: 0.84rem; color: #444;">{{ proj.description }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if references %}
+        <h2>References</h2>
+        {% for ref in references %}
+        <p style="font-size: 0.85rem; margin-bottom: 0.4rem;"><strong>{{ ref.name }}</strong> — {{ ref.title }}, {{ ref.company }}<br>{{ ref.contact }}</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
