@@ -9,6 +9,12 @@ ALPHA_PACK_CREDITS = 50
 ALPHA_PACK_PRICE_CENTS = 2900  # $29.00
 ALPHA_USER_CAP = 100
 
+TOPUP_PACKS = {
+    "10-pack": {"credits": 10, "price_cents": 900, "name": "10 CV Generations", "per_credit": "$0.90"},
+    "25-pack": {"credits": 25, "price_cents": 1900, "name": "25 CV Generations", "per_credit": "$0.76"},
+    "50-pack": {"credits": 50, "price_cents": 2900, "name": "50 CV Generations", "per_credit": "$0.58"},
+}
+
 
 async def get_balance(db: AsyncSession, user_id: str) -> int:
     result = await db.execute(select(Credit.balance).where(Credit.user_id == user_id))

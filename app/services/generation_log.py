@@ -7,7 +7,6 @@ Log file: app/logs/generations.jsonl
 """
 import json
 import time
-from dataclasses import asdict
 from pathlib import Path
 
 from app.services.ats_analyzer import ATSResult

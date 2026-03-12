@@ -8,6 +8,10 @@ class CVTemplate:
     description: str
     best_for: str
     regions: list[str]
+    category: str = "universal"  # "universal", "industry", "region", "specialty"
+    ai_description: str = ""  # Richer description for AI template matching
+    industries: list[str] = field(default_factory=list)
+    experience_levels: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -37,6 +41,10 @@ TEMPLATES: dict[str, CVTemplate] = {
         description="Traditional single-column with serif fonts. Conservative and universally accepted.",
         best_for="Corporate, government, finance, legal",
         regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="universal",
+        ai_description="Traditional single-column layout with serif typography. Conservative, formal design that signals reliability and professionalism. Universally accepted by ATS systems and hiring managers in traditional industries.",
+        industries=["finance", "legal", "government", "corporate", "accounting"],
+        experience_levels=["mid", "senior", "executive"],
     ),
     "modern": CVTemplate(
         id="modern",
@@ -44,6 +52,10 @@ TEMPLATES: dict[str, CVTemplate] = {
         description="Clean sans-serif with blue accent color. Professional yet contemporary.",
         best_for="Marketing, consulting, general professional roles",
         regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="universal",
+        ai_description="Clean sans-serif design with subtle blue accent color. Balances professionalism with a contemporary feel. Versatile enough for most industries while looking polished and up-to-date.",
+        industries=["marketing", "consulting", "sales", "business", "general"],
+        experience_levels=["entry", "mid", "senior"],
     ),
     "minimal": CVTemplate(
         id="minimal",
@@ -51,6 +63,10 @@ TEMPLATES: dict[str, CVTemplate] = {
         description="Ultra-clean Harvard-style. Maximum whitespace, no color, pure content focus.",
         best_for="Academia, research, any role where content > design",
         regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="universal",
+        ai_description="Ultra-clean Harvard-style layout with maximum whitespace and zero color. Puts 100% focus on content quality. Ideal when substance matters more than visual flair, such as academic or research positions.",
+        industries=["academia", "research", "education", "science", "nonprofit"],
+        experience_levels=["entry", "mid", "senior"],
     ),
     "executive": CVTemplate(
         id="executive",
@@ -58,6 +74,10 @@ TEMPLATES: dict[str, CVTemplate] = {
         description="Dark header, authoritative layout with key achievements section.",
         best_for="Senior/C-level roles, director positions, management",
         regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="specialty",
+        ai_description="Authoritative layout with dark header and prominent key achievements section. Designed for leadership roles where strategic impact and business outcomes need to be front and center. Signals seniority and gravitas.",
+        industries=["executive", "management", "consulting", "finance", "corporate"],
+        experience_levels=["senior", "executive"],
     ),
     "tech": CVTemplate(
         id="tech",
@@ -65,6 +85,10 @@ TEMPLATES: dict[str, CVTemplate] = {
         description="Skills-forward layout with tech tags, project sections, and stack listings.",
         best_for="Software engineering, DevOps, IT, data science",
         regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Skills-forward layout featuring tech stack tags, dedicated project sections, and prominent skills listings. Optimized for technical roles where specific technologies, tools, and project contributions matter most to hiring managers.",
+        industries=["software", "devops", "it", "data-science", "cybersecurity", "engineering"],
+        experience_levels=["entry", "mid", "senior"],
     ),
     "compact": CVTemplate(
         id="compact",
@@ -72,6 +96,120 @@ TEMPLATES: dict[str, CVTemplate] = {
         description="Dense layout maximizing content per page. Great for extensive experience.",
         best_for="Experienced professionals, career changers with lots of history",
         regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="specialty",
+        ai_description="Dense, space-efficient layout that maximizes content per page without sacrificing readability. Ideal for professionals with 10+ years of experience or career changers who need to show breadth across multiple roles and industries.",
+        industries=["general", "consulting", "healthcare", "engineering"],
+        experience_levels=["mid", "senior", "executive"],
+    ),
+    "academic": CVTemplate(
+        id="academic",
+        name="Academic",
+        description="Traditional scholarly format with serif fonts. Supports publications, grants, and teaching sections.",
+        best_for="Academia, research, postdoc, faculty positions",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Traditional academic CV with serif typography and scholarly structure. Includes dedicated sections for publications, grants, teaching experience, and conference presentations. Can extend beyond 2 pages as is standard in academia.",
+        industries=["academia", "research", "science", "higher-education"],
+        experience_levels=["entry", "mid", "senior"],
+    ),
+    "healthcare": CVTemplate(
+        id="healthcare",
+        name="Healthcare",
+        description="Clean professional medical layout with prominent licenses and clinical experience sections.",
+        best_for="Nursing, physicians, allied health, medical professionals",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Clean medical-professional layout with teal accent. Places licenses and registrations prominently below summary, followed by clinical experience. Includes continuing education section for healthcare compliance requirements.",
+        industries=["healthcare", "nursing", "medical", "pharmaceutical", "allied-health"],
+        experience_levels=["entry", "mid", "senior"],
+    ),
+    "legal": CVTemplate(
+        id="legal",
+        name="Legal",
+        description="Conservative, authoritative design with bar admissions, practice areas, and case highlights.",
+        best_for="Attorneys, paralegals, legal counsel, compliance",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Conservative serif design signaling authority and precision. Features prominent bar admissions, practice areas, and notable matters sections. Appropriate for the legal profession's formal expectations.",
+        industries=["legal", "compliance", "regulatory", "law-enforcement"],
+        experience_levels=["entry", "mid", "senior", "executive"],
+    ),
+    "creative": CVTemplate(
+        id="creative",
+        name="Creative",
+        description="Visually expressive layout with portfolio cards, brand statement, and modern grid design.",
+        best_for="Designers, artists, writers, UX/UI, creative directors",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Visually expressive layout with bold purple accent, circular photo frame, portfolio cards in a grid, and a brand statement section. More white space and modern typography than traditional templates. Shows creative sensibility while remaining ATS-readable.",
+        industries=["design", "creative", "marketing", "media", "arts", "ux-ui"],
+        experience_levels=["entry", "mid", "senior"],
+    ),
+    "sales": CVTemplate(
+        id="sales",
+        name="Sales",
+        description="Metrics-heavy format with quota performance table and revenue-focused achievements.",
+        best_for="Sales, business development, account management",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Performance-driven layout with green accent conveying growth and revenue. Features a quota achievement table with color-coded percentages, key metrics display, and achievement-focused experience sections. Numbers and results are front and center.",
+        industries=["sales", "business-development", "account-management", "retail"],
+        experience_levels=["entry", "mid", "senior"],
+    ),
+    "engineering": CVTemplate(
+        id="engineering",
+        name="Engineering",
+        description="Technical layout for all engineering disciplines with certifications, patents, and project scope.",
+        best_for="Civil, mechanical, electrical, chemical engineering",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Structured technical layout for traditional engineering disciplines (civil, mechanical, electrical, chemical). Prominently displays professional engineering licenses, safety certifications, and patents. Broader than the tech template which focuses on software.",
+        industries=["engineering", "civil", "mechanical", "electrical", "chemical", "manufacturing"],
+        experience_levels=["entry", "mid", "senior"],
+    ),
+    "education": CVTemplate(
+        id="education",
+        name="Education",
+        description="Teacher-focused format with teaching philosophy, curriculum development, and student outcomes.",
+        best_for="Teachers, professors, academic administrators, instructional designers",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Warm, approachable layout with amber accent designed for educators. Features a prominent teaching philosophy section, curriculum development highlights, and student outcomes with a two-column grid. Conveys dedication to student success.",
+        industries=["education", "teaching", "training", "instructional-design"],
+        experience_levels=["entry", "mid", "senior"],
+    ),
+    "consulting": CVTemplate(
+        id="consulting",
+        name="Consulting",
+        description="Engagement-based format highlighting client work, methodologies, and thought leadership.",
+        best_for="Management consulting, strategy, advisory roles",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Polished, professional layout with dark header reminiscent of top consulting firms. Replaces standard experience with engagement summaries (client, scope, outcome). Includes methodologies and thought leadership sections to demonstrate advisory expertise.",
+        industries=["consulting", "strategy", "advisory", "management"],
+        experience_levels=["mid", "senior", "executive"],
+    ),
+    "nonprofit": CVTemplate(
+        id="nonprofit",
+        name="Nonprofit",
+        description="Impact-focused format with fundraising metrics, community impact, and grant writing sections.",
+        best_for="Nonprofit leadership, program management, social impact, NGOs",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Community-oriented layout with warm earth tone accent. Leads with impact highlights, includes fundraising metrics table, community impact narratives, and grant writing experience. Designed to showcase mission-driven achievements.",
+        industries=["nonprofit", "ngo", "social-impact", "charity", "public-sector"],
+        experience_levels=["entry", "mid", "senior", "executive"],
+    ),
+    "federal": CVTemplate(
+        id="federal",
+        name="Federal",
+        description="Formal government format with security clearances, KSAs, and detailed structured experience.",
+        best_for="Federal government, military transition, public sector, GS positions",
+        regions=["AU", "US", "UK", "CA", "NZ", "DE", "FR", "NL", "IN", "BR", "AE", "JP"],
+        category="industry",
+        ai_description="Highly formal government-style CV with minimal color and serif typography. Features security clearances, KSA (Knowledge/Skills/Abilities) factor descriptions, GS grade display, and detailed experience sections. Can extend to 3+ pages as is standard for federal applications.",
+        industries=["government", "federal", "military", "public-sector", "defense"],
+        experience_levels=["entry", "mid", "senior", "executive"],
     ),
 }
 
@@ -474,6 +612,10 @@ def list_templates(region: str | None = None) -> list[CVTemplate]:
     if region:
         return [t for t in TEMPLATES.values() if region in t.regions]
     return list(TEMPLATES.values())
+
+
+def list_templates_by_category(category: str) -> list[CVTemplate]:
+    return [t for t in TEMPLATES.values() if t.category == category]
 
 
 def list_regions() -> list[RegionConfig]:

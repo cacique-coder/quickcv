@@ -1,12 +1,12 @@
 """User management: creation, lookup, OAuth linking."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import User, Credit
 from app.auth.utils import hash_password, verify_password
+from app.models import Credit, User
 
 
 async def create_user(db: AsyncSession, email: str, password: str | None = None, name: str = "",
@@ -55,13 +55,13 @@ async def authenticate_user(db: AsyncSession, email: str, password: str) -> User
         return None
     if not verify_password(password, user.password_hash):
         return None
-    user.last_login = datetime.now(timezone.utc)
+    user.last_login = datetime.now(UTC)
     await db.commit()
     return user
 
 
 async def update_last_login(db: AsyncSession, user: User):
-    user.last_login = datetime.now(timezone.utc)
+    user.last_login = datetime.now(UTC)
     await db.commit()
 
 

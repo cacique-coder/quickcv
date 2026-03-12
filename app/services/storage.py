@@ -6,8 +6,8 @@ Files are stored under user_id folders: {user_id}/photos/{filename}
 """
 
 import os
-import uuid
 import shutil
+import uuid
 from pathlib import Path
 
 import boto3
@@ -127,7 +127,7 @@ def upload_photo_r2(user_id: str, relative_path: str, file_bytes: bytes) -> str 
         )
         return key
     except (ClientError, NoCredentialsError) as e:
-        raise StorageError(f"R2 upload failed: {e}")
+        raise StorageError(f"R2 upload failed: {e}") from e
 
 
 def get_photo_url_r2(relative_path: str, expires_in: int = 3600) -> str | None:

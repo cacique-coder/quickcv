@@ -1,15 +1,16 @@
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from pathlib import Path
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.routers import cv, demo, photos, wizard
 from app.routers import auth as auth_router
-from app.routers import payments as payments_router
+from app.routers import builder, cv, demo, my_cvs, photos, wizard
 from app.routers import landing as landing_router
+from app.routers import payments as payments_router
+from app.routers import seo as seo_router
 from app.services.llm_client import AnthropicAPIClient, ClaudeCodeClient
 
 
@@ -45,6 +46,9 @@ app.mount(
     name="static",
 )
 
+# SEO infrastructure (robots.txt, sitemap.xml)
+app.include_router(seo_router.router)
+
 # Auth & payments
 app.include_router(auth_router.router)
 app.include_router(payments_router.router)
@@ -54,6 +58,8 @@ app.include_router(landing_router.router)
 
 # App routes
 app.include_router(wizard.router)
+app.include_router(builder.router)
+app.include_router(my_cvs.router)
 app.include_router(cv.router)
 app.include_router(demo.router)
 app.include_router(photos.router)

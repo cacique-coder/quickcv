@@ -2,18 +2,21 @@
 
 import logging
 import os
+from pathlib import Path
 
 from fastapi import APIRouter, Form, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 
-from app.database import async_session
-from app.auth.utils import create_access_token
 from app.auth.dependencies import get_current_user
+from app.auth.utils import create_access_token
+from app.database import async_session
 from app.services.user_service import (
-    create_user, get_user_by_email, authenticate_user,
-    get_user_by_provider, update_last_login,
+    authenticate_user,
+    create_user,
+    get_user_by_email,
+    get_user_by_provider,
+    update_last_login,
 )
 
 logger = logging.getLogger(__name__)

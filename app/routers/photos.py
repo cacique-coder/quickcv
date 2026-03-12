@@ -1,16 +1,16 @@
 import uuid
+from pathlib import Path
 
 from fastapi import APIRouter, File, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 
 from app.services.storage import (
-    save_photo_local,
-    get_photo_local,
-    sync_to_r2,
-    get_photo_url_r2,
     StorageError,
+    get_photo_local,
+    get_photo_url_r2,
+    save_photo_local,
+    sync_to_r2,
 )
 
 router = APIRouter(prefix="/photos")

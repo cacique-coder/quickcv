@@ -48,6 +48,54 @@ ROLES: dict[str, DemoRole] = {
         description="Cross-functional delivery — Agile, stakeholders, budgets",
         hero_template="compact",
     ),
+    "professor": DemoRole(
+        id="professor",
+        name="Professor",
+        description="Academic role — publications, grants, teaching",
+        hero_template="academic",
+    ),
+    "nurse": DemoRole(
+        id="nurse",
+        name="Registered Nurse",
+        description="Healthcare — licenses, clinical rotations",
+        hero_template="healthcare",
+    ),
+    "lawyer": DemoRole(
+        id="lawyer",
+        name="Lawyer",
+        description="Legal — bar admissions, practice areas",
+        hero_template="legal",
+    ),
+    "graphic-designer": DemoRole(
+        id="graphic-designer",
+        name="Graphic Designer",
+        description="Creative — portfolio links, visual projects",
+        hero_template="creative",
+    ),
+    "sales-executive": DemoRole(
+        id="sales-executive",
+        name="Sales Executive",
+        description="Sales — quota data, revenue metrics",
+        hero_template="sales",
+    ),
+    "graduate": DemoRole(
+        id="graduate",
+        name="Recent Graduate",
+        description="Entry-level — coursework, internships, minimal experience",
+        hero_template="clean-slate",
+    ),
+    "freelancer": DemoRole(
+        id="freelancer",
+        name="Freelancer",
+        description="Contract — client-based project format",
+        hero_template="freelance",
+    ),
+    "career-changer": DemoRole(
+        id="career-changer",
+        name="Career Changer",
+        description="Transition — functional skills-first format",
+        hero_template="career-change",
+    ),
 }
 
 
@@ -606,6 +654,755 @@ def _project_manager() -> dict:
     }
 
 
+def _professor() -> dict:
+    return {
+        "name": "Dr. Sarah Williams",
+        "title": "Associate Professor of Computer Science",
+        "email": "s.williams@university.edu",
+        "phone": "+61 402 345 678",
+        "linkedin": "linkedin.com/in/sarahwilliamscs",
+        "github": "github.com/swilliams-cs",
+        "portfolio": "",
+        "summary": (
+            "Associate Professor of Computer Science with 12+ years in academia, "
+            "specialising in machine learning and natural language processing. "
+            "Published 35+ peer-reviewed papers (h-index 22) and secured over "
+            "$2.4M in competitive research funding. Passionate about bridging "
+            "industry and academia through applied research and mentoring the "
+            "next generation of researchers."
+        ),
+        "experience": [
+            {
+                "title": "Associate Professor",
+                "company": "University of Queensland",
+                "location": "Brisbane, Australia",
+                "date": "Jan 2020 – Present",
+                "tech": "",
+                "bullets": [
+                    "Lead the NLP & Applied ML research group (8 PhD students, 3 postdocs)",
+                    "Secured $1.8M ARC Discovery Grant for explainable AI research programme",
+                    "Published 12 papers in top-tier venues (NeurIPS, ACL, EMNLP) since 2020",
+                    "Redesigned postgraduate ML curriculum adopted by 3 partner universities",
+                    "Supervised 6 PhD completions with 100% employment placement rate",
+                ],
+            },
+            {
+                "title": "Senior Lecturer",
+                "company": "University of Melbourne",
+                "location": "Melbourne, Australia",
+                "date": "Mar 2016 – Dec 2019",
+                "tech": "",
+                "bullets": [
+                    "Taught undergraduate and postgraduate courses (200+ students/semester)",
+                    "Co-authored textbook 'Applied Machine Learning' adopted by 15+ institutions",
+                    "Established industry partnership programme with 4 tech companies",
+                    "Received Faculty Teaching Excellence Award (2018)",
+                ],
+            },
+            {
+                "title": "Postdoctoral Research Fellow",
+                "company": "Stanford University",
+                "location": "Stanford, CA, USA",
+                "date": "Jun 2013 – Feb 2016",
+                "tech": "",
+                "bullets": [
+                    "Conducted research in deep learning for biomedical text mining",
+                    "Published 8 papers with 1,200+ citations",
+                    "Collaborated with Stanford NLP Group on open-source toolkit development",
+                ],
+            },
+        ],
+        "skills": [
+            "Machine Learning", "Natural Language Processing", "Deep Learning",
+            "Research Leadership", "Grant Writing", "Python", "PyTorch",
+            "TensorFlow", "Statistical Analysis", "Academic Publishing",
+            "Curriculum Design", "PhD Supervision", "Peer Review",
+        ],
+        "skills_grouped": [
+            {"category": "Research", "items": ["Machine Learning", "NLP", "Deep Learning", "Statistical Analysis"]},
+            {"category": "Technical", "items": ["Python", "PyTorch", "TensorFlow", "R", "LaTeX"]},
+            {"category": "Academic", "items": ["Grant Writing", "Curriculum Design", "PhD Supervision", "Peer Review"]},
+        ],
+        "education": [
+            {"degree": "PhD in Computer Science", "institution": "University of Melbourne", "date": "2009 – 2013"},
+            {"degree": "Master of Computer Science", "institution": "University of Sydney", "date": "2007 – 2008"},
+            {"degree": "Bachelor of Computer Science (Honours)", "institution": "University of Queensland", "date": "2003 – 2006"},
+        ],
+        "certifications": [],
+        "key_achievements": [
+            "Secured $2.4M+ in competitive research funding across 5 grants",
+            "35+ publications with h-index of 22 and 3,500+ total citations",
+            "Faculty Teaching Excellence Award (2018)",
+        ],
+        "projects": [],
+        "publications": [
+            "Williams, S., Chen, L., & Park, J. (2023). 'Explainable Transformers for Biomedical Text Classification.' NeurIPS 2023.",
+            "Williams, S. & Rodriguez, A. (2022). 'Cross-Lingual Transfer Learning for Low-Resource NLP.' ACL 2022, pp. 1234–1245.",
+            "Park, J., Williams, S., et al. (2021). 'Attention-Based Models for Clinical Note Summarisation.' EMNLP 2021.",
+            "Williams, S. (2020). 'A Survey of Pre-trained Language Models for Domain-Specific Applications.' Journal of Machine Learning Research, 21(1), pp. 1–42.",
+        ],
+        "grants": [
+            "ARC Discovery Grant — Explainable AI for Healthcare — $1,800,000 — 2021",
+            "Google Research Scholar Award — NLP for Accessibility — $80,000 — 2022",
+            "University Strategic Research Fund — Cross-Lingual NLP — $520,000 — 2019",
+        ],
+        "teaching": [
+            {"course": "COMP7505 — Advanced Machine Learning", "institution": "University of Queensland", "date": "2020"},
+            {"course": "COMP4702 — Machine Learning", "institution": "University of Queensland", "date": "2021"},
+            {"course": "COMP3710 — Natural Language Processing", "institution": "University of Melbourne", "date": "2017"},
+        ],
+        "conferences": [
+            "Keynote Speaker — Australasian Language Technology Workshop (ALTA) — 2023",
+            "Invited Talk — Google Research Sydney — 'Explainability in NLP' — 2022",
+            "Oral Presentation — NeurIPS 2023, New Orleans, USA",
+        ],
+    }
+
+
+def _nurse() -> dict:
+    return {
+        "name": "Emily Johnson",
+        "title": "Registered Nurse — Intensive Care Unit",
+        "email": "emily.johnson@email.com",
+        "phone": "+61 411 234 567",
+        "linkedin": "linkedin.com/in/emilyjohnsonrn",
+        "github": "",
+        "portfolio": "",
+        "summary": (
+            "Dedicated Registered Nurse with 6+ years of experience in critical care "
+            "and intensive care settings. Skilled in ventilator management, haemodynamic "
+            "monitoring, and rapid patient assessment. Committed to evidence-based practice "
+            "and compassionate patient-centred care. Experienced preceptor with a track "
+            "record of mentoring graduate nurses through ICU transition programmes."
+        ),
+        "experience": [
+            {
+                "title": "Registered Nurse — ICU",
+                "company": "Royal Prince Alfred Hospital",
+                "location": "Sydney, Australia",
+                "date": "Mar 2021 – Present",
+                "tech": "",
+                "bullets": [
+                    "Provide critical care nursing for 12-bed ICU with 1:1 and 1:2 patient ratios",
+                    "Manage patients on mechanical ventilation, CRRT, and intra-aortic balloon pumps",
+                    "Precept 8+ graduate nurses through 6-month ICU transition programme",
+                    "Led implementation of early mobility protocol reducing ICU length of stay by 1.8 days",
+                    "Participate in rapid response and code blue teams across 600-bed facility",
+                ],
+            },
+            {
+                "title": "Registered Nurse — Medical/Surgical",
+                "company": "St Vincent's Hospital",
+                "location": "Melbourne, Australia",
+                "date": "Jan 2019 – Feb 2021",
+                "tech": "",
+                "bullets": [
+                    "Managed care for up to 6 patients on busy 32-bed medical/surgical ward",
+                    "Administered medications, IV therapy, and wound care to post-surgical patients",
+                    "Coordinated discharge planning with multidisciplinary healthcare teams",
+                    "Achieved 98% medication administration accuracy across 2-year tenure",
+                ],
+            },
+        ],
+        "skills": [
+            "Critical Care Nursing", "Ventilator Management", "Haemodynamic Monitoring",
+            "ECG Interpretation", "IV Therapy", "Wound Management",
+            "Patient Assessment", "Medication Administration", "Care Planning",
+            "Infection Control", "Electronic Health Records", "Team Leadership",
+        ],
+        "skills_grouped": [
+            {"category": "Clinical", "items": ["Critical Care", "Ventilator Management", "Haemodynamic Monitoring", "ECG Interpretation"]},
+            {"category": "Procedures", "items": ["IV Therapy", "Wound Management", "Medication Administration", "Blood Transfusion"]},
+            {"category": "Professional", "items": ["Patient Assessment", "Care Planning", "Infection Control", "Preceptorship"]},
+        ],
+        "education": [
+            {"degree": "Bachelor of Nursing", "institution": "University of Technology Sydney", "date": "2015 – 2018"},
+        ],
+        "certifications": [
+            "Graduate Certificate in Critical Care Nursing — University of Sydney (2022)",
+        ],
+        "key_achievements": [
+            "Led early mobility protocol reducing ICU length of stay by 1.8 days",
+            "Precepted 8+ graduate nurses with 100% programme completion rate",
+            "98% medication administration accuracy over 2-year tenure",
+        ],
+        "projects": [],
+        "licenses": [
+            "Registered Nurse — AHPRA — NMW0002345678 — Expires Dec 2026",
+            "Basic Life Support (BLS) — Australian Resuscitation Council — Current",
+            "Advanced Cardiovascular Life Support (ACLS) — ARC — Expires Jun 2026",
+        ],
+        "clinical_experience": [
+            {"role": "Student Nurse — ICU Placement", "facility": "Westmead Hospital", "date": "Jul 2017 – Oct 2017", "description": "120-hour clinical placement in 20-bed ICU, assisted with ventilated patient care and haemodynamic monitoring"},
+            {"role": "Student Nurse — Emergency Dept Placement", "facility": "Royal North Shore Hospital", "date": "Feb 2017 – May 2017", "description": "100-hour placement in Level 1 trauma centre, triaged patients and assisted in resuscitation bays"},
+            {"role": "Student Nurse — Aged Care Placement", "facility": "HammondCare", "date": "Aug 2016 – Nov 2016", "description": "80-hour placement providing holistic care for elderly residents including medication rounds and wound care"},
+        ],
+    }
+
+
+def _lawyer() -> dict:
+    return {
+        "name": "Michael Chen",
+        "title": "Senior Associate — Corporate & Commercial Law",
+        "email": "michael.chen@email.com",
+        "phone": "+61 404 567 890",
+        "linkedin": "linkedin.com/in/michaelchenlaw",
+        "github": "",
+        "portfolio": "",
+        "summary": (
+            "Senior Associate with 8+ years of experience in corporate and commercial "
+            "law, specialising in mergers & acquisitions, private equity, and cross-border "
+            "transactions. Advised on deals valued at over $3B collectively. Recognised "
+            "by Chambers Asia-Pacific as an 'Associate to Watch' and committed to "
+            "delivering commercially pragmatic legal solutions."
+        ),
+        "experience": [
+            {
+                "title": "Senior Associate — Corporate & M&A",
+                "company": "King & Wood Mallesons",
+                "location": "Sydney, Australia",
+                "date": "Feb 2021 – Present",
+                "tech": "",
+                "bullets": [
+                    "Lead deal teams on M&A and private equity transactions valued at $50M–$1.2B",
+                    "Advised ASX-listed clients on takeovers, schemes of arrangement, and capital raisings",
+                    "Drafted and negotiated share purchase agreements, shareholders agreements, and joint ventures",
+                    "Managed due diligence processes across 15+ transactions coordinating teams of 8–12 lawyers",
+                    "Mentored 4 junior lawyers and supervised 6 summer clerks across 3 intakes",
+                ],
+            },
+            {
+                "title": "Associate — Corporate",
+                "company": "Herbert Smith Freehills",
+                "location": "Melbourne, Australia",
+                "date": "Mar 2018 – Jan 2021",
+                "tech": "",
+                "bullets": [
+                    "Acted on cross-border M&A transactions across Australia, Southeast Asia, and Europe",
+                    "Advised private equity funds on portfolio acquisitions and exit strategies",
+                    "Prepared ASIC and ASX regulatory filings and disclosure documents",
+                    "Recognised in Chambers Asia-Pacific 2020 as 'Associate to Watch — Corporate/M&A'",
+                ],
+            },
+            {
+                "title": "Graduate Lawyer",
+                "company": "Herbert Smith Freehills",
+                "location": "Melbourne, Australia",
+                "date": "Feb 2017 – Feb 2018",
+                "tech": "",
+                "bullets": [
+                    "Rotated through Corporate, Disputes, and Employment practice groups",
+                    "Conducted legal research and drafted client memoranda on regulatory matters",
+                    "Assisted on pro bono matters including refugee visa applications",
+                ],
+            },
+        ],
+        "skills": [
+            "Mergers & Acquisitions", "Private Equity", "Corporate Advisory",
+            "Due Diligence", "Contract Negotiation", "Capital Markets",
+            "Regulatory Compliance", "Cross-Border Transactions",
+            "Stakeholder Management", "Legal Research", "Client Advisory",
+        ],
+        "skills_grouped": [
+            {"category": "Transactional", "items": ["M&A", "Private Equity", "Capital Markets", "Joint Ventures"]},
+            {"category": "Advisory", "items": ["Corporate Governance", "Regulatory Compliance", "ASIC/ASX Filings"]},
+            {"category": "Drafting", "items": ["SPAs", "Shareholders Agreements", "Due Diligence Reports", "Board Resolutions"]},
+        ],
+        "education": [
+            {"degree": "Juris Doctor", "institution": "University of Melbourne", "date": "2014 – 2016"},
+            {"degree": "Bachelor of Commerce (Finance)", "institution": "University of Sydney", "date": "2010 – 2013"},
+        ],
+        "certifications": [
+            "Admitted to Supreme Court of New South Wales (2017)",
+            "Admitted to High Court of Australia (2017)",
+            "Graduate Diploma of Legal Practice — College of Law (2016)",
+        ],
+        "key_achievements": [
+            "Advised on transactions valued at $3B+ collectively",
+            "Chambers Asia-Pacific 'Associate to Watch' — Corporate/M&A (2020)",
+            "Led due diligence for largest deal in firm's APAC PE practice (FY2023)",
+        ],
+        "projects": [],
+        "bar_admissions": [
+            "Supreme Court of New South Wales — 2017",
+            "High Court of Australia — 2017",
+        ],
+        "practice_areas": [
+            "Mergers & Acquisitions",
+            "Private Equity",
+            "Capital Markets",
+            "Corporate Governance",
+            "Cross-Border Transactions",
+        ],
+        "case_highlights": [
+            {"case_type": "Public M&A — Scheme of Arrangement", "outcome": "Successful $1.2B acquisition completed", "description": "Advised ASX-listed target on contested scheme of arrangement involving competing proposals from two international bidders"},
+            {"case_type": "Private Equity Buyout", "outcome": "Deal closed — $380M enterprise value", "description": "Led transaction for PE fund acquiring majority stake in Australian healthcare group, including complex vendor due diligence"},
+            {"case_type": "Cross-Border Joint Venture", "outcome": "JV operational within 6 months", "description": "Structured and documented 50/50 JV between Australian mining company and Singapore-based investor for Indonesian operations"},
+        ],
+    }
+
+
+def _graphic_designer() -> dict:
+    return {
+        "name": "Luna Patel",
+        "title": "Senior Graphic Designer",
+        "email": "luna.patel@email.com",
+        "phone": "+61 421 567 890",
+        "linkedin": "linkedin.com/in/lunapatel",
+        "github": "",
+        "portfolio": "lunapatel.design",
+        "summary": (
+            "Creative and detail-oriented Senior Graphic Designer with 5+ years of "
+            "experience delivering compelling visual identities, marketing materials, "
+            "and digital assets for brands ranging from startups to ASX-listed corporations. "
+            "Skilled in brand strategy, print and digital design, and motion graphics. "
+            "Passionate about translating complex ideas into beautiful, functional design."
+        ),
+        "experience": [
+            {
+                "title": "Senior Graphic Designer",
+                "company": "BrandWorks Studio",
+                "location": "Sydney, Australia",
+                "date": "Jun 2022 – Present",
+                "tech": "",
+                "bullets": [
+                    "Lead visual design for 8+ client accounts generating $2M+ annual revenue",
+                    "Created complete brand identities (logo, typography, colour systems) for 15+ brands",
+                    "Designed marketing collateral driving 35% increase in client engagement metrics",
+                    "Mentored 2 junior designers through portfolio development and skill building",
+                    "Produced motion graphics and social media content with 2M+ combined impressions",
+                ],
+            },
+            {
+                "title": "Graphic Designer",
+                "company": "Creative Pulse Agency",
+                "location": "Melbourne, Australia",
+                "date": "Jan 2020 – May 2022",
+                "tech": "",
+                "bullets": [
+                    "Designed print and digital campaigns for clients in tech, hospitality, and retail",
+                    "Produced packaging designs for FMCG brand achieving 20% sales uplift post-redesign",
+                    "Collaborated with copywriters and strategists on integrated marketing campaigns",
+                    "Managed production pipeline for 30+ concurrent projects using Asana",
+                ],
+            },
+            {
+                "title": "Junior Graphic Designer",
+                "company": "PixelCraft",
+                "location": "Brisbane, Australia",
+                "date": "Mar 2019 – Dec 2019",
+                "tech": "",
+                "bullets": [
+                    "Created social media graphics, email templates, and web banners for 10+ clients",
+                    "Assisted senior designers with large-scale branding and print projects",
+                    "Maintained brand consistency across all deliverables and client touchpoints",
+                ],
+            },
+        ],
+        "skills": [
+            "Brand Identity", "Visual Design", "Typography", "Colour Theory",
+            "Print Design", "Digital Design", "Motion Graphics", "Packaging Design",
+            "Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign", "Adobe After Effects",
+            "Figma", "Sketch", "Canva", "Art Direction",
+        ],
+        "skills_grouped": [
+            {"category": "Design", "items": ["Brand Identity", "Typography", "Colour Theory", "Layout", "Art Direction"]},
+            {"category": "Adobe Suite", "items": ["Photoshop", "Illustrator", "InDesign", "After Effects", "Premiere Pro"]},
+            {"category": "Digital", "items": ["Figma", "Sketch", "Canva", "Motion Graphics", "Social Media Design"]},
+            {"category": "Print", "items": ["Packaging Design", "Large Format", "Offset Printing", "Pre-press"]},
+        ],
+        "education": [
+            {"degree": "Bachelor of Design (Visual Communication)", "institution": "RMIT University", "date": "2015 – 2018"},
+        ],
+        "certifications": [
+            "Adobe Certified Professional — Illustrator (2023)",
+            "Google UX Design Certificate (2022)",
+        ],
+        "key_achievements": [
+            "Brand identity work contributed to client winning 'Best New Brand' at Australian Design Awards",
+            "Packaging redesign drove 20% sales uplift for FMCG client within 3 months",
+            "2M+ social media impressions on motion graphics content produced in 2023",
+        ],
+        "projects": [],
+        "portfolio_links": [
+            {"title": "Nova Coffee — Brand Identity", "url": "https://lunapatel.design/nova-coffee", "description": "Complete brand identity including logo, packaging, and store signage for specialty coffee chain"},
+            {"title": "TechStart Conference — Event Branding", "url": "https://lunapatel.design/techstart", "description": "Event branding, stage design, and digital assets for 2,000-attendee tech conference"},
+            {"title": "GreenLeaf Organics — Packaging", "url": "https://lunapatel.design/greenleaf", "description": "Sustainable packaging design for organic food brand achieving 20% sales uplift"},
+            {"title": "MindWell App — UI Design", "url": "https://lunapatel.design/mindwell", "description": "UI design and illustration for mental health app with 50K+ downloads"},
+        ],
+        "brand_statement": (
+            "I believe design is a conversation between brand and audience. My work "
+            "bridges strategic thinking with visual craft, creating identities that "
+            "resonate emotionally while driving measurable business outcomes."
+        ),
+    }
+
+
+def _sales_executive() -> dict:
+    return {
+        "name": "Tom Bradley",
+        "title": "Regional Sales Director — APAC",
+        "email": "tom.bradley@email.com",
+        "phone": "+61 408 901 234",
+        "linkedin": "linkedin.com/in/tombradleysales",
+        "github": "",
+        "portfolio": "",
+        "summary": (
+            "High-performing Regional Sales Director with 10+ years of experience "
+            "driving revenue growth across enterprise SaaS and technology markets in "
+            "APAC. Consistently exceeded quota by 120%+, generating $45M+ in cumulative "
+            "revenue. Proven ability to build and scale sales teams, develop strategic "
+            "partnerships, and close complex enterprise deals with C-suite stakeholders."
+        ),
+        "experience": [
+            {
+                "title": "Regional Sales Director — APAC",
+                "company": "CloudPlatform Inc",
+                "location": "Sydney, Australia",
+                "date": "Jan 2021 – Present",
+                "tech": "",
+                "bullets": [
+                    "Lead 12-person sales team across AU, NZ, and SEA generating $18M ARR",
+                    "Exceeded annual quota by 135% in FY2024, earning President's Club recognition",
+                    "Closed largest deal in APAC history — $4.2M 3-year enterprise agreement",
+                    "Grew APAC revenue from $8M to $18M (125% growth) over 3 years",
+                    "Implemented MEDDIC sales methodology increasing win rates from 22% to 38%",
+                ],
+            },
+            {
+                "title": "Senior Account Executive",
+                "company": "SalesForceOne",
+                "location": "Melbourne, Australia",
+                "date": "Mar 2017 – Dec 2020",
+                "tech": "",
+                "bullets": [
+                    "Managed portfolio of 40+ enterprise accounts ($6M+ annual quota)",
+                    "Achieved 128% quota attainment averaged across 4 years",
+                    "Developed strategic account plans resulting in 3 seven-figure expansions",
+                    "Built relationships with C-suite executives at ASX 100 companies",
+                ],
+            },
+            {
+                "title": "Account Executive",
+                "company": "TechVentures",
+                "location": "Brisbane, Australia",
+                "date": "Jun 2014 – Feb 2017",
+                "tech": "",
+                "bullets": [
+                    "Exceeded first-year quota by 115%, promoted to Senior AE within 18 months",
+                    "Built pipeline of $4M+ through outbound prospecting and networking events",
+                    "Closed 60+ mid-market deals with average contract value of $85K",
+                ],
+            },
+        ],
+        "skills": [
+            "Enterprise Sales", "Strategic Account Management", "Revenue Growth",
+            "MEDDIC", "Consultative Selling", "Pipeline Management",
+            "C-Suite Engagement", "Contract Negotiation", "Team Leadership",
+            "Salesforce", "Gong", "Sales Navigator", "Clari",
+            "Forecasting", "Partner Channel Development",
+        ],
+        "skills_grouped": [
+            {"category": "Sales", "items": ["Enterprise Sales", "MEDDIC", "Consultative Selling", "Negotiation"]},
+            {"category": "Leadership", "items": ["Team Management", "Coaching", "Revenue Planning", "Forecasting"]},
+            {"category": "Tools", "items": ["Salesforce", "Gong", "Clari", "Sales Navigator", "Outreach"]},
+        ],
+        "education": [
+            {"degree": "Bachelor of Business (Marketing)", "institution": "Queensland University of Technology", "date": "2010 – 2013"},
+        ],
+        "certifications": [
+            "MEDDIC Certified Sales Professional (2021)",
+            "Sandler Sales Certification (2019)",
+            "Salesforce Certified Administrator (2020)",
+        ],
+        "key_achievements": [
+            "Grew APAC revenue from $8M to $18M (125% growth) in 3 years",
+            "President's Club winner 3 consecutive years (FY2022–FY2024)",
+            "Closed largest APAC deal in company history — $4.2M enterprise agreement",
+        ],
+        "projects": [],
+        "quota_metrics": [
+            {"period": "FY2024", "target": "$14M", "achieved": "$18.9M", "percentage": "135%"},
+            {"period": "FY2023", "target": "$12M", "achieved": "$15.6M", "percentage": "130%"},
+            {"period": "FY2022", "target": "$10M", "achieved": "$12.2M", "percentage": "122%"},
+        ],
+    }
+
+
+def _graduate() -> dict:
+    return {
+        "name": "Aisha Rahman",
+        "title": "Computer Science Graduate",
+        "email": "aisha.rahman@email.com",
+        "phone": "+61 423 456 789",
+        "linkedin": "linkedin.com/in/aisharahman",
+        "github": "github.com/aisharahman",
+        "portfolio": "",
+        "summary": (
+            "Recent Computer Science graduate with strong foundations in software "
+            "development, algorithms, and data structures. Completed a 6-month "
+            "internship building production features for a fintech startup. Eager to "
+            "contribute to a collaborative engineering team and grow as a full-stack "
+            "developer."
+        ),
+        "experience": [
+            {
+                "title": "Software Engineering Intern",
+                "company": "PayTech Startup",
+                "location": "Sydney, Australia",
+                "date": "Jul 2025 – Dec 2025",
+                "tech": "Python, Django, React, PostgreSQL",
+                "bullets": [
+                    "Built transaction history dashboard used by 5,000+ customers daily",
+                    "Implemented REST API endpoints for payment reconciliation module",
+                    "Wrote unit and integration tests achieving 85% code coverage on new features",
+                    "Participated in Agile ceremonies including sprint planning and retrospectives",
+                ],
+            },
+        ],
+        "skills": [
+            "Python", "Java", "JavaScript", "React", "Django",
+            "PostgreSQL", "Git", "Docker", "REST APIs",
+            "Data Structures", "Algorithms", "Agile/Scrum",
+        ],
+        "skills_grouped": [
+            {"category": "Languages", "items": ["Python", "Java", "JavaScript", "SQL"]},
+            {"category": "Frameworks", "items": ["Django", "React", "Flask"]},
+            {"category": "Tools", "items": ["Git", "Docker", "VS Code", "Jira"]},
+        ],
+        "education": [
+            {
+                "degree": "Bachelor of Computer Science",
+                "institution": "University of New South Wales",
+                "date": "2023 – 2025",
+            },
+        ],
+        "certifications": [],
+        "key_achievements": [
+            "Dean's List — 2 consecutive semesters (GPA 3.8/4.0)",
+            "Winner — University Hackathon 2025 (AI-powered accessibility tool)",
+        ],
+        "projects": [
+            {
+                "name": "StudyBuddy",
+                "url": "github.com/aisharahman/studybuddy",
+                "description": "AI-powered study planner that generates revision schedules from lecture notes",
+                "tech": ["Python", "FastAPI", "React", "OpenAI API"],
+            },
+            {
+                "name": "EcoTrack",
+                "url": "github.com/aisharahman/ecotrack",
+                "description": "Carbon footprint calculator with personalised reduction suggestions",
+                "tech": ["JavaScript", "Node.js", "MongoDB", "Chart.js"],
+            },
+        ],
+    }
+
+
+def _freelancer() -> dict:
+    return {
+        "name": "Chris Navarro",
+        "title": "Freelance Full-Stack Developer",
+        "email": "chris@navarro.dev",
+        "phone": "+61 415 678 901",
+        "linkedin": "linkedin.com/in/chrisnavarro",
+        "github": "github.com/chrisnavarro",
+        "portfolio": "navarro.dev",
+        "summary": (
+            "Freelance Full-Stack Developer with 7+ years building web applications, "
+            "e-commerce platforms, and SaaS products for clients across Australia, the US, "
+            "and Europe. Delivered 50+ projects ranging from MVPs to enterprise platforms. "
+            "Specialising in React, Node.js, and cloud architecture with a focus on "
+            "clean code, performance, and scalability."
+        ),
+        "experience": [
+            {
+                "title": "Freelance Full-Stack Developer",
+                "company": "Self-Employed",
+                "location": "Sydney, Australia (Remote)",
+                "date": "Jan 2019 – Present",
+                "tech": "React, Next.js, Node.js, TypeScript, AWS, PostgreSQL",
+                "bullets": [
+                    "Delivered 35+ client projects across e-commerce, SaaS, and fintech verticals",
+                    "Maintained 100% client satisfaction with average project rating of 4.9/5",
+                    "Built and deployed production applications handling 100K+ monthly users",
+                    "Managed full project lifecycle from scoping through deployment and maintenance",
+                    "Generated $180K+ annual revenue as solo practitioner",
+                ],
+            },
+            {
+                "title": "Software Developer",
+                "company": "Digital Agency Co",
+                "location": "Melbourne, Australia",
+                "date": "Mar 2017 – Dec 2018",
+                "tech": "Ruby on Rails, React, PostgreSQL, Heroku",
+                "bullets": [
+                    "Built web applications for 15+ agency clients across diverse industries",
+                    "Developed reusable component library reducing development time by 30%",
+                    "Collaborated with designers and project managers in Agile team of 8",
+                ],
+            },
+        ],
+        "skills": [
+            "React", "Next.js", "Node.js", "TypeScript", "Python",
+            "Ruby on Rails", "PostgreSQL", "MongoDB", "Redis",
+            "AWS", "Vercel", "Docker", "CI/CD",
+            "REST APIs", "GraphQL", "Stripe", "Shopify",
+        ],
+        "skills_grouped": [
+            {"category": "Frontend", "items": ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML/CSS"]},
+            {"category": "Backend", "items": ["Node.js", "Python", "Ruby on Rails", "GraphQL", "REST APIs"]},
+            {"category": "Infrastructure", "items": ["AWS", "Vercel", "Docker", "CI/CD", "PostgreSQL", "MongoDB"]},
+            {"category": "Integrations", "items": ["Stripe", "Shopify", "SendGrid", "Twilio", "Auth0"]},
+        ],
+        "education": [
+            {"degree": "Bachelor of Information Technology", "institution": "RMIT University", "date": "2013 – 2016"},
+        ],
+        "certifications": [
+            "AWS Certified Developer — Associate (2022)",
+            "Shopify Partner Certification (2021)",
+        ],
+        "key_achievements": [
+            "Delivered 50+ projects with 100% client satisfaction rating",
+            "Built e-commerce platform processing $2M+ annually for retail client",
+            "Generated $180K+ annual freelance revenue as solo practitioner",
+        ],
+        "projects": [
+            {
+                "name": "FreshCart — E-Commerce Platform",
+                "url": "navarro.dev/freshcart",
+                "description": "Custom Shopify Plus storefront with subscription management, processing $2M+ annually",
+                "tech": ["Next.js", "Shopify API", "Stripe", "Vercel"],
+            },
+            {
+                "name": "TradeFlow — SaaS Dashboard",
+                "url": "navarro.dev/tradeflow",
+                "description": "Real-time trading analytics platform for commodity brokers with 500+ daily active users",
+                "tech": ["React", "Node.js", "WebSocket", "PostgreSQL", "AWS"],
+            },
+            {
+                "name": "HealthBook — Appointment System",
+                "url": "navarro.dev/healthbook",
+                "description": "Multi-tenant appointment booking system for 30+ medical practices",
+                "tech": ["Ruby on Rails", "React", "Twilio", "Heroku"],
+            },
+            {
+                "name": "GreenBuild — Carbon Calculator",
+                "url": "navarro.dev/greenbuild",
+                "description": "Carbon footprint calculator for construction companies with PDF report generation",
+                "tech": ["Python", "FastAPI", "React", "Docker"],
+            },
+            {
+                "name": "LegalEase — Document Automation",
+                "url": "navarro.dev/legalease",
+                "description": "Contract generation and e-signature platform for small law firms",
+                "tech": ["Next.js", "Node.js", "DocuSign API", "MongoDB"],
+            },
+        ],
+        "availability": "Available for new projects",
+    }
+
+
+def _career_changer() -> dict:
+    return {
+        "name": "Diana Foster",
+        "title": "UX Designer (Transitioning from Education)",
+        "email": "diana.foster@email.com",
+        "phone": "+61 419 012 345",
+        "linkedin": "linkedin.com/in/dianafosterux",
+        "github": "",
+        "portfolio": "dianafoster.design",
+        "summary": (
+            "UX Designer transitioning from 10 years in education, bringing deep "
+            "expertise in user empathy, curriculum design, and data-driven iteration. "
+            "Completed intensive UX bootcamp and delivered 4 end-to-end design projects. "
+            "Unique ability to translate complex requirements into intuitive, accessible "
+            "experiences informed by years of understanding diverse learner needs."
+        ),
+        "experience": [
+            {
+                "title": "UX Designer (Contract)",
+                "company": "EduTech Solutions",
+                "location": "Sydney, Australia",
+                "date": "Sep 2025 – Present",
+                "tech": "",
+                "bullets": [
+                    "Designing student onboarding flow for learning management platform (40K+ users)",
+                    "Conducted 15 user interviews and usability tests with students and educators",
+                    "Created interactive prototypes in Figma tested across 3 iteration cycles",
+                    "Reduced user onboarding drop-off by 25% through evidence-based redesign",
+                ],
+            },
+            {
+                "title": "Head of Curriculum & Teaching",
+                "company": "Riverside Secondary College",
+                "location": "Melbourne, Australia",
+                "date": "Jan 2018 – Jun 2025",
+                "tech": "",
+                "bullets": [
+                    "Led curriculum redesign for 1,200-student school improving NAPLAN results by 15%",
+                    "Designed and facilitated 50+ professional development workshops for 80 staff",
+                    "Managed $200K annual curriculum budget and vendor relationships",
+                    "Analysed student performance data to drive evidence-based teaching strategies",
+                    "Created accessible learning materials for students with diverse needs",
+                ],
+            },
+            {
+                "title": "English & Humanities Teacher",
+                "company": "Bayside Grammar School",
+                "location": "Melbourne, Australia",
+                "date": "Feb 2015 – Dec 2017",
+                "tech": "",
+                "bullets": [
+                    "Taught classes of 25–30 students across Years 7–12",
+                    "Developed engaging lesson plans aligned to Victorian curriculum standards",
+                    "Achieved highest student satisfaction scores in English department (2017)",
+                ],
+            },
+        ],
+        "skills": [
+            "UX Design", "User Research", "Usability Testing", "Wireframing",
+            "Prototyping", "Figma", "Information Architecture", "Accessibility",
+            "Curriculum Design", "Workshop Facilitation", "Data Analysis",
+            "Stakeholder Management", "Empathy Mapping", "Design Thinking",
+        ],
+        "skills_grouped": [
+            {"category": "UX Design", "items": ["User Research", "Usability Testing", "Wireframing", "Prototyping", "Information Architecture"]},
+            {"category": "Tools", "items": ["Figma", "Miro", "Maze", "Hotjar", "Google Analytics"]},
+            {"category": "Transferable", "items": ["Curriculum Design", "Workshop Facilitation", "Data Analysis", "Stakeholder Management", "Accessibility"]},
+        ],
+        "education": [
+            {"degree": "UX Design Immersive Bootcamp", "institution": "General Assembly", "date": "2025"},
+            {"degree": "Master of Teaching (Secondary)", "institution": "University of Melbourne", "date": "2013 – 2014"},
+            {"degree": "Bachelor of Arts (English & Psychology)", "institution": "Monash University", "date": "2009 – 2012"},
+        ],
+        "certifications": [
+            "Google UX Design Professional Certificate (2025)",
+            "Interaction Design Foundation — UX Management (2025)",
+        ],
+        "key_achievements": [
+            "Reduced onboarding drop-off by 25% in first UX contract role",
+            "Led curriculum redesign improving NAPLAN results by 15% across 1,200 students",
+            "Designed 50+ professional development workshops with 95%+ satisfaction ratings",
+            "Created accessible learning materials adopted across 3 schools in network",
+        ],
+        "projects": [
+            {
+                "name": "MindfulMe — Mental Health App",
+                "url": "dianafoster.design/mindfulme",
+                "description": "End-to-end UX design for teen mental health app (bootcamp capstone project)",
+                "tech": ["Figma", "Maze", "User Research"],
+            },
+            {
+                "name": "CommunityHub — Neighbourhood Platform",
+                "url": "dianafoster.design/communityhub",
+                "description": "Redesigned local community platform improving task completion rate by 40%",
+                "tech": ["Figma", "Hotjar", "Usability Testing"],
+            },
+        ],
+    }
+
+
 # ---------------------------------------------------------------------------
 # Role getter
 # ---------------------------------------------------------------------------
@@ -617,6 +1414,14 @@ _ROLE_DATA = {
     "vp-engineering": _vp_engineering,
     "ux-designer": _ux_designer,
     "project-manager": _project_manager,
+    "professor": _professor,
+    "nurse": _nurse,
+    "lawyer": _lawyer,
+    "graphic-designer": _graphic_designer,
+    "sales-executive": _sales_executive,
+    "graduate": _graduate,
+    "freelancer": _freelancer,
+    "career-changer": _career_changer,
 }
 
 

@@ -1,9 +1,8 @@
 import asyncio
 import logging
 import os
-import subprocess
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
@@ -107,10 +106,10 @@ class ClaudeCodeClient(LLMClient):
             stdout, stderr = await asyncio.wait_for(
                 proc.communicate(), timeout=self.timeout
             )
-        except asyncio.TimeoutError:
+        except TimeoutError as err:
             proc.kill()
             await proc.communicate()
-            raise RuntimeError(f"Claude CLI timed out after {self.timeout}s")
+            raise RuntimeError(f"Claude CLI timed out after {self.timeout}s") from err
 
         if proc.returncode != 0:
             raise RuntimeError(f"Claude CLI failed: {stderr.decode()}")

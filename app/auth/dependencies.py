@@ -3,9 +3,9 @@
 from fastapi import Request
 from sqlalchemy import select
 
-from app.database import async_session
-from app.models import User, Credit
 from app.auth.utils import decode_access_token
+from app.database import async_session
+from app.models import Credit, User
 
 
 async def get_current_user(request: Request) -> User | None:

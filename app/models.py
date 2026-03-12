@@ -1,16 +1,16 @@
 """SQLAlchemy models for users, credits, payments, and WebAuthn credentials."""
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, Float
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
 
 def _utcnow():
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def _uuid():
@@ -77,3 +77,20 @@ class WebAuthnCredential(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
     user: Mapped["User"] = relationship(back_populates="webauthn_credentials")
+
+
+class SavedCV(Base):
+    """Stored CV content — both AI-generated and manually built."""
+    __tablename__ = "saved_cvs"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    user_id: Mapped[str | None] = mapped_column(String(32), ForeignKey("users.id"), nullable=True, index=True)
+    attempt_id: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    source: Mapped[str] = mapped_column(String(20), nullable=False)  # "ai" or "builder"
+    label: Mapped[str] = mapped_column(String(255), default="")  # user-chosen name for this CV
+    job_title: Mapped[str] = mapped_column(String(255), default="")  # target job title (optional)
+    region: Mapped[str] = mapped_column(String(5), nullable=False)
+    template_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    markdown: Mapped[str] = mapped_column(Text, nullable=False)  # sanitized markdown content
+    cv_data_json: Mapped[str] = mapped_column(Text, nullable=False)  # structured CV data as JSON
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
