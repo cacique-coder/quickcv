@@ -1,23 +1,24 @@
 """Tests for template registry — templates, regions, and configuration."""
 
-import pytest
 from app.services.template_registry import (
-    get_template,
-    get_region,
-    list_templates,
-    list_regions,
-    TEMPLATES,
-    REGIONS,
     REGION_RULES,
     CVTemplate,
     RegionConfig,
+    get_region,
+    get_template,
+    list_regions,
+    list_templates,
 )
 
 
 class TestTemplates:
     """Tests for CV template registry."""
 
-    EXPECTED_TEMPLATES = ["classic", "modern", "minimal", "executive", "tech", "compact"]
+    EXPECTED_TEMPLATES = [
+        "classic", "modern", "minimal", "executive", "tech", "compact",
+        "academic", "healthcare", "legal", "creative", "sales",
+        "engineering", "education", "consulting", "nonprofit", "federal",
+    ]
 
     def test_all_templates_exist(self):
         for tpl_id in self.EXPECTED_TEMPLATES:

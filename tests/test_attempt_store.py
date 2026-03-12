@@ -1,16 +1,15 @@
 """Tests for attempt store — session persistence."""
 
+
 import pytest
-from pathlib import Path
 
 from app.services.attempt_store import (
     create_attempt,
     get_attempt,
-    update_attempt,
-    save_document,
     get_document_bytes,
     get_document_filename,
-    ATTEMPTS_DIR,
+    save_document,
+    update_attempt,
 )
 
 

@@ -1,10 +1,10 @@
 """Tests for authentication: signup, login, logout, JWT tokens."""
 
 import pytest
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
+from app.auth.utils import create_access_token, decode_access_token, hash_password, verify_password
 from app.main import app
-from app.auth.utils import hash_password, verify_password, create_access_token, decode_access_token
 
 
 class TestPasswordHashing:
@@ -42,7 +42,7 @@ async def mock_db_for_auth(monkeypatch, tmp_path):
     """Use a temp database for auth tests."""
     db_path = tmp_path / "test.db"
 
-    from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
     test_engine = create_async_engine(f"sqlite+aiosqlite:///{db_path}", echo=False)
     test_session = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 

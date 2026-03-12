@@ -1,6 +1,7 @@
 """Tests for CV parser — file format detection and text extraction."""
 
 import pytest
+
 from app.services.cv_parser import parse_cv, parse_text
 
 
@@ -34,7 +35,7 @@ class TestParseText:
     """Tests for plain text parser."""
 
     def test_utf8_text(self):
-        text = parse_text("Résumé — Senior Engineer".encode("utf-8"))
+        text = parse_text("Résumé — Senior Engineer".encode())
         assert "Résumé" in text
 
     def test_invalid_utf8_handled(self):

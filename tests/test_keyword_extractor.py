@@ -1,6 +1,7 @@
 """Tests for LLM-powered keyword extraction."""
 
 import json
+
 import pytest
 
 from app.services.keyword_extractor import extract_keywords_llm

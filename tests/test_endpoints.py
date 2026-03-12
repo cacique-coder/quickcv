@@ -1,13 +1,13 @@
 """Integration tests for FastAPI endpoints."""
 
 import json
+
 import pytest
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
 from app.main import app
-from app.services.attempt_store import create_attempt, update_attempt, save_document
+from app.services.attempt_store import create_attempt, save_document, update_attempt
 from app.services.llm_client import LLMClient, LLMResult
-
 
 # ── Mock LLM for endpoint tests ──────────────────────────────
 
@@ -145,7 +145,7 @@ class TestAnalyzeEndpoint:
 
     async def test_analyze_with_prepared_attempt(self, prepared_attempt):
         transport = ASGITransport(app=app)
-        async with AsyncClient(transport=transport, base_url="http://test") as client:
+        async with AsyncClient(transport=transport, base_url="http://test") as _client:
             # Manually set session cookie with attempt_id
             # This is tricky with signed sessions, so we test via the wizard flow instead
             pass  # Covered by manual/E2E testing

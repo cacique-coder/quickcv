@@ -1,10 +1,11 @@
 """Tests for CV quality reviewer and refiner."""
 
 import json
+
 import pytest
 
-from app.services.cv_reviewer import review_cv_quality
 from app.services.cv_refiner import apply_review_fixes, sanitize_user_instruction
+from app.services.cv_reviewer import review_cv_quality
 
 
 class TestSanitizeUserInstruction:

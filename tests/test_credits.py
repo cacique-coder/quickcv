@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.services.credit_service import get_balance, deduct_credit, add_credits, has_credits
+from app.services.credit_service import add_credits, deduct_credit, get_balance, has_credits
 
 
 @pytest.fixture(autouse=True)
@@ -10,7 +10,7 @@ async def setup_test_db(monkeypatch, tmp_path):
     """Use a temp database for credit tests."""
     db_path = tmp_path / "test.db"
 
-    from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
     test_engine = create_async_engine(f"sqlite+aiosqlite:///{db_path}", echo=False)
     test_session = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 
@@ -26,7 +26,7 @@ async def setup_test_db(monkeypatch, tmp_path):
 
 async def _create_test_user(session_factory):
     """Create a test user and return their ID."""
-    from app.models import User, Credit
+    from app.models import Credit, User
     async with session_factory() as db:
         user = User(email="credit@test.com", name="Credit Test")
         db.add(user)

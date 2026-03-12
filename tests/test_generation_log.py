@@ -1,11 +1,11 @@
 """Tests for generation logging."""
 
 import json
+
 import pytest
-from pathlib import Path
 
 from app.services.ats_analyzer import ATSResult
-from app.services.generation_log import log_generation, _score_breakdown, LOG_FILE
+from app.services.generation_log import _score_breakdown, log_generation
 
 
 @pytest.fixture(autouse=True)

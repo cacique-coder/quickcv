@@ -1,0 +1,39 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "S",    # flake8-bandit (security rules in ruff)
+  "B",    # flake8-bugbear
+  "UP",   # pyupgrade
+  "RUF",  # ruff-specific rules
+]
+ignore = [
+  "E501",   # line too long (handled by formatter)
+  "S101",   # assert usage (fine in tests)
+  "B008",   # Form() as default arg is standard FastAPI pattern
+  "RUF001", # en-dashes and curly quotes are intentional in CV content
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S106", "RUF012"]  # asserts, test passwords, class-level lists OK in tests
+"app/services/demo_data.py" = ["RUF001"]   # en-dashes are intentional in CV date ranges
+"app/services/pii_redactor.py" = ["S105"]  # PII tokens are not passwords
+"app/routers/auth.py" = ["S106"]           # OAuth URLs are not passwords
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = [
+  "B105",  # false positives on PII tokens and OAuth URLs
+  "B106",  # false positives on OAuth access_token_url params
+  "B404",  # subprocess import (used intentionally in llm_client)
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

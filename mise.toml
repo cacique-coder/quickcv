@@ -1,0 +1,38 @@
+[tools]
+python = "latest"
+
+[tasks.dev]
+description = "Start development server"
+run = "python -m uvicorn app.main:app --reload --port 8000"
+
+[tasks.install]
+description = "Install Python dependencies"
+run = "python -m pip install -r requirements.txt"
+
+[tasks.lint]
+description = "Run ruff linter"
+run = "ruff check app/ tests/"
+
+[tasks.lint-fix]
+description = "Auto-fix lint issues"
+run = "ruff check --fix app/ tests/"
+
+[tasks.security]
+description = "Run bandit security scanner"
+run = "bandit -r app/ -c pyproject.toml"
+
+[tasks.audit]
+description = "Check dependencies for known CVEs"
+run = "python -m pip_audit -r requirements.txt"
+
+[tasks.test]
+description = "Run tests with coverage"
+run = "python -m pytest --cov=app --cov-report=term-missing"
+
+[tasks.check]
+description = "Run all quality checks (lint + security + audit)"
+run = [
+  "ruff check app/ tests/",
+  "bandit -r app/ -c pyproject.toml",
+  "python -m pip_audit -r requirements.txt",
+]

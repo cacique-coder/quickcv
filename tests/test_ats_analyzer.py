@@ -1,12 +1,10 @@
 """Tests for ATS analyzer — keyword extraction, scoring, and section checks."""
 
-import pytest
 from app.services.ats_analyzer import (
     ATSResult,
+    _strip_boilerplate,
     analyze_ats,
     extract_keywords,
-    _strip_boilerplate,
-    EXPECTED_SECTIONS,
 )
 
 

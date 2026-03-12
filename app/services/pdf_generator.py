@@ -52,7 +52,7 @@ async def generate_pdf(rendered_html: str) -> bytes | None:
             stderr=asyncio.subprocess.PIPE,
         )
 
-        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=30)
+        _stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=30)
 
         if proc.returncode != 0:
             logger.error("PDF generation failed: %s", stderr.decode())
@@ -64,7 +64,7 @@ async def generate_pdf(rendered_html: str) -> bytes | None:
 
         return pdf_file.read_bytes()
 
-    except asyncio.TimeoutError:
+    except TimeoutError:
         logger.error("PDF generation timed out")
         return None
     except Exception:

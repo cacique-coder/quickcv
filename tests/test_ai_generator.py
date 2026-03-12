@@ -1,13 +1,14 @@
 """Tests for AI generator — prompt building, JSON parsing, and region rules."""
 
 import json
+
 import pytest
 
 from app.services.ai_generator import (
-    _build_region_rules,
     _build_ats_report,
-    _build_personal_context,
     _build_keyword_context,
+    _build_personal_context,
+    _build_region_rules,
     _parse_cv_json,
     generate_tailored_cv,
 )

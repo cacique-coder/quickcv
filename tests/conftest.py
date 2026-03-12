@@ -1,11 +1,10 @@
 """Shared fixtures for QuillCV tests."""
 
+
 import pytest
-from pathlib import Path
 
 from app.services.ats_analyzer import ATSResult
 from app.services.llm_client import LLMClient, LLMResult
-
 
 # ── Sample data ──────────────────────────────────────────────
 

@@ -1,12 +1,13 @@
 """Tests for prompt injection detection and sanitization."""
 
 import pytest
+
 from app.services.prompt_guard import (
-    sanitize_user_input,
-    detect_injection,
-    neutralize,
     MAX_CV_LENGTH,
     MAX_JOB_DESC_LENGTH,
+    detect_injection,
+    neutralize,
+    sanitize_user_input,
 )
 
 
