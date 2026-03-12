@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}My Account — QuillCV{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <div class="account-header">
+        <h2>My Account</h2>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="account-section">
+        <h3>Profile</h3>
+        <form hx-post="/account/update-profile" hx-target="#profile-result" hx-swap="innerHTML">
+            <div class="account-field">
+                <label for="acct-name">Name</label>
+                <input id="acct-name" type="text" name="name" class="input-field" value="{{ request.state.user.name }}">
+            </div>
+            <div class="account-field">
+                <label>Email</label>
+                <input type="email" class="input-field" value="{{ request.state.user.email }}" disabled>
+                <span class="account-hint">Email cannot be changed</span>
+            </div>
+            <div class="account-field">
+                <label>Member since</label>
+                <span class="account-value">{{ request.state.user.created_at.strftime("%d %b %Y") }}</span>
+            </div>
+            <button type="submit" class="btn-primary btn-sm">Save Changes</button>
+            <div id="profile-result"></div>
+        </form>
+    </div>
+
+    <!-- Credits Section -->
+    <div class="account-section">
+        <h3>Credits</h3>
+        <div class="account-stats">
+            <div class="account-stat">
+                <span class="account-stat-value">{{ request.state.balance }}</span>
+                <span class="account-stat-label">Available</span>
+            </div>
+            <div class="account-stat">
+                <span class="account-stat-value">{{ credits.total_purchased if credits else 0 }}</span>
+                <span class="account-stat-label">Purchased</span>
+            </div>
+            <div class="account-stat">
+                <span class="account-stat-value">{{ credits.total_used if credits else 0 }}</span>
+                <span class="account-stat-label">Used</span>
+            </div>
+            <div class="account-stat">
+                <span class="account-stat-value">{{ saved_cv_count }}</span>
+                <span class="account-stat-label">CVs Saved</span>
+            </div>
+        </div>
+        <a href="/pricing" class="btn-secondary btn-sm">Buy More Credits</a>
+    </div>
+
+    <!-- Security Section -->
+    <div class="account-section">
+        <h3>Security</h3>
+
+        {% if request.state.user.provider %}
+        <div class="account-field">
+            <label>Connected account</label>
+            <span class="account-value">{{ request.state.user.provider | title }} ({{ request.state.user.provider_id[:8] if request.state.user.provider_id else '' }}...)</span>
+        </div>
+        {% endif %}
+
+        {% if request.state.user.password_hash %}
+        <form hx-post="/account/change-password" hx-target="#password-result" hx-swap="innerHTML" class="account-password-form">
+            <div class="account-field">
+                <label for="acct-cur-pw">Current Password</label>
+                <input id="acct-cur-pw" type="password" name="current_password" class="input-field" required>
+            </div>
+            <div class="account-field">
+                <label for="acct-new-pw">New Password</label>
+                <input id="acct-new-pw" type="password" name="new_password" class="input-field" required minlength="8">
+            </div>
+            <button type="submit" class="btn-secondary btn-sm">Change Password</button>
+            <div id="password-result"></div>
+        </form>
+        {% else %}
+        <p class="account-hint">You signed up with {{ request.state.user.provider | title }}. No password set.</p>
+        {% endif %}
+
+        {% if passkeys %}
+        <div class="account-passkeys">
+            <label>Passkeys</label>
+            {% for pk in passkeys %}
+            <div class="account-passkey-item">
+                <span>{{ pk.name }}</span>
+                <span class="account-hint">Added {{ pk.created_at.strftime("%d %b %Y") }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Billing Section -->
+    <div class="account-section">
+        <h3>Billing History</h3>
+        {% if payments %}
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Credits</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td>{{ p.created_at.strftime("%d %b %Y") }}</td>
+                    <td>${{ "%.2f" | format(p.amount_cents / 100) }}</td>
+                    <td>{{ p.credits_granted }}</td>
+                    <td><span class="account-status account-status--{{ p.status }}">{{ p.status | title }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="account-hint">No payments yet. <a href="/pricing">Buy credits</a> to get started.</p>
+        {% endif %}
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="account-section account-section--danger">
+        <h3>Danger Zone</h3>
+        <p class="account-hint">Permanently delete your account and all associated data. This cannot be undone.</p>
+        <form hx-post="/account/delete" hx-target="#delete-result" hx-swap="innerHTML">
+            <div class="account-field">
+                <label for="acct-confirm">Type DELETE to confirm</label>
+                <input id="acct-confirm" type="text" name="confirm" class="input-field" placeholder="DELETE" required>
+            </div>
+            <button type="submit" class="btn-danger btn-sm">Delete My Account</button>
+            <div id="delete-result"></div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -49,10 +49,10 @@
             <div class="site-nav-links">
                 <a href="/pricing" class="nav-link">Pricing</a>
                 <a href="/demo" class="nav-link">Templates</a>
-                {% if user %}
-                    <a href="/app" class="nav-link">My Account</a>
-                    <span class="nav-credits" title="Credits remaining">{{ balance|default(0) }} credits</span>
-                    <a href="/logout" class="nav-link">Sign Out</a>
+                {% if request.state.user %}
+                    <span class="nav-credits" title="Credits remaining">{{ request.state.balance }} credits</span>
+                    <a href="/account" class="nav-link">My Account</a>
+                    <a href="/logout" class="nav-link nav-link--muted">Sign Out</a>
                 {% else %}
                     <a href="/login" class="nav-link" rel="nofollow">Sign In</a>
                     <a href="/signup" class="btn-cta btn-cta--small">Get Started</a>
@@ -65,7 +65,11 @@
                   stroke="var(--border)" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
     </header>
-    {% block app_nav %}{% endblock %}
+    {% block app_nav %}
+        {% if request.state.user %}
+            {% include "partials/app_nav.html" %}
+        {% endif %}
+    {% endblock %}
     <main>
         {% block content %}{% endblock %}
     </main>
@@ -74,8 +78,8 @@
             <a href="/">Home</a>
             <a href="/pricing">Pricing</a>
             <a href="/demo">Templates</a>
-            {% if user %}
-                <a href="/app">My Account</a>
+            {% if request.state.user %}
+                <a href="/account">My Account</a>
             {% else %}
                 <a href="/login" rel="nofollow">Sign In</a>
             {% endif %}
