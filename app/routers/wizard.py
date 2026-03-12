@@ -1,15 +1,18 @@
 import json
 import logging
+from pathlib import Path
 
 from fastapi import APIRouter, File, Form, Request, UploadFile
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 
 from app.services.attempt_store import (
-    create_attempt, get_attempt, update_attempt,
-    save_document, get_document_filename,
+    create_attempt,
+    get_attempt,
+    get_document_filename,
+    save_document,
+    update_attempt,
 )
-from app.services.template_registry import list_regions, list_templates, REGIONS, TEMPLATES
+from app.services.template_registry import REGIONS, list_regions, list_templates, list_templates_by_category
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +102,7 @@ async def step2(request: Request):
 @router.post("/step/2/save")
 async def step2_save(
     request: Request,
+    full_name: str = Form(""),
     visa_status: str = Form(""),
     self_description: str = Form(""),
     values: str = Form(""),
@@ -119,7 +123,7 @@ async def step2_save(
 
     # Build references list from form fields
     references = []
-    for i, (name, title, company, email, phone) in enumerate([
+    for _i, (name, title, company, email, phone) in enumerate([
         (ref_name_1, ref_title_1, ref_company_1, ref_email_1, ref_phone_1),
         (ref_name_2, ref_title_2, ref_company_2, ref_email_2, ref_phone_2),
     ], 1):
@@ -129,8 +133,24 @@ async def step2_save(
                 "email": email, "phone": phone,
             })
 
+    if not full_name.strip():
+        # Re-render step 2 with validation error
+        region = attempt.get("region", "AU")
+        region_config = REGIONS.get(region, REGIONS["AU"])
+        fields = _region_fields(region)
+        return templates.TemplateResponse("partials/wizard/step2_details.html", {
+            "request": request,
+            "attempt": {**attempt, "full_name": full_name},
+            "region": region,
+            "region_config": region_config,
+            "fields": fields,
+            "dev_mode": request.app.state.dev_mode,
+            "error": "Your full name is required — we use it to protect your privacy during AI generation.",
+        })
+
     update_attempt(
         attempt["id"],
+        full_name=full_name.strip(),
         visa_status=visa_status,
         self_description=self_description,
         values=values,
@@ -205,6 +225,9 @@ async def step4(request: Request):
     region_config = REGIONS.get(region, REGIONS["AU"])
     job_description = attempt.get("job_description", "")
 
+    # Filter templates by region
+    available_templates = list_templates(region=region)
+
     # Check if we already have a cached AI recommendation for this job description
     cached_rec = attempt.get("template_recommendation")
     if cached_rec and cached_rec.get("job_hash") == _hash(job_description):
@@ -223,12 +246,22 @@ async def step4(request: Request):
             "job_hash": _hash(job_description),
         })
 
+    # Group templates by category for UI
+    categories = ["universal", "industry", "region", "specialty"]
+    grouped = {}
+    available_ids = {t.id for t in available_templates}
+    for cat in categories:
+        cat_templates = [t for t in list_templates_by_category(cat) if t.id in available_ids]
+        if cat_templates:
+            grouped[cat] = cat_templates
+
     return templates.TemplateResponse("partials/wizard/step4_template.html", {
         "request": request,
         "attempt": attempt,
         "region": region,
         "region_config": region_config,
-        "templates": list_templates(),
+        "templates": available_templates,
+        "grouped_templates": grouped,
         "recommended": recommended,
         "recommendation_reason": recommendation_reason,
     })
@@ -287,19 +320,22 @@ async def region_summary(request: Request, code: str):
 def _hash(text: str) -> str:
     """Quick hash for cache invalidation."""
     import hashlib
-    return hashlib.md5(text.encode()).hexdigest()[:12]
+    return hashlib.sha256(text.encode()).hexdigest()[:12]
 
 
 async def _recommend_templates(llm, region: str, region_name: str, job_description: str) -> tuple[list[str], str]:
     """Use AI to recommend the best templates for the job description and region."""
+    available = list_templates(region=region)
     tpl_descriptions = "\n".join(
-        f"- {t.id}: {t.name} — {t.description} Best for: {t.best_for}"
-        for t in TEMPLATES.values()
+        f"- {t.id} [{t.category}]: {t.name} — {t.ai_description or t.description} "
+        f"(Industries: {', '.join(t.industries) if t.industries else 'general'}, "
+        f"Experience: {', '.join(t.experience_levels) if t.experience_levels else 'any'})"
+        for t in available
     )
 
     prompt = f"""You are a CV formatting expert. Given a job description and target country, recommend the best CV templates from the available options.
 
-Available templates:
+Available templates for {region_name}:
 {tpl_descriptions}
 
 Target country: {region_name} ({region})
@@ -308,9 +344,9 @@ Job description:
 {job_description[:3000]}
 
 Respond with ONLY valid JSON, no markdown fences, no extra text:
-{{"recommended": ["template_id_1", "template_id_2"], "reason": "One sentence explaining why these templates suit this role and region."}}
+{{"recommended": ["template_id_1", "template_id_2", "template_id_3"], "reason": "One sentence explaining why these templates suit this role and region."}}
 
-Pick exactly 2 templates. The first should be the best match."""
+Pick exactly 3 templates. The first should be the best match. Consider the candidate's likely industry and experience level based on the job description."""
 
     try:
         raw = (await llm.generate(prompt)).text.strip()
@@ -320,11 +356,12 @@ Pick exactly 2 templates. The first should be the best match."""
                 raw = raw[:raw.rfind("```")]
             raw = raw.strip()
         result = json.loads(raw)
-        recommended = [tid for tid in result.get("recommended", []) if tid in TEMPLATES]
+        valid_ids = {t.id for t in available}
+        recommended = [tid for tid in result.get("recommended", []) if tid in valid_ids]
         reason = result.get("reason", "")
         if recommended:
-            return recommended, reason
+            return recommended[:3], reason
     except Exception:
         logger.exception("AI template recommendation failed, using fallback")
 
-    return ["modern", "classic"], "Modern is a versatile choice for most roles."
+    return ["modern", "classic", "professional"], "Modern is a versatile choice for most roles."

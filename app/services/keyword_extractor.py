@@ -70,7 +70,7 @@ async def extract_keywords_llm(
         # Build flat keyword list for ATS matching
         all_keywords = []
         seen = set()
-        for category, keywords in categories.items():
+        for _category, keywords in categories.items():
             if not isinstance(keywords, list):
                 continue
             for kw in keywords:

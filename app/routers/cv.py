@@ -1,96 +1,103 @@
 import asyncio
-import json
+import logging
 import re
 import time
-
-from fastapi import APIRouter, Request
-from fastapi.responses import Response
-from fastapi.templating import Jinja2Templates
+from collections.abc import Callable, Coroutine
 from pathlib import Path
 
-from app.services.cv_parser import parse_cv
-from app.services.ats_analyzer import analyze_ats
+from fastapi import APIRouter, Request, WebSocket, WebSocketDisconnect
+from fastapi.responses import Response
+from fastapi.templating import Jinja2Templates
+
+from app.database import async_session
 from app.services.ai_generator import generate_tailored_cv
+from app.services.ats_analyzer import analyze_ats
 from app.services.attempt_store import get_attempt, get_document_bytes, get_document_filename, update_attempt
+from app.services.cv_parser import parse_cv
 from app.services.cv_refiner import apply_review_fixes
 from app.services.cv_reviewer import review_cv_quality
+from app.services.cv_store import save_cv
 from app.services.generation_log import log_generation
 from app.services.keyword_extractor import extract_keywords_llm
 from app.services.pdf_generator import generate_pdf
-from app.services.template_registry import get_region, get_template, REGION_RULES
+from app.services.pii_redactor import PIIRedactor
+from app.services.placeholder_check import check_placeholders
+from app.services.template_registry import REGION_RULES, get_region, get_template
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).parent.parent / "templates")
 
+# Type alias for progress callback
+ProgressCallback = Callable[[str, str], Coroutine]
 
-@router.post("/analyze")
-async def analyze(request: Request):
-    """Parse CV from attempt store, run ATS analysis, and generate tailored CV."""
-    attempt_id = request.session.get("attempt_id")
-    if not attempt_id:
-        return templates.TemplateResponse(
-            "partials/error.html",
-            {"request": request, "error": "No active session. Please start from the beginning."},
-        )
 
+async def _noop_progress(step: str, detail: str) -> None:
+    """No-op progress callback for the HTTP endpoint."""
+    pass
+
+
+async def _run_generation_pipeline(
+    attempt_id: str,
+    llm,
+    llm_fast,
+    on_progress: ProgressCallback = _noop_progress,
+) -> dict:
+    """Shared CV generation pipeline used by both HTTP and WebSocket endpoints.
+
+    Returns a dict with all data needed to render results, or raises an exception.
+    Keys: ats_original, ats_generated, generated_cv, cv_text, template,
+          region, region_rules, quality_review, timings.
+    """
     attempt = get_attempt(attempt_id)
     if not attempt:
-        return templates.TemplateResponse(
-            "partials/error.html",
-            {"request": request, "error": "Session expired. Please start again."},
-        )
+        raise ValueError("Session expired. Please start again.")
 
-    # Read CV file from attempt store
     cv_bytes = get_document_bytes(attempt_id, "cv_file")
     cv_filename = get_document_filename(attempt_id, "cv_file")
     if not cv_bytes or not cv_filename:
-        return templates.TemplateResponse(
-            "partials/error.html",
-            {"request": request, "error": "No CV file found. Please go back to step 3 and upload your CV."},
-        )
+        raise ValueError("No CV file found. Please go back to step 3 and upload your CV.")
 
     timings = {}
 
-    # Parse CV
+    # 1. Parse CV
+    await on_progress("Reading your CV", "Parsing document structure")
     t0 = time.monotonic()
-    try:
-        cv_text = parse_cv(cv_filename, cv_bytes)
-    except ValueError as e:
-        return templates.TemplateResponse(
-            "partials/error.html",
-            {"request": request, "error": str(e)},
-        )
+    cv_text = parse_cv(cv_filename, cv_bytes)
     timings["parse_cv"] = round(time.monotonic() - t0, 2)
 
     if not cv_text.strip():
-        return templates.TemplateResponse(
-            "partials/error.html",
-            {"request": request, "error": "Could not extract text from the CV file."},
-        )
+        raise ValueError("Could not extract text from the CV file.")
 
-    # Get settings from attempt
+    # PII redaction — replace name/email/phone with tokens before sending to AI
+    full_name = attempt.get("full_name", "").strip()
+    redactor = PIIRedactor(full_name=full_name) if full_name else None
+    if redactor:
+        cv_text_for_llm = redactor.redact(cv_text)
+    else:
+        cv_text_for_llm = cv_text
+
+    # Get settings
     region_code = attempt.get("region", "AU")
     template_id = attempt.get("template_id", "modern")
     job_description = attempt.get("job_description", "")
 
-    llm = request.app.state.llm
-    llm_fast = request.app.state.llm_fast
-
-    # Extract keywords with LLM (fast model) or fall back to regex
+    # 2. Extract keywords
+    await on_progress("Scanning the job description", "Extracting keywords & requirements")
     t0 = time.monotonic()
     keyword_data = await extract_keywords_llm(job_description, llm_fast)
     if keyword_data:
         job_keywords = keyword_data["all_keywords"]
         keyword_categories = keyword_data["categories"]
-        timings["keyword_extraction"] = round(time.monotonic() - t0, 2)
-        # Cache on the attempt for re-use
         update_attempt(attempt_id, extracted_keywords=keyword_data)
     else:
-        job_keywords = None  # will fall back to regex in analyze_ats
+        job_keywords = None
         keyword_categories = None
-        timings["keyword_extraction"] = round(time.monotonic() - t0, 2)
+    timings["keyword_extraction"] = round(time.monotonic() - t0, 2)
 
-    # Run ATS analysis with LLM-extracted keywords
+    # 3. ATS analysis on original
+    await on_progress("Running ATS check", "Scoring your original CV")
     t0 = time.monotonic()
     ats_result = analyze_ats(cv_text, job_description, keywords_override=job_keywords)
     timings["ats_original"] = round(time.monotonic() - t0, 2)
@@ -100,33 +107,41 @@ async def analyze(request: Request):
     region_config = get_region(region_code) or get_region("US")
     region_rules = REGION_RULES.get(region_code, REGION_RULES["US"])
 
-    # Generate tailored CV
+    # 4. Generate tailored CV (the slow step)
+    await on_progress("Writing your new CV", "AI at work — this is the big one")
     t0 = time.monotonic()
     cv_data = await generate_tailored_cv(
-        cv_text, job_description, ats_result.missing_keywords,
+        cv_text_for_llm, job_description, ats_result.missing_keywords,
         region=region_config, llm=llm, attempt=attempt,
         ats_result=ats_result, keyword_categories=keyword_categories,
     )
     timings["ai_generate"] = round(time.monotonic() - t0, 2)
 
     if cv_data is None:
-        return templates.TemplateResponse(
-            "partials/error.html",
-            {"request": request, "error": "CV generation failed. Please try again."},
+        raise ValueError("CV generation failed. Please try again.")
+
+    # Restore real PII values from tokens
+    if redactor:
+        cv_data = redactor.restore(cv_data)
+
+    # Quality gate — catch any leftover placeholders
+    placeholder_issues = check_placeholders(cv_data)
+    if placeholder_issues:
+        logger.warning(
+            "Placeholder issues in generated CV (attempt=%s): %s",
+            attempt_id, placeholder_issues,
         )
 
-    # Strip internal metadata before rendering
+    # 5. Render template
+    await on_progress("Rendering the template", "Laying out your final design")
     llm_usage = cv_data.pop("_llm_usage", {})
-
-    # Render the CV through the selected Jinja2 template
     rendered_cv = templates.get_template(
         f"cv_templates/{template_id}.html"
     ).render(**cv_data)
-
-    # Re-attach for logging
     cv_data["_llm_usage"] = llm_usage
 
-    # Run ATS and quality review in parallel (both read generated data)
+    # 6. ATS + quality review in parallel
+    await on_progress("Final ATS comparison", "Scoring the result and reviewing quality")
     t0 = time.monotonic()
     generated_text = re.sub(r'<style[^>]*>.*?</style>', '', rendered_cv, flags=re.DOTALL)
     generated_text = re.sub(r'<[^>]+>', ' ', generated_text)
@@ -144,7 +159,7 @@ async def analyze(request: Request):
     ats_generated, quality_review = await asyncio.gather(_ats(), _review())
     timings["ats_generated"] = round(time.monotonic() - t0, 2)
 
-    # Log generation for analysis
+    # Log generation
     log_generation(
         attempt_id=attempt_id,
         region=region_code,
@@ -158,7 +173,7 @@ async def analyze(request: Request):
         timings=timings,
     )
 
-    # Cache the result + quality review flags for apply-fixes endpoint
+    # Cache results
     review_flags = quality_review.get("flags", []) if quality_review else []
     update_attempt(
         attempt_id,
@@ -168,21 +183,120 @@ async def analyze(request: Request):
         quality_review_flags=review_flags,
     )
 
+    # Persist CV as sanitized markdown for reuse
+    try:
+        async with async_session() as db:
+            await save_cv(
+                db,
+                attempt_id=attempt_id,
+                source="ai",
+                region=region_code,
+                template_id=template_id,
+                rendered_html=rendered_cv,
+                cv_data=cv_data,
+            )
+    except Exception:
+        logger.exception("Failed to save CV to database (attempt=%s)", attempt_id)
+
+    return {
+        "ats_original": ats_result,
+        "ats_generated": ats_generated,
+        "generated_cv": rendered_cv,
+        "cv_text": cv_text[:500],
+        "template": selected_template,
+        "region": region_code,
+        "region_rules": region_rules,
+        "quality_review": quality_review,
+    }
+
+
+# ---------------------------------------------------------------------------
+# WebSocket endpoint — real-time progress during CV generation
+# ---------------------------------------------------------------------------
+
+@router.websocket("/ws/analyze")
+async def ws_analyze(websocket: WebSocket):
+    attempt_id = websocket.query_params.get("attempt_id", "")
+    if not attempt_id or not get_attempt(attempt_id):
+        await websocket.close(code=4000, reason="Invalid attempt")
+        return
+
+    await websocket.accept()
+
+    async def send_progress(step: str, detail: str) -> None:
+        try:
+            await websocket.send_json({"type": "progress", "step": step, "detail": detail})
+        except (WebSocketDisconnect, RuntimeError) as err:
+            raise WebSocketDisconnect() from err
+
+    try:
+        llm = websocket.app.state.llm
+        llm_fast = websocket.app.state.llm_fast
+
+        result = await _run_generation_pipeline(
+            attempt_id, llm, llm_fast, on_progress=send_progress,
+        )
+
+        # Render the final HTML
+        html = templates.get_template("partials/results.html").render(**result)
+        await websocket.send_json({"type": "complete", "html": html})
+
+    except WebSocketDisconnect:
+        logger.info("WebSocket disconnected during generation (attempt=%s)", attempt_id)
+        return
+    except ValueError as e:
+        try:
+            await websocket.send_json({"type": "error", "message": str(e)})
+        except (WebSocketDisconnect, RuntimeError):
+            pass
+    except Exception:
+        logger.exception("WebSocket generation failed (attempt=%s)", attempt_id)
+        try:
+            await websocket.send_json({"type": "error", "message": "Generation failed. Please try again."})
+        except (WebSocketDisconnect, RuntimeError):
+            pass
+    finally:
+        try:
+            await websocket.close()
+        except (WebSocketDisconnect, RuntimeError):
+            pass
+
+
+# ---------------------------------------------------------------------------
+# HTTP fallback — kept for clients without WebSocket support
+# ---------------------------------------------------------------------------
+
+@router.post("/analyze")
+async def analyze(request: Request):
+    """Parse CV from attempt store, run ATS analysis, and generate tailored CV."""
+    attempt_id = request.session.get("attempt_id")
+    if not attempt_id:
+        return templates.TemplateResponse(
+            "partials/error.html",
+            {"request": request, "error": "No active session. Please start from the beginning."},
+        )
+
+    try:
+        result = await _run_generation_pipeline(
+            attempt_id,
+            request.app.state.llm,
+            request.app.state.llm_fast,
+        )
+    except ValueError as e:
+        return templates.TemplateResponse(
+            "partials/error.html",
+            {"request": request, "error": str(e)},
+        )
+
     return templates.TemplateResponse(
         "partials/results.html",
-        {
-            "request": request,
-            "ats_original": ats_result,
-            "ats_generated": ats_generated,
-            "generated_cv": rendered_cv,
-            "cv_text": cv_text[:500],
-            "template": selected_template,
-            "region": region_code,
-            "region_rules": region_rules,
-            "quality_review": quality_review,
-        },
+        {"request": request, **result},
     )
 
+
+# ---------------------------------------------------------------------------
+# Apply fixes (unchanged — stays HTTP)
+# ---------------------------------------------------------------------------
 
 @router.post("/apply-fixes")
 async def apply_fixes(request: Request):
@@ -203,8 +317,6 @@ async def apply_fixes(request: Request):
 
     form = await request.form()
 
-    # Checkboxes send name="selected" value="0", "1", etc. (indices into cached flags)
-    # User instructions come as instruction_0, instruction_1, etc.
     cached_flags = attempt.get("quality_review_flags", [])
     selected_indices = form.getlist("selected")
 
@@ -213,7 +325,7 @@ async def apply_fixes(request: Request):
         try:
             idx = int(idx_str)
             if 0 <= idx < len(cached_flags):
-                flag = dict(cached_flags[idx])  # copy
+                flag = dict(cached_flags[idx])
                 user_note = str(form.get(f"instruction_{idx}", "")).strip()
                 if user_note:
                     flag["user_instruction"] = user_note
@@ -234,7 +346,6 @@ async def apply_fixes(request: Request):
 
     llm_fast = request.app.state.llm_fast
 
-    # Apply fixes via LLM
     updated_data = await apply_review_fixes(cv_data, flags, job_description, llm=llm_fast)
     if updated_data is None:
         return templates.TemplateResponse(
@@ -242,33 +353,26 @@ async def apply_fixes(request: Request):
             {"request": request, "error": "Failed to apply fixes. Please try again."},
         )
 
-    # Re-render the CV template
     llm_usage = updated_data.pop("_llm_usage", {})
     rendered_cv = templates.get_template(
         f"cv_templates/{template_id}.html"
     ).render(**updated_data)
     updated_data["_llm_usage"] = llm_usage
 
-    # Run ATS on the refined CV
     generated_text = re.sub(r'<style[^>]*>.*?</style>', '', rendered_cv, flags=re.DOTALL)
     generated_text = re.sub(r'<[^>]+>', ' ', generated_text)
     generated_text = re.sub(r'\s+', ' ', generated_text).strip()
 
-    # Use cached keywords if available
     keyword_data = attempt.get("extracted_keywords")
     job_keywords = keyword_data["all_keywords"] if keyword_data else None
     ats_generated = analyze_ats(generated_text, job_description, keywords_override=job_keywords)
 
-    # Update the cached attempt with refined data
     update_attempt(attempt_id, cv_data=updated_data, rendered_cv=rendered_cv)
 
     selected_template = get_template(template_id) or get_template("modern")
     region_rules = REGION_RULES.get(region_code, REGION_RULES["US"])
 
-    # Re-run ATS on original for comparison
     cv_text = attempt.get("cv_text_preview", "")
-    # For original score, use the full original — but we only have preview cached
-    # Re-parse if we have the file, otherwise use a minimal comparison
     cv_bytes = get_document_bytes(attempt_id, "cv_file")
     cv_filename = get_document_filename(attempt_id, "cv_file")
     if cv_bytes and cv_filename:
@@ -292,11 +396,15 @@ async def apply_fixes(request: Request):
             "template": selected_template,
             "region": region_code,
             "region_rules": region_rules,
-            "quality_review": None,  # Fixes already applied
+            "quality_review": None,
             "fixes_applied": len(flags),
         },
     )
 
+
+# ---------------------------------------------------------------------------
+# PDF download (unchanged)
+# ---------------------------------------------------------------------------
 
 @router.get("/download-pdf")
 async def download_pdf(request: Request):
@@ -311,7 +419,6 @@ async def download_pdf(request: Request):
 
     rendered_cv = attempt["rendered_cv"]
     cv_name = attempt.get("cv_data", {}).get("name", "CV") or "CV"
-    # Sanitize filename
     safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
 
     pdf_bytes = await generate_pdf(rendered_cv)

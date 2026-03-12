@@ -9,6 +9,15 @@
         <p class="hint">Some details can't be AI-generated — we need them from you. Fields shown here are based on {{ region_config.flag }} {{ region_config.name }} conventions.</p>
     </div>
 
+    {% if error %}
+    <div class="form-error">{{ error }}</div>
+    {% endif %}
+
+    <!-- Full name — mandatory, used for PII redaction -->
+    {% call form_group("Full Name", hint="Required — your name is replaced with a placeholder before your CV is sent to AI, and restored in the final output. This keeps your identity private during processing.") %}
+        {{ text_input("full_name", placeholder="e.g. Jane Doe", value=attempt.get('full_name', ''), required=true) }}
+    {% endcall %}
+
     <!-- Region-conditional fields -->
     {% if fields.photo %}
     <div class="form-group">
@@ -83,6 +92,7 @@
     <script>
     function devFillStep2() {
         const data = {
+            full_name: "Alex Morgan",
             visa_status: "Full working rights — Australian Citizen",
             self_description: "I'm a pragmatic full-stack developer with 8 years of experience who thrives on turning ambiguous requirements into clean, shipped products. Colleagues describe me as reliable, curious, and the person who quietly unblocks the team.",
             values: "Code quality over speed, user empathy, continuous learning, honest communication, keeping things simple.",
