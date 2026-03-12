@@ -6,7 +6,7 @@ job description structure and returns categorized, CV-relevant keywords.
 import json
 import logging
 
-from app.services.llm_client import LLMClient
+from app.services.llm_client import LLMClient, set_llm_context
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +52,7 @@ async def extract_keywords_llm(
       - "all_keywords": flat list of all keywords (lowercased for matching)
       - "llm_usage": token/cost metadata from the extraction call
     """
+    set_llm_context(service="keyword_extractor", inherit=True)
     prompt = _EXTRACTION_PROMPT.format(job_description=job_description[:6000])
 
     try:

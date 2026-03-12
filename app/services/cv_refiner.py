@@ -8,7 +8,7 @@ import json
 import logging
 import re
 
-from app.services.llm_client import LLMClient
+from app.services.llm_client import LLMClient, set_llm_context
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +99,8 @@ async def apply_review_fixes(
 
     Returns updated cv_data dict, or None on failure.
     """
+    set_llm_context(service="cv_refiner", inherit=True)
+
     # Build a clean copy without internal metadata
     clean_data = {k: v for k, v in cv_data.items() if not k.startswith("_")}
 

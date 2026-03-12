@@ -8,7 +8,7 @@ are irrelevant to the target role.
 import json
 import logging
 
-from app.services.llm_client import LLMClient
+from app.services.llm_client import LLMClient, set_llm_context
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +82,8 @@ async def review_cv_quality(
 
     Returns dict with 'flags' list and 'summary', or None on failure.
     """
+    set_llm_context(service="cv_reviewer", inherit=True)
+
     # Clean copy without internal metadata
     clean_data = {k: v for k, v in cv_data.items() if not k.startswith("_")}
     cv_json = json.dumps(clean_data, indent=2)

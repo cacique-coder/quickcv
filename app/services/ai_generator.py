@@ -2,7 +2,7 @@ import json
 import logging
 
 from app.services.ats_analyzer import ATSResult
-from app.services.llm_client import LLMClient
+from app.services.llm_client import LLMClient, set_llm_context
 from app.services.prompt_guard import MAX_CV_LENGTH, MAX_JOB_DESC_LENGTH, sanitize_user_input
 from app.services.template_registry import RegionConfig
 
@@ -252,6 +252,8 @@ async def generate_tailored_cv(
 
     Returns a dict with structured CV fields, or None if generation fails.
     """
+    set_llm_context(service="ai_generator", inherit=True)
+
     cv_text = sanitize_user_input(cv_text, MAX_CV_LENGTH, "CV text")
     job_description = sanitize_user_input(job_description, MAX_JOB_DESC_LENGTH, "Job description")
 
