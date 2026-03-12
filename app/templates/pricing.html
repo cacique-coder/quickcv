@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Pricing — QuillCV | $29 for 50 ATS-Optimized CV Generations{% endblock %}
-{% block meta_description %}QuillCV pricing — $29 for 50 ATS-optimized CV generations during alpha. Credits never expire. No subscriptions required.{% endblock %}
-{% block og_title %}QuillCV Pricing — $29 for 50 CV Generations{% endblock %}
-{% block og_description %}Alpha pricing: $29 for 50 ATS-optimized CV generations. Credits never expire. All templates, 12 country formats included.{% endblock %}
-{% block twitter_title %}QuillCV Pricing — $29 for 50 CV Generations{% endblock %}
-{% block twitter_description %}Alpha pricing: $29 for 50 ATS-optimized CV generations. Credits never expire. All templates, 12 country formats included.{% endblock %}
+{% block title %}Pricing — QuillCV | $29 for 40 ATS-Optimized CV Generations{% endblock %}
+{% block meta_description %}QuillCV pricing — $29 for 40 ATS-optimized CV generations during alpha. Credits never expire. No subscriptions required.{% endblock %}
+{% block og_title %}QuillCV Pricing — $29 for 40 CV Generations{% endblock %}
+{% block og_description %}Alpha pricing: $29 for 40 ATS-optimized CV generations. Credits never expire. All templates, 12 country formats included.{% endblock %}
+{% block twitter_title %}QuillCV Pricing — $29 for 40 CV Generations{% endblock %}
+{% block twitter_description %}Alpha pricing: $29 for 40 ATS-optimized CV generations. Credits never expire. All templates, 12 country formats included.{% endblock %}
 
 
 {% block structured_data %}
@@ -28,7 +28,7 @@
             "name": "What counts as one CV generation?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "One generation = one tailored CV output. You can review, apply quality fixes, and download the PDF — all for one credit."
+                "text": "One credit = one tailored CV generation. Refinements (tweaking an existing generated CV) will cost half a credit in a future update — for now, they're free."
             }
         },
         {
@@ -36,7 +36,7 @@
             "name": "Can I buy more QuillCV credits later?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes! Top-up packs are available right now — 10, 25, or 50 credits. Credits never expire."
+                "text": "Yes! Top-up packs are available — Starter (15 credits, $15), Standard (35 credits, $29), and Pro (65 credits, $49). Credits never expire."
             }
         },
         {
@@ -44,7 +44,7 @@
             "name": "Are QuillCV templates free?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "No — all templates are completely free. Sign up, pick one, and fill it in yourself at no cost. Credits are only used when AI generates a tailored CV for you."
+                "text": "Yes — all templates are completely free. Sign up, pick one, and fill it in yourself at no cost. Credits are only used when AI generates a tailored CV for you."
             }
         },
         {
@@ -61,7 +61,7 @@
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "QuillCV Alpha Pack",
-    "description": "50 ATS-optimized CV generations with all templates and 12 country formats",
+    "description": "40 ATS-optimized CV generations with all templates and 12 country formats",
     "brand": {"@type": "Brand", "name": "QuillCV"},
     "offers": {
         "@type": "Offer",
@@ -111,12 +111,38 @@
     <p class="pricing-social-proof">Join {{ alpha_count }} early adopters already building better CVs</p>
     {% endif %}
 
+    <div class="pricing-credit-explainer">
+        <h2 class="pricing-section-heading">How credits work</h2>
+        <div class="credit-explainer-grid">
+            <div class="credit-explainer-item">
+                <span class="credit-explainer-cost">1 credit</span>
+                <span class="credit-explainer-label">CV generation</span>
+                <span class="credit-explainer-desc">AI analyses the job description, tailors your CV, and produces an ATS-optimized output</span>
+            </div>
+            <div class="credit-explainer-item">
+                <span class="credit-explainer-cost">Free</span>
+                <span class="credit-explainer-label">Refinement</span>
+                <span class="credit-explainer-desc">Tweak and regenerate sections of an existing CV — no extra cost during alpha</span>
+            </div>
+            <div class="credit-explainer-item">
+                <span class="credit-explainer-cost">Free</span>
+                <span class="credit-explainer-label">Manual edits</span>
+                <span class="credit-explainer-desc">Edit your generated CV by hand anytime — no credits used</span>
+            </div>
+            <div class="credit-explainer-item">
+                <span class="credit-explainer-cost">Free</span>
+                <span class="credit-explainer-label">Templates &amp; downloads</span>
+                <span class="credit-explainer-desc">All 6 templates, 12 country formats, PDF download — always free</span>
+            </div>
+        </div>
+    </div>
+
     <h2 class="pricing-section-heading">Credit Packs</h2>
 
     <div class="pricing-value-anchor pricing-value-anchor--crafted">
         That's just
         <span class="value-highlight">
-            <strong>$0.58 per tailored CV</strong>
+            <strong>$0.73 per tailored CV</strong>
             <!-- Hand-drawn circle highlight -->
             <svg class="value-circle-doodle" viewBox="0 0 200 60" preserveAspectRatio="none" fill="none" aria-hidden="true">
                 <ellipse cx="100" cy="30" rx="95" ry="26" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4" stroke-dasharray="6 4"/>
@@ -193,7 +219,7 @@
             <ul class="pricing-features pricing-features--checks">
                 <li>
                     <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    50 CV generations
+                    40 CV generations
                 </li>
                 <li>
                     <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -270,22 +296,26 @@
         </div>
 
         <div class="pricing-card sticky-note sticky-note--blue">
-            <div class="pricing-badge pricing-badge--muted">Post-Alpha</div>
+            <div class="pricing-badge pricing-badge--muted">Post-Alpha — Coming Soon</div>
             <div class="pricing-price">
                 <span class="pricing-amount">Credit Packs</span>
             </div>
             <ul class="pricing-features pricing-features--checks">
                 <li>
                     <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Same features — no premium tiers
+                    <strong>Starter</strong> — 15 credits &middot; $15 AUD
                 </li>
                 <li>
                     <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Buy more credits anytime
+                    <strong>Standard</strong> — 35 credits &middot; $29 AUD
                 </li>
                 <li>
                     <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    No subscriptions for personal accounts
+                    <strong>Pro</strong> — 65 credits &middot; $49 AUD
+                </li>
+                <li>
+                    <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    No subscriptions — credits never expire
                 </li>
                 <li>
                     <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -316,11 +346,11 @@
                 <ul class="pricing-features pricing-features--checks">
                     <li>
                         <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <strong>{{ pack.credits }}</strong> CV generations
+                        <strong>{{ pack.credits }}</strong> credits
                     </li>
                     <li>
                         <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        {{ pack.per_credit }} per CV
+                        {{ pack.per_credit }} per credit
                     </li>
                     <li>
                         <svg class="hand-check-icon" width="18" height="16" viewBox="0 0 18 16" fill="none" aria-hidden="true"><path d="M2 8 L7 13 L16 3" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -366,15 +396,19 @@
         </div>
         <div class="faq-item">
             <h3>What counts as one CV generation?</h3>
-            <p>One generation = one tailored CV output. You can review, apply quality fixes, and download the PDF — all for one credit.</p>
+            <p>One credit = one tailored CV generation. Refinements (tweaking an existing generated CV) will cost half a credit in a future update — for now, they're free.</p>
+        </div>
+        <div class="faq-item">
+            <h3>What is a refinement?</h3>
+            <p>After generating a CV, you can refine specific sections — adjusting tone, adding detail, or restructuring. During alpha, refinements are free. Post-alpha, they'll cost half a credit.</p>
         </div>
         <div class="faq-item">
             <h3>Can I buy more QuillCV credits later?</h3>
-            <p>Yes! Top-up packs are available right now — 10, 25, or 50 credits. Credits never expire.</p>
+            <p>Yes! Top-up packs are available — Starter (15 credits, $15 AUD), Standard (35 credits, $29 AUD), and Pro (65 credits, $49 AUD). Credits never expire.</p>
         </div>
         <div class="faq-item">
             <h3>Are QuillCV templates free?</h3>
-            <p>No — all templates are completely free. Sign up, pick one, and fill it in yourself at no cost. Credits are only used when AI generates a tailored CV for you.</p>
+            <p>Yes — all templates are completely free. Sign up, pick one, and fill it in yourself at no cost. Credits are only used when AI generates a tailored CV for you.</p>
         </div>
         <div class="faq-item">
             <h3>Can I edit my CV manually after generation?</h3>

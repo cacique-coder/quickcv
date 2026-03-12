@@ -5,14 +5,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Credit
 
-ALPHA_PACK_CREDITS = 50
-ALPHA_PACK_PRICE_CENTS = 2900  # $29.00
+ALPHA_PACK_CREDITS = 40
+ALPHA_PACK_PRICE_CENTS = 2900  # $29.00 AUD
 ALPHA_USER_CAP = 100
 
 TOPUP_PACKS = {
-    "10-pack": {"credits": 10, "price_cents": 900, "name": "10 CV Generations", "per_credit": "$0.90"},
-    "25-pack": {"credits": 25, "price_cents": 1900, "name": "25 CV Generations", "per_credit": "$0.76"},
-    "50-pack": {"credits": 50, "price_cents": 2900, "name": "50 CV Generations", "per_credit": "$0.58"},
+    "starter": {"credits": 15, "price_cents": 1500, "name": "Starter — 15 Credits", "per_credit": "$1.00"},
+    "standard": {"credits": 35, "price_cents": 2900, "name": "Standard — 35 Credits", "per_credit": "$0.83"},
+    "pro": {"credits": 65, "price_cents": 4900, "name": "Pro — 65 Credits", "per_credit": "$0.75"},
 }
 
 

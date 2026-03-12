@@ -49,7 +49,7 @@ async def pricing_page(request: Request):
         "alpha_count": alpha_count,
         "stripe_enabled": bool(STRIPE_SECRET_KEY),
         "topup_packs": TOPUP_PACKS,
-        "page_description": "QuillCV pricing — $29 for 50 ATS-optimized CV generations during alpha. Credits never expire. No subscriptions.",
+        "page_description": "QuillCV pricing — $29 for 40 ATS-optimized CV generations during alpha. Credits never expire. No subscriptions.",
     })
 
 
@@ -81,9 +81,9 @@ async def create_alpha_checkout(request: Request):
             "quantity": 1,
         }] if STRIPE_PRICE_ID else [{
             "price_data": {
-                "currency": "usd",
+                "currency": "aud",
                 "product_data": {
-                    "name": "QuillCV Alpha Pack — 50 CV Generations",
+                    "name": "QuillCV Alpha Pack — 40 CV Generations",
                     "description": "Founders cohort. Credits never expire.",
                 },
                 "unit_amount": ALPHA_PACK_PRICE_CENTS,
@@ -132,7 +132,7 @@ async def create_topup_checkout(request: Request, pack_id: str):
         metadata={"user_id": user.id, "pack": pack_id},
         line_items=[{
             "price_data": {
-                "currency": "usd",
+                "currency": "aud",
                 "product_data": {
                     "name": f"QuillCV — {pack['name']}",
                     "description": "Credits never expire.",

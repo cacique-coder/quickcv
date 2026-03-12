@@ -1,27 +1,109 @@
 # Pricing Strategy
 
+All prices in AUD. Payments via Stripe.
+
+## Credit System
+
+| Action | Credits | Our cost (USD) |
+|--------|---------|----------------|
+| CV generation | 1 credit | ~$0.25 |
+| CV refinement | 0.5 credit | ~$0.05 |
+
 ## Alpha — First 100 Users (Founders Cohort)
 
-- **$29 for 50 CV generations** (credit-based, no subscription)
-- Extra credits: ~$0.50-1.00 per generation after credits run out
-- Goal: validate demand, collect feedback, break even on API costs
+| | Details |
+|--|--------|
+| Price | **$29 AUD** |
+| Credits | **40** |
+| Per credit | $0.73 |
+| Stripe product | `quillcv_alpha_40` |
 
-## Post-Alpha (Planned)
+- One-time purchase, no subscription
+- Best per-credit value across all packs (founders reward)
+- Goal: validate demand, collect feedback, fund initial compliance
 
-- Personal accounts: credit packs only (no subscriptions)
-- Business/team accounts: subscription option TBD
-- Pricing TBD based on alpha feedback
-- Founder alumni may get discounted rates on future packs
+## Credit Packs (Post-Alpha)
 
-## Cost Estimates
+Available from day one alongside alpha. These are the standard pricing tiers.
 
-| Item                        | Estimate        |
-|-----------------------------|-----------------|
-| AI API call per generation  | $0.05-0.20      |
-| Web scraping (similar CVs)  | $0.01-0.05      |
-| **Total per generation**    | **$0.10-0.25**  |
-| 100 users × 50 credits each| $500-1,250 cost |
-| Revenue (100 × $29)         | $2,900          |
+| Pack | Price (AUD) | Credits | Per credit | Stripe product |
+|------|-------------|---------|------------|----------------|
+| Starter | $15 | 15 | $1.00 | `quillcv_starter_15` |
+| Standard | $29 | 35 | $0.83 | `quillcv_standard_35` |
+| Pro | $49 | 65 | $0.75 | `quillcv_pro_65` |
+
+- One-time purchases, no expiry on credits
+- Volume discount ladder (Starter → Pro)
+- All packs more expensive per-credit than alpha (founders genuinely got a deal)
+
+## Future: Subscriptions (3-6 months post-launch)
+
+Design based on real usage data from alpha + credit pack purchases.
+
+| Tier | Price (AUD/mo) | Monthly credits | Target |
+|------|----------------|-----------------|--------|
+| Personal | $19/mo | 25 | Active job seekers |
+| Professional | $39/mo | 60 | Career changers, frequent users |
+| Team/Business | TBD | TBD | Recruiters, career coaches |
+
+- Unused credits roll over (1 month max)
+- Top-up packs available for subscribers at Standard pricing
+- Implement only after usage patterns are clear
+
+## Stripe Implementation
+
+### Products to create
+
+```
+quillcv_alpha_40      — Alpha Pack (40 credits, $29 AUD) — one-time
+quillcv_starter_15    — Starter Pack (15 credits, $15 AUD) — one-time
+quillcv_standard_35   — Standard Pack (35 credits, $29 AUD) — one-time
+quillcv_pro_65        — Pro Pack (65 credits, $49 AUD) — one-time
+```
+
+### Checkout flow
+
+1. User selects pack → Stripe Checkout session
+2. Stripe webhook `checkout.session.completed` → credit user account
+3. Credits stored in DB, decremented on generation/refinement
+4. Low credit warning at 5 remaining
+5. Zero credits → prompt to purchase pack
+
+### Webhook events to handle
+
+| Event | Action |
+|-------|--------|
+| `checkout.session.completed` | Add credits to user account |
+| `payment_intent.payment_failed` | Log, notify user |
+| `charge.refunded` | Deduct credits (if unused) or flag account |
+
+## Unit Economics
+
+### Margin per pack
+
+| Pack | Revenue (USD~) | Max cost (all gens) | Gross margin |
+|------|---------------|---------------------|-------------|
+| Alpha (40) | ~$18.50 | $10.00 | ~46% |
+| Starter (15) | ~$9.60 | $3.75 | ~61% |
+| Standard (35) | ~$18.50 | $8.75 | ~53% |
+| Pro (65) | ~$31.30 | $16.25 | ~48% |
+
+### Break-even for infrastructure
+
+- Estimated hosting (Digital Ocean): ~$40/mo
+- At alpha margin (~$8.50/pack): ~5 packs/month to cover infra
+- At standard margin (~$9.75/pack): ~4 packs/month to cover infra
+
+### Compliance budget (funded by margins)
+
+| Requirement | Estimated cost | Priority |
+|-------------|---------------|----------|
+| GDPR (EU/UK/AU/NZ) | $2-5K | P0 — launch blocker |
+| Privacy policy + ToS (multi-jurisdiction) | $3-8K | P0 — launch blocker |
+| PCI DSS | Handled by Stripe | N/A |
+| SOC 2 Type I | $10-20K | P1 — post-alpha |
+| APPI (Japan) | $2-3K | P2 — market expansion |
+| LGPD (Brazil) | $2-3K | P2 — market expansion |
 
 ## Naming Candidates
 
