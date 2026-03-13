@@ -4,7 +4,7 @@ image: quillcv
 servers:
   web:
     hosts:
-      - <DROPLET_IP>
+      - 209.38.30.185
     options:
       network: "kamal"
 
@@ -19,7 +19,7 @@ proxy:
 
 registry:
   server: registry.digitalocean.com
-  username: daniel@2rk.co
+  username: xzdasx+digitalocean@gmail.com
   password:
     - KAMAL_REGISTRY_PASSWORD
 
@@ -40,9 +40,8 @@ env:
 
 accessories:
   db:
-    image: postgres:16-alpine
-    port: "127.0.0.1:5432:5432"
-    host: <DROPLET_IP>
+    image: postgres:18-alpine
+    host: 209.38.30.185
     env:
       clear:
         POSTGRES_DB: quillcv_production
@@ -50,6 +49,6 @@ accessories:
       secret:
         - POSTGRES_PASSWORD
     directories:
-      - quillcv-pgdata:/var/lib/postgresql/data
+      - quillcv-pgdata:/var/lib/postgresql
     options:
       network: "kamal"
