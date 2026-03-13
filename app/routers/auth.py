@@ -36,11 +36,13 @@ async def signup_page(request: Request):
     user = await get_current_user(request)
     if user:
         return RedirectResponse("/app", status_code=303)
-    return templates.TemplateResponse("auth/signup.html", {
-        "request": request,
-        "google_enabled": bool(GOOGLE_CLIENT_ID),
-        "github_enabled": bool(GITHUB_CLIENT_ID),
-    })
+    # Signup temporarily disabled — redirect to sign-in
+    return RedirectResponse("/signin", status_code=303)
+    # return templates.TemplateResponse("auth/signup.html", {
+    #     "request": request,
+    #     "google_enabled": bool(GOOGLE_CLIENT_ID),
+    #     "github_enabled": bool(GITHUB_CLIENT_ID),
+    # })
 
 
 @router.post("/signup")
@@ -50,35 +52,37 @@ async def signup_submit(
     password: str = Form(...),
     name: str = Form(""),
 ):
-    errors = []
-    if len(password) < 8:
-        errors.append("Password must be at least 8 characters.")
-    if not email or "@" not in email:
-        errors.append("Please enter a valid email address.")
-
-    if errors:
-        return templates.TemplateResponse("auth/signup.html", {
-            "request": request, "errors": errors, "email": email, "name": name,
-            "google_enabled": bool(GOOGLE_CLIENT_ID),
-            "github_enabled": bool(GITHUB_CLIENT_ID),
-        })
-
-    async with async_session() as db:
-        existing = await get_user_by_email(db, email)
-        if existing:
-            return templates.TemplateResponse("auth/signup.html", {
-                "request": request,
-                "errors": ["An account with this email already exists. Try signing in."],
-                "email": email, "name": name,
-                "google_enabled": bool(GOOGLE_CLIENT_ID),
-                "github_enabled": bool(GITHUB_CLIENT_ID),
-            })
-
-        user = await create_user(db, email=email, password=password, name=name)
-
-    token = create_access_token(user.id, user.email)
-    request.session["auth_token"] = token
-    return RedirectResponse("/app", status_code=303)
+    # Signup temporarily disabled — redirect to sign-in
+    return RedirectResponse("/signin", status_code=303)
+    # errors = []
+    # if len(password) < 8:
+    #     errors.append("Password must be at least 8 characters.")
+    # if not email or "@" not in email:
+    #     errors.append("Please enter a valid email address.")
+    #
+    # if errors:
+    #     return templates.TemplateResponse("auth/signup.html", {
+    #         "request": request, "errors": errors, "email": email, "name": name,
+    #         "google_enabled": bool(GOOGLE_CLIENT_ID),
+    #         "github_enabled": bool(GITHUB_CLIENT_ID),
+    #     })
+    #
+    # async with async_session() as db:
+    #     existing = await get_user_by_email(db, email)
+    #     if existing:
+    #         return templates.TemplateResponse("auth/signup.html", {
+    #             "request": request,
+    #             "errors": ["An account with this email already exists. Try signing in."],
+    #             "email": email, "name": name,
+    #             "google_enabled": bool(GOOGLE_CLIENT_ID),
+    #             "github_enabled": bool(GITHUB_CLIENT_ID),
+    #         })
+    #
+    #     user = await create_user(db, email=email, password=password, name=name)
+    #
+    # token = create_access_token(user.id, user.email)
+    # request.session["auth_token"] = token
+    # return RedirectResponse("/app", status_code=303)
 
 
 @router.get("/login")
