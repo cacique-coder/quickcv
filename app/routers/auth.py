@@ -5,12 +5,14 @@ import os
 from pathlib import Path
 
 from fastapi import APIRouter, Form, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import select
 
 from app.auth.dependencies import get_current_user
 from app.auth.utils import create_access_token
 from app.database import async_session
+from app.models import ExpressionOfInterest
 from app.services.user_service import (
     authenticate_user,
     create_user,
@@ -36,53 +38,40 @@ async def signup_page(request: Request):
     user = await get_current_user(request)
     if user:
         return RedirectResponse("/app", status_code=303)
-    # Signup temporarily disabled — redirect to sign-in
-    return RedirectResponse("/signin", status_code=303)
-    # return templates.TemplateResponse("auth/signup.html", {
-    #     "request": request,
-    #     "google_enabled": bool(GOOGLE_CLIENT_ID),
-    #     "github_enabled": bool(GITHUB_CLIENT_ID),
-    # })
+    return templates.TemplateResponse("auth/signup.html", {
+        "request": request,
+    })
 
 
 @router.post("/signup")
 async def signup_submit(
     request: Request,
     email: str = Form(...),
-    password: str = Form(...),
     name: str = Form(""),
 ):
-    # Signup temporarily disabled — redirect to sign-in
-    return RedirectResponse("/signin", status_code=303)
-    # errors = []
-    # if len(password) < 8:
-    #     errors.append("Password must be at least 8 characters.")
-    # if not email or "@" not in email:
-    #     errors.append("Please enter a valid email address.")
-    #
-    # if errors:
-    #     return templates.TemplateResponse("auth/signup.html", {
-    #         "request": request, "errors": errors, "email": email, "name": name,
-    #         "google_enabled": bool(GOOGLE_CLIENT_ID),
-    #         "github_enabled": bool(GITHUB_CLIENT_ID),
-    #     })
-    #
-    # async with async_session() as db:
-    #     existing = await get_user_by_email(db, email)
-    #     if existing:
-    #         return templates.TemplateResponse("auth/signup.html", {
-    #             "request": request,
-    #             "errors": ["An account with this email already exists. Try signing in."],
-    #             "email": email, "name": name,
-    #             "google_enabled": bool(GOOGLE_CLIENT_ID),
-    #             "github_enabled": bool(GITHUB_CLIENT_ID),
-    #         })
-    #
-    #     user = await create_user(db, email=email, password=password, name=name)
-    #
-    # token = create_access_token(user.id, user.email)
-    # request.session["auth_token"] = token
-    # return RedirectResponse("/app", status_code=303)
+    """Handle Expression of Interest form submission.
+
+    Always returns the success partial — duplicate emails show the same
+    friendly message to avoid leaking whether an address is registered.
+    """
+    async with async_session() as db:
+        existing = await db.scalar(
+            select(ExpressionOfInterest).where(ExpressionOfInterest.email == email.lower().strip())
+        )
+        if not existing:
+            eoi = ExpressionOfInterest(
+                email=email.lower().strip(),
+                name=name.strip(),
+                source="signup",
+            )
+            db.add(eoi)
+            await db.commit()
+
+    return templates.TemplateResponse(
+        "partials/eoi_success.html",
+        {"request": request},
+        headers={"Content-Type": "text/html"},
+    )
 
 
 @router.get("/login")

@@ -164,6 +164,10 @@
       <div class="stat-label">Unique Generations</div>
       <div class="stat-value">{{ unique_generations }}</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">EOI Signups</div>
+      <div class="stat-value">{{ eoi_count }}</div>
+    </div>
   </div>
 
   <div class="breakdown-grid">
@@ -222,6 +226,32 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <div class="section-title">Expressions of Interest</div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for eoi in recent_eois %}
+        <tr>
+          <td style="white-space:nowrap;font-size:0.8rem">{{ eoi.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+          <td>{{ eoi.name or "—" }}</td>
+          <td style="font-family:monospace;font-size:0.8rem">{{ eoi.email }}</td>
+          <td><span class="status-badge status-success">{{ eoi.source }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" style="color:var(--text-muted)">No expressions of interest yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
   <div class="section-title">Cost per CV Generation</div>

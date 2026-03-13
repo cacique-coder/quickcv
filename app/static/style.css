@@ -2710,6 +2710,14 @@ header a:hover { text-decoration: underline; }
 }
 .auth-footer a { color: var(--accent); text-decoration: none; }
 .auth-footer a:hover { text-decoration: underline; }
+.auth-coming-soon-doodle {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.auth-coming-soon-note {
+    font-size: 0.85rem;
+    text-align: center;
+}
 
 /* ── Pricing Page ───────────────────────────────────────── */
 .pricing-page {
@@ -4645,6 +4653,35 @@ select.input-field {
         padding: 0.5rem 0.4rem;
         font-size: 0.8rem;
     }
+}
+
+/* EOI (Expression of Interest) */
+.eoi-card { text-align: center; }
+.eoi-card .auth-form { text-align: left; }
+.eoi-doodle {
+    margin: 0 auto 0.75rem;
+    display: block;
+    animation: eoi-sparkle 2s ease-in-out infinite;
+}
+@keyframes eoi-sparkle {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+.optional-hint { color: var(--text-muted); font-weight: 400; font-size: 0.8rem; }
+.eoi-success {
+    text-align: center;
+    padding: 1.5rem 0;
+}
+.eoi-success svg {
+    margin: 0 auto 1rem;
+    display: block;
+}
+.eoi-success h3 {
+    color: var(--green);
+    margin-bottom: 0.5rem;
+}
+.eoi-success p {
+    color: var(--text-muted);
 }
 
 /* (Old builder UX styles removed — replaced by .bld-* classes above) */

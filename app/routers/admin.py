@@ -12,7 +12,7 @@ from sqlalchemy import func, literal_column, select, text
 
 from app.auth.dependencies import get_current_user
 from app.database import async_session
-from app.models import APIRequestLog
+from app.models import APIRequestLog, ExpressionOfInterest
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +98,20 @@ async def admin_dashboard(request: Request):
         )
         cost_by_service = service_rows.all()
 
+        # EOI stats
+        eoi_count_result = await db.execute(
+            select(func.count(ExpressionOfInterest.id))
+        )
+        eoi_count = eoi_count_result.scalar() or 0
+
+        # Recent EOIs
+        eoi_result = await db.execute(
+            select(ExpressionOfInterest)
+            .order_by(ExpressionOfInterest.created_at.desc())
+            .limit(20)
+        )
+        recent_eois = eoi_result.scalars().all()
+
         # Recent 50 requests
         recent_result = await db.execute(
             select(APIRequestLog)
@@ -141,6 +155,8 @@ async def admin_dashboard(request: Request):
             "cost_by_service": cost_by_service,
             "recent_requests": recent_requests,
             "cv_costs": cv_costs,
+            "eoi_count": eoi_count,
+            "recent_eois": recent_eois,
         },
     )
 

@@ -96,6 +96,17 @@ class SavedCV(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
 
+class ExpressionOfInterest(Base):
+    """Pre-launch interest capture — records emails before public signup opens."""
+    __tablename__ = "expressions_of_interest"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(255), default="")
+    source: Mapped[str] = mapped_column(String(50), default="signup")  # where they signed up from
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
 class APIRequestLog(Base):
     """Log of every LLM API call for cost tracking and debugging."""
     __tablename__ = "api_request_logs"

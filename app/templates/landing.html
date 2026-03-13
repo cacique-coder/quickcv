@@ -68,7 +68,7 @@
             <p class="hero-tagline handwritten">Crafted by hand, powered by AI</p>
             <div class="hero-cta">
                 <a href="/signup" class="btn-cta">
-                    Start Building Your CV
+                    Register Your Interest
                     <!-- Small arrow doodle next to CTA -->
                     <svg class="btn-arrow-doodle" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
                         <path d="M2 7 C6 7, 10 7, 14 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -76,12 +76,7 @@
                     </svg>
                 </a>
                 <p class="hero-note">
-                    {% if spots_remaining > 0 %}
-                        <span class="handwritten hero-note-alpha">Alpha pricing!</span>
-                        <strong>$29 for 50 generations</strong> — {{ spots_remaining }} spots left
-                    {% else %}
-                        Join the waitlist for post-alpha access
-                    {% endif %}
+                    <strong>Launching soon</strong> — register your interest for early access
                 </p>
             </div>
         </div>
@@ -342,17 +337,17 @@
 
     <!-- CTA -->
     <section class="final-cta">
-        <h2>Stop getting filtered out by ATS</h2>
-        <p>Join {{ spots_remaining }} remaining alpha spots and get 50 CV generations for $29.</p>
+        <h2>Don't miss the launch</h2>
+        <p>Register your interest and be first to build ATS-optimized CVs with QuillCV.</p>
         <!-- Hand-drawn arrow pointing to CTA -->
         <div class="cta-annotation" aria-hidden="true">
             <svg class="cta-arrow" width="80" height="60" viewBox="0 0 80 60" fill="none">
                 <path d="M10 5 C20 15, 35 40, 55 45 C60 46, 65 44, 70 40" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
                 <path d="M63 42 L71 38 L68 47" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
-            <span class="handwritten cta-annotation-text">that's $0.58 each!</span>
+            <span class="handwritten cta-annotation-text">it's free to join!</span>
         </div>
-        <a href="/signup" class="btn-cta">Create Your Account</a>
+        <a href="/signup" class="btn-cta">Register Your Interest</a>
     </section>
 </div>
 {% endblock %}
