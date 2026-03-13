@@ -2,7 +2,7 @@
 
 {% block title %}QuillCV — ATS-Optimized CVs That Get You Interviews{% endblock %}
 
-{% block meta_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats, keyword matching, and AI-powered quality review. Alpha pricing: $29 for 50 generations.{% endblock %}
+{% block meta_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats, keyword matching, and AI-powered quality review. Launching soon.{% endblock %}
 
 {% block og_title %}QuillCV — ATS-Optimized CVs That Get You Interviews{% endblock %}
 {% block og_description %}Paste a job description, upload your CV, and get an ATS-optimized version tailored to the role — formatted for your target country.{% endblock %}
@@ -13,20 +13,49 @@
 
 {% block structured_data %}
 <script type="application/ld+json">
-{
+[
+  {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "QuillCV",
     "url": "https://quillcv.com",
     "description": "ATS-optimized CV builder that tailors your CV to job descriptions with 12 country formats",
     "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
-        "price": "29",
-        "priceCurrency": "USD",
-        "description": "Alpha pack — 50 CV generations"
+        "price": "0",
+        "priceCurrency": "AUD",
+        "description": "Register interest for early access — launching soon"
     }
-}
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to create an ATS-optimized CV with QuillCV",
+    "description": "Three simple steps to get a CV tailored to your target job and country.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Paste the job description",
+        "text": "QuillCV extracts key skills, requirements, and keywords the ATS will scan for."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Upload your CV",
+        "text": "PDF, DOCX, or plain text. QuillCV parses your experience, skills, and achievements."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Get your tailored CV",
+        "text": "AI rewrites your CV to match the job — download as PDF or raw HTML. Includes ATS scoring and quality review."
+      }
+    ]
+  }
+]
 </script>
 {% endblock %}
 

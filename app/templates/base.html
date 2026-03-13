@@ -16,6 +16,8 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}QuillCV — ATS-Optimized CV Builder{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Build ATS-optimized CVs tailored to job descriptions. 12 country formats and AI quality review.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://quillcv.com/static/og-default.png{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://quillcv.com/static/og-default.png{% endblock %}">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZQBQB9NF4"></script>
     <script>
@@ -30,7 +32,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://unpkg.com">
-    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVt3TVjGOo7NeFDuShuaTo7ASg0iGJnHag43IZAEYC" crossorigin="anonymous"></script>
     {% block head_extra %}{% endblock %}
     {% block structured_data %}
     <script type="application/ld+json">
