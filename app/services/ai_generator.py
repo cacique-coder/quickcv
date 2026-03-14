@@ -293,10 +293,11 @@ Structure:
 - Each experience entry MUST have: job title, company name, location, date range.
 
 Dates:
-- Use "MMM YYYY" format (e.g., "Jan 2024") or "MM/YYYY" — these are the two formats
-  all major ATS systems parse correctly.
+- Use the date format specified in the REGION FORMAT RULES section below — it varies by country
+  (e.g., DD/MM/YYYY for AU/UK/BR/CO/VE, MM/YYYY for US, DD.MM.YYYY for DE, YYYY/MM/DD for JP).
+- STRICTLY follow the region's date format for consistency. ATS parsers expect the local convention.
 - For current positions use "Present" not "Current" or "Ongoing".
-- Never use date ranges like "2024-01" or "January 2024 to present" without the abbreviated month.
+- Experience date ranges: "Jan 2024 – Present" or region-equivalent. Always include month and year.
 
 Bullet Points:
 - Start every bullet with a strong action verb (Led, Built, Reduced, Delivered, Managed).
