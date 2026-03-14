@@ -229,9 +229,23 @@
         {% endif %}
 
         {% if fields.visa %}
-        {% call form_group("Visa / Work Rights Status", hint=region_config.name ~ " expects work rights information on your CV.") %}
-            {{ text_input("visa_status", placeholder="e.g. Full working rights, PR, Visa subclass 482...", value=attempt.get('visa_status', '')) }}
-        {% endcall %}
+<div class="form-group">
+    <label>Visa / Work Rights Status
+        <span class="photo-level photo-required">Required for {{ region_config.name }}</span>
+    </label>
+    <p class="hint">{{ region_config.name }} expects work rights information on your CV.</p>
+    <select name="visa_status" class="input-field" required>
+        <option value="">— Select your work rights —</option>
+        <option value="Citizen" {% if attempt.get('visa_status') == 'Citizen' %}selected{% endif %}>Citizen</option>
+        <option value="Permanent Resident" {% if attempt.get('visa_status') == 'Permanent Resident' %}selected{% endif %}>Permanent Resident</option>
+        <option value="Work Visa" {% if attempt.get('visa_status') == 'Work Visa' %}selected{% endif %}>Work Visa (employer-sponsored)</option>
+        <option value="Working Holiday Visa" {% if attempt.get('visa_status') == 'Working Holiday Visa' %}selected{% endif %}>Working Holiday Visa</option>
+        <option value="Student Visa" {% if attempt.get('visa_status') == 'Student Visa' %}selected{% endif %}>Student Visa (with work rights)</option>
+        <option value="Partner/Spouse Visa" {% if attempt.get('visa_status') == 'Partner/Spouse Visa' %}selected{% endif %}>Partner / Spouse Visa</option>
+        <option value="Bridging Visa" {% if attempt.get('visa_status') == 'Bridging Visa' %}selected{% endif %}>Bridging Visa</option>
+        <option value="Other" {% if attempt.get('visa_status') == 'Other' %}selected{% endif %}>Other</option>
+    </select>
+</div>
         {% endif %}
 
         {% if fields.references %}

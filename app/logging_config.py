@@ -98,6 +98,8 @@ def setup_logging(dev_mode: bool) -> None:
         else "app.logging_config._JSONFormatter"
     )
 
+    stream = "ext://sys.stdout" if dev_mode else "ext://sys.stderr"
+
     logging.config.dictConfig({
         "version": 1,
         "disable_existing_loggers": False,
@@ -109,7 +111,7 @@ def setup_logging(dev_mode: bool) -> None:
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
-                "stream": "ext://sys.stderr",
+                "stream": stream,
                 "formatter": "main",
             },
         },
@@ -142,6 +144,11 @@ def setup_logging(dev_mode: bool) -> None:
                 "propagate": False,
             },
             "anthropic": {
+                "level": "WARNING",
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "sqlalchemy.engine": {
                 "level": "WARNING",
                 "handlers": ["console"],
                 "propagate": False,

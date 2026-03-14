@@ -174,7 +174,7 @@ class AnthropicAPIClient(LLMClient):
         try:
             message = await self.client.messages.create(
                 model=self.model,
-                max_tokens=4096,
+                max_tokens=12000,
                 system=system_text,
                 messages=[{"role": "user", "content": user_text}],
             )
@@ -404,7 +404,7 @@ class OpenAIClient(LLMClient):
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                max_tokens=4096,
+                max_tokens=12000,
             )
 
             duration_s = round(time.monotonic() - t0, 2)
@@ -499,7 +499,7 @@ class GeminiClient(LLMClient):
         try:
             client = google.genai.Client(api_key=self.api_key)
 
-            config_kwargs: dict = {"max_output_tokens": 4096}
+            config_kwargs: dict = {"max_output_tokens": 12000}
             if system_text:
                 config_kwargs["system_instruction"] = system_text
 
@@ -508,6 +508,18 @@ class GeminiClient(LLMClient):
                 contents=user_text,
                 config=GenerateContentConfig(**config_kwargs),
             )
+
+            # Debug: log raw response structure for troubleshooting
+            print(f"[GEMINI] Response received. candidates={len(response.candidates) if response.candidates else 0}", flush=True)
+            if response.candidates:
+                candidate = response.candidates[0]
+                print(f"[GEMINI] candidate[0] finish_reason={candidate.finish_reason} safety_ratings={candidate.safety_ratings}", flush=True)
+                if candidate.content and candidate.content.parts:
+                    print(f"[GEMINI] content parts={len(candidate.content.parts)} first_part_len={len(candidate.content.parts[0].text) if candidate.content.parts[0].text else 0}", flush=True)
+                else:
+                    print(f"[GEMINI] WARNING: No content/parts in candidate!", flush=True)
+            else:
+                print(f"[GEMINI] WARNING: No candidates! prompt_feedback={response.prompt_feedback}", flush=True)
 
             duration_s = round(time.monotonic() - t0, 2)
 
@@ -525,6 +537,8 @@ class GeminiClient(LLMClient):
             )
 
             result_text = response.text
+            if not result_text:
+                print(f"[GEMINI] WARNING: Empty result_text! Full response: {response}", flush=True)
 
         except Exception as exc:
             duration_s = round(time.monotonic() - t0, 2)

@@ -271,6 +271,8 @@
     <div class="ref-row">
         {{ text_input("ref_company_" ~ index, placeholder="Company", value=ref.get('company', '') if ref else '') }}
         {{ text_input("ref_email_" ~ index, type="email", placeholder="Email", value=ref.get('email', '') if ref else '') }}
+    </div>
+    <div class="ref-row">
         {{ phone_input("ref_phone_" ~ index, value=ref.get('phone', '') if ref else '', placeholder="+1 (555) 123-4567") }}
     </div>
 </div>

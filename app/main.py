@@ -122,6 +122,7 @@ app.mount(
 # Health check — Kamal requires this to verify the app is running
 @app.get("/up", include_in_schema=False)
 async def health_check():
+    print("[HEALTH] /up endpoint hit", flush=True)
     return {"status": "ok"}
 
 
