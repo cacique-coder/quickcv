@@ -1040,11 +1040,11 @@ def _graphic_designer() -> dict:
 
 def _sales_executive() -> dict:
     return {
-        "name": "Tom Bradley",
+        "name": "Han Solo",
         "title": "Regional Sales Director — APAC",
-        "email": "tom.bradley@email.com",
+        "email": "han.solo@millennium.sales",
         "phone": "+61 408 901 234",
-        "linkedin": "linkedin.com/in/tombradleysales",
+        "linkedin": "linkedin.com/in/han-solo",
         "github": "",
         "portfolio": "",
         "summary": (
@@ -1131,12 +1131,12 @@ def _sales_executive() -> dict:
 
 def _graduate() -> dict:
     return {
-        "name": "Aisha Rahman",
+        "name": "Tanjiro Kamado",
         "title": "Computer Science Graduate",
-        "email": "aisha.rahman@email.com",
+        "email": "tanjiro@slayercorps.dev",
         "phone": "+61 423 456 789",
-        "linkedin": "linkedin.com/in/aisharahman",
-        "github": "github.com/aisharahman",
+        "linkedin": "linkedin.com/in/tanjiro-kamado",
+        "github": "github.com/tanjirokamado",
         "portfolio": "",
         "summary": (
             "Recent Computer Science graduate with strong foundations in software "
@@ -1185,13 +1185,13 @@ def _graduate() -> dict:
         "projects": [
             {
                 "name": "StudyBuddy",
-                "url": "github.com/aisharahman/studybuddy",
+                "url": "github.com/tanjirokamado/studybuddy",
                 "description": "AI-powered study planner that generates revision schedules from lecture notes",
                 "tech": ["Python", "FastAPI", "React", "OpenAI API"],
             },
             {
                 "name": "EcoTrack",
-                "url": "github.com/aisharahman/ecotrack",
+                "url": "github.com/tanjirokamado/ecotrack",
                 "description": "Carbon footprint calculator with personalised reduction suggestions",
                 "tech": ["JavaScript", "Node.js", "MongoDB", "Chart.js"],
             },
@@ -1201,13 +1201,13 @@ def _graduate() -> dict:
 
 def _freelancer() -> dict:
     return {
-        "name": "Chris Navarro",
+        "name": "Din Djarin",
         "title": "Freelance Full-Stack Developer",
-        "email": "chris@navarro.dev",
+        "email": "din@mandalorian.dev",
         "phone": "+61 415 678 901",
-        "linkedin": "linkedin.com/in/chrisnavarro",
-        "github": "github.com/chrisnavarro",
-        "portfolio": "navarro.dev",
+        "linkedin": "linkedin.com/in/din-djarin",
+        "github": "github.com/dindjarin",
+        "portfolio": "mandalorian.dev",
         "summary": (
             "Freelance Full-Stack Developer with 7+ years building web applications, "
             "e-commerce platforms, and SaaS products for clients across Australia, the US, "
@@ -1270,31 +1270,31 @@ def _freelancer() -> dict:
         "projects": [
             {
                 "name": "FreshCart — E-Commerce Platform",
-                "url": "navarro.dev/freshcart",
+                "url": "mandalorian.dev/freshcart",
                 "description": "Custom Shopify Plus storefront with subscription management, processing $2M+ annually",
                 "tech": ["Next.js", "Shopify API", "Stripe", "Vercel"],
             },
             {
                 "name": "TradeFlow — SaaS Dashboard",
-                "url": "navarro.dev/tradeflow",
+                "url": "mandalorian.dev/tradeflow",
                 "description": "Real-time trading analytics platform for commodity brokers with 500+ daily active users",
                 "tech": ["React", "Node.js", "WebSocket", "PostgreSQL", "AWS"],
             },
             {
                 "name": "HealthBook — Appointment System",
-                "url": "navarro.dev/healthbook",
+                "url": "mandalorian.dev/healthbook",
                 "description": "Multi-tenant appointment booking system for 30+ medical practices",
                 "tech": ["Ruby on Rails", "React", "Twilio", "Heroku"],
             },
             {
                 "name": "GreenBuild — Carbon Calculator",
-                "url": "navarro.dev/greenbuild",
+                "url": "mandalorian.dev/greenbuild",
                 "description": "Carbon footprint calculator for construction companies with PDF report generation",
                 "tech": ["Python", "FastAPI", "React", "Docker"],
             },
             {
                 "name": "LegalEase — Document Automation",
-                "url": "navarro.dev/legalease",
+                "url": "mandalorian.dev/legalease",
                 "description": "Contract generation and e-signature platform for small law firms",
                 "tech": ["Next.js", "Node.js", "DocuSign API", "MongoDB"],
             },
@@ -1305,13 +1305,13 @@ def _freelancer() -> dict:
 
 def _career_changer() -> dict:
     return {
-        "name": "Diana Foster",
+        "name": "Spike Spiegel",
         "title": "UX Designer (Transitioning from Education)",
-        "email": "diana.foster@email.com",
+        "email": "spike@bebop.careers",
         "phone": "+61 419 012 345",
-        "linkedin": "linkedin.com/in/dianafosterux",
+        "linkedin": "linkedin.com/in/spike-spiegel",
         "github": "",
-        "portfolio": "dianafoster.design",
+        "portfolio": "bebop.careers",
         "summary": (
             "UX Designer transitioning from 10 years in education, bringing deep "
             "expertise in user empathy, curriculum design, and data-driven iteration. "
@@ -1389,13 +1389,13 @@ def _career_changer() -> dict:
         "projects": [
             {
                 "name": "MindfulMe — Mental Health App",
-                "url": "dianafoster.design/mindfulme",
+                "url": "bebop.careers/mindfulme",
                 "description": "End-to-end UX design for teen mental health app (bootcamp capstone project)",
                 "tech": ["Figma", "Maze", "User Research"],
             },
             {
                 "name": "CommunityHub — Neighbourhood Platform",
-                "url": "dianafoster.design/communityhub",
+                "url": "bebop.careers/communityhub",
                 "description": "Redesigned local community platform improving task completion rate by 40%",
                 "tech": ["Figma", "Hotjar", "Usability Testing"],
             },
@@ -1508,11 +1508,11 @@ def _apply_region(data: dict, region_code: str) -> dict:
         exp = data.get("experience", [])
         refs = []
         if len(exp) >= 1:
-            refs.append({"name": "Jane Smith", "title": "Director", "company": exp[0]["company"],
-                         "contact": f"jane.smith@company.com | {_REGION_PHONES.get(region_code, '')}"})
+            refs.append({"name": "Obi-Wan Kenobi", "title": "Director", "company": exp[0]["company"],
+                         "contact": f"obiwan.kenobi@jediorder.org | {_REGION_PHONES.get(region_code, '')}"})
         if len(exp) >= 2:
-            refs.append({"name": "John Doe", "title": "CTO", "company": exp[1]["company"],
-                         "contact": f"john.doe@company.com | {_REGION_PHONES.get(region_code, '')}"})
+            refs.append({"name": "Spock", "title": "CTO", "company": exp[1]["company"],
+                         "contact": f"spock@starfleet.io | {_REGION_PHONES.get(region_code, '')}"})
         data["references"] = refs
 
     # DOB for DE, NL, IN, BR, AE, JP
