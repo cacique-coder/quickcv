@@ -18,7 +18,8 @@ if (!input || !output) {
       '--disable-gpu',
       '--disable-dev-shm-usage',
       '--crash-dumps-dir=/tmp',
-      '--single-process',
+      '--disable-crash-reporter',
+      '--user-data-dir=/tmp/chromium-profile',
     ],
   });
 
