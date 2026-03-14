@@ -19,6 +19,31 @@
 
     {{ section_divider("Target Job") }}
 
+    <div class="job-url-input">
+        <label>Job posting URL <span class="optional-label">(optional)</span></label>
+        <p class="hint">Paste the link and we'll extract the description automatically. Works with Seek, Indeed, LinkedIn, and most job boards.</p>
+        <div class="job-url-row">
+            <input type="url" name="job_url" id="job-url-input"
+                   class="input-field"
+                   placeholder="https://www.seek.com.au/job/12345678"
+                   value="{{ attempt.get('job_url', '') }}">
+            <button type="button" class="btn-secondary btn-sm"
+                    hx-post="/wizard/scrape-job"
+                    hx-include="#job-url-input"
+                    hx-target="#job-scrape-result"
+                    hx-swap="innerHTML"
+                    hx-indicator="#scrape-spinner">
+                Fetch
+            </button>
+            <div id="scrape-spinner" class="htmx-indicator scrape-spinner-wrap">
+                <div class="spinner" style="width:20px;height:20px;border-width:2px;"></div>
+            </div>
+        </div>
+        <div id="job-scrape-result"></div>
+    </div>
+
+    <p class="hint" style="margin: 0.75rem 0 0.25rem; text-align: center; color: var(--text-muted);">— or paste it manually —</p>
+
     {% call form_group("Job Description", hint="Paste the full job posting — the AI uses this to tailor keywords, tone, and structure to match what the employer is looking for.", required=true) %}
         {{ text_area("job_description", rows=10, placeholder="Paste the job description here...", value=attempt.get('job_description', ''), required=true) }}
     {% endcall %}

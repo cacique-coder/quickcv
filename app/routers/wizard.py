@@ -374,6 +374,25 @@ async def step2_save(
 
 
 # ------------------------------------------------------------------
+# Job URL scraper (HTMX endpoint — returns HTML partial)
+# ------------------------------------------------------------------
+
+@router.post("/scrape-job")
+async def scrape_job(request: Request, job_url: str = Form("")):
+    """Scrape a job posting URL and return an HTML partial for HTMX."""
+    from app.services.job_scraper import scrape_job_url
+
+    result = await scrape_job_url(job_url)
+    return templates.TemplateResponse("partials/wizard/job_scrape_result.html", {
+        "request": request,
+        "success": result["success"],
+        "text": result["text"],
+        "title": result["title"],
+        "error": result["error"],
+    })
+
+
+# ------------------------------------------------------------------
 # Step 3: Documents
 # ------------------------------------------------------------------
 

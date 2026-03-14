@@ -4818,6 +4818,99 @@ select.input-field {
     font-size: 0.82rem;
 }
 
+/* Job URL scraper */
+.job-url-input {
+    margin-bottom: 1rem;
+}
+.job-url-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 0.35rem;
+}
+.job-url-row .input-field {
+    flex: 1;
+    min-width: 0;
+}
+.job-url-row .btn-sm {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.scrape-spinner-wrap {
+    display: none;
+    align-items: center;
+}
+.scrape-spinner-wrap.htmx-request {
+    display: flex;
+}
+/* Job scrape preview panel */
+.job-scrape-preview {
+    margin-top: 0.75rem;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-radius: var(--radius);
+    background: rgba(52, 211, 153, 0.05);
+    overflow: hidden;
+}
+.job-scrape-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid rgba(52, 211, 153, 0.15);
+    flex-wrap: wrap;
+}
+.job-scrape-success-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--green);
+    background: rgba(52, 211, 153, 0.12);
+    padding: 0.15rem 0.5rem;
+    border-radius: 1rem;
+    flex-shrink: 0;
+}
+.job-scrape-title {
+    font-size: 0.85rem;
+    color: var(--text);
+}
+.job-scrape-preview-body {
+    padding: 0.75rem 0.9rem;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+.job-scrape-preview-hint {
+    padding: 0.4rem 0.9rem 0.6rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Job scrape error */
+.job-scrape-error {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    padding: 0.75rem 0.9rem;
+    background: rgba(248, 113, 113, 0.06);
+    border-radius: var(--radius);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+}
+.job-scrape-error p {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+.job-scrape-error strong {
+    color: var(--warning);
+}
+
 @media (max-width: 600px) {
     .account-stats {
         gap: 0.6rem;
