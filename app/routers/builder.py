@@ -15,6 +15,7 @@ from fastapi.templating import Jinja2Templates
 from app.database import async_session
 from app.services.attempt_store import create_attempt, get_attempt, update_attempt
 from app.services.cv_store import get_saved_cv, save_cv, update_cv
+from app.services.docx_generator import generate_docx
 from app.services.pdf_generator import generate_pdf
 from app.services.template_registry import REGIONS, TEMPLATES, list_regions, list_templates
 
@@ -426,5 +427,36 @@ async def builder_download_pdf(request: Request):
         media_type="application/pdf",
         headers={
             "Content-Disposition": f'attachment; filename="{safe_name} - QuillCV.pdf"',
+        },
+    )
+
+
+@router.get("/download-docx")
+async def builder_download_docx(request: Request):
+    """Download the manually built CV as DOCX."""
+    attempt_id = request.session.get("builder_id")
+    if not attempt_id:
+        return Response("No active session", status_code=400)
+
+    attempt = get_attempt(attempt_id)
+    if not attempt or not attempt.get("cv_data"):
+        return Response("No CV preview found. Please preview first.", status_code=400)
+
+    cv_data = attempt.get("cv_data", {})
+    region_code = attempt.get("builder_data", {}).get("region", "AU") or "AU"
+    cv_name = cv_data.get("name", "CV") or "CV"
+    safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
+
+    try:
+        docx_bytes = generate_docx(cv_data, region_code=region_code)
+    except Exception:
+        logger.exception("DOCX generation failed for builder attempt=%s", attempt_id)
+        return Response("DOCX generation failed. Please try again.", status_code=500)
+
+    return Response(
+        content=docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={
+            "Content-Disposition": f'attachment; filename="{safe_name} - QuillCV.docx"',
         },
     )

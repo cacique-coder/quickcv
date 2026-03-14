@@ -167,9 +167,14 @@
                     — {{ template.name }} template ({{ region }})
                 </span>
             </h2>
-            <a href="/download-pdf" class="btn-download" download>
-                <span class="download-icon">&#8681;</span> Download PDF
-            </a>
+            <div class="download-actions">
+                <a href="/download-pdf" class="btn-download" download>
+                    <span class="download-icon">&#8681;</span> Download PDF
+                </a>
+                <a href="/download-docx" class="btn-download btn-download--secondary" download>
+                    <span class="download-icon">&#8681;</span> Download DOCX
+                </a>
+            </div>
         </div>
         <div class="cv-preview">
             {{ generated_cv | safe }}
@@ -185,6 +190,9 @@
         </button>
         <a href="/download-pdf" class="btn-generate" download>
             <span class="download-icon">&#8681;</span> Download PDF
+        </a>
+        <a href="/download-docx" class="btn-secondary" download>
+            <span class="download-icon">&#8681;</span> Download DOCX
         </a>
     </div>
 </div>

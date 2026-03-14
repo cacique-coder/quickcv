@@ -2128,6 +2128,21 @@ header a:hover { text-decoration: underline; }
 .btn-download:hover {
     background: var(--accent-hover);
 }
+.btn-download--secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+}
+.btn-download--secondary:hover {
+    background: var(--accent);
+    color: white;
+}
+.download-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
 .download-icon {
     font-size: 1.1rem;
 }

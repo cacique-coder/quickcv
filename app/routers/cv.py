@@ -20,6 +20,7 @@ from app.services.cv_reviewer import review_cv_quality
 from app.services.cv_store import save_cv
 from app.services.generation_log import log_generation
 from app.services.keyword_extractor import extract_keywords_llm
+from app.services.docx_generator import generate_docx
 from app.services.pdf_generator import generate_pdf
 from app.services.pii_redactor import PIIRedactor
 from app.services.placeholder_check import check_placeholders
@@ -513,5 +514,36 @@ async def download_pdf(request: Request):
         media_type="application/pdf",
         headers={
             "Content-Disposition": f'attachment; filename="{safe_name} - QuillCV.pdf"',
+        },
+    )
+
+
+@router.get("/download-docx")
+async def download_docx(request: Request):
+    """Generate and download the CV as DOCX."""
+    attempt_id = request.session.get("attempt_id")
+    if not attempt_id:
+        return Response("No active session", status_code=400)
+
+    attempt = get_attempt(attempt_id)
+    if not attempt or not attempt.get("cv_data"):
+        return Response("No generated CV found. Please generate your CV first.", status_code=400)
+
+    cv_data = attempt["cv_data"]
+    region_code = attempt.get("region", "AU") or "AU"
+    cv_name = cv_data.get("name", "CV") or "CV"
+    safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
+
+    try:
+        docx_bytes = generate_docx(cv_data, region_code=region_code)
+    except Exception:
+        logger.exception("DOCX generation failed for attempt=%s", attempt_id)
+        return Response("DOCX generation failed. Please try again.", status_code=500)
+
+    return Response(
+        content=docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={
+            "Content-Disposition": f'attachment; filename="{safe_name} - QuillCV.docx"',
         },
     )

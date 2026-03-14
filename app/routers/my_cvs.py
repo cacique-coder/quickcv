@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.database import async_session
 from app.services.cv_store import get_saved_cv, list_saved_cvs
+from app.services.docx_generator import generate_docx
 from app.services.pdf_generator import generate_pdf
 
 logger = logging.getLogger(__name__)
@@ -96,5 +97,35 @@ async def my_cv_download(request: Request, cv_id: str):
         media_type="application/pdf",
         headers={
             "Content-Disposition": f'attachment; filename="{safe_name}{label_part} - QuillCV.pdf"',
+        },
+    )
+
+
+@router.get("/my-cvs/{cv_id}/download-docx")
+async def my_cv_download_docx(request: Request, cv_id: str):
+    """Download a saved CV as DOCX."""
+    async with async_session() as db:
+        saved = await get_saved_cv(db, cv_id)
+
+    if not saved:
+        return Response("CV not found", status_code=404)
+
+    cv_data = json.loads(saved.cv_data_json)
+    region_code = saved.region or "AU"
+    cv_name = cv_data.get("name", "CV") or "CV"
+    safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
+    label_part = f" - {saved.label}" if saved.label else ""
+
+    try:
+        docx_bytes = generate_docx(cv_data, region_code=region_code)
+    except Exception:
+        logger.exception("DOCX generation failed for cv_id=%s", cv_id)
+        return Response("DOCX generation failed", status_code=500)
+
+    return Response(
+        content=docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={
+            "Content-Disposition": f'attachment; filename="{safe_name}{label_part} - QuillCV.docx"',
         },
     )
