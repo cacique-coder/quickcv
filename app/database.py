@@ -25,14 +25,16 @@ class Base(DeclarativeBase):
 
 
 async def init_db():
-    """Run Alembic migrations on app startup.
+    """Run Alembic migrations then create_all as safety net.
 
-    Uses asyncio.to_thread because Alembic's upgrade() is synchronous.
-    Any pending migrations are applied before the app begins serving requests.
+    1. Alembic handles column additions and schema changes on existing tables.
+    2. create_all handles any new tables not yet covered by migrations.
+       It's idempotent — skips tables that already exist.
     """
     from alembic import command
     from alembic.config import Config
 
+    # Step 1: Alembic migrations (sync, run in thread)
     def _run_upgrade():
         alembic_cfg = Config("alembic.ini")
         logger.info("Running Alembic migrations to head...")
@@ -40,6 +42,12 @@ async def init_db():
         logger.info("Alembic migrations complete.")
 
     await asyncio.to_thread(_run_upgrade)
+
+    # Step 2: create_all for any new tables not yet in a migration
+    from app.models import APIRequestLog, ConsentRecord, Credit, ExpressionOfInterest, Invitation, Payment, PIIVault, SavedCV, User, WebAuthnCredential  # noqa: F401
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    logger.info("create_all safety net complete.")
 
 
 async def get_db() -> AsyncSession:
