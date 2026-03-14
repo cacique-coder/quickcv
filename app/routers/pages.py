@@ -1,9 +1,15 @@
-"""Static content pages: about, privacy policy, terms of service."""
+"""Static content pages: about, privacy policy, terms of service, CCPA opt-out."""
 
+import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Form, Request
 from fastapi.templating import Jinja2Templates
+
+from app.database import async_session
+from app.models import ConsentRecord
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).parent.parent / "templates")
@@ -19,6 +25,62 @@ async def privacy_page(request: Request):
     return templates.TemplateResponse("privacy.html", {"request": request})
 
 
+@router.get("/privacidad")
+async def privacidad_page(request: Request):
+    return templates.TemplateResponse("privacidad.html", {"request": request})
+
+
+@router.get("/privacidade")
+async def privacidade_page(request: Request):
+    return templates.TemplateResponse("privacidade.html", {"request": request})
+
+
 @router.get("/terms")
 async def terms_page(request: Request):
     return templates.TemplateResponse("terms.html", {"request": request})
+
+
+@router.get("/ccpa-opt-out")
+async def ccpa_optout_page(request: Request):
+    """CCPA/CPRA 'Do Not Sell or Share' opt-out form."""
+    user = getattr(request.state, "user", None)
+    prefill_email = user.email if user else ""
+    return templates.TemplateResponse(
+        "ccpa_optout.html",
+        {"request": request, "prefill_email": prefill_email, "submitted": False},
+    )
+
+
+@router.post("/ccpa-opt-out")
+async def ccpa_optout_submit(
+    request: Request,
+    email: str = Form(...),
+    opt_out_confirmed: bool = Form(False),
+):
+    """Record a CCPA opt-out request and show confirmation."""
+    user = getattr(request.state, "user", None)
+    ip = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")[:512]
+
+    async with async_session() as db:
+        record = ConsentRecord(
+            user_id=user.id if user else None,
+            consent_type="ccpa_opt_out",
+            email=email.strip().lower(),
+            granted=False,  # opted OUT — not granting sale/share
+            ip_address=ip,
+            user_agent=ua,
+        )
+        db.add(record)
+        await db.commit()
+
+    logger.info("CCPA opt-out recorded for %s (confirmed=%s)", email, opt_out_confirmed)
+
+    return templates.TemplateResponse(
+        "ccpa_optout.html",
+        {
+            "request": request,
+            "prefill_email": email,
+            "submitted": True,
+        },
+    )

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Política de Privacidade — QuillCV{% endblock %}
+{% block meta_description %}Política de privacidade do QuillCV — como coletamos, usamos e protegemos seus dados pessoais. Conformidade com a LGPD (Lei 13.709/2018) e normas internacionais.{% endblock %}
+
+{% block content %}
+<section class="legal-page">
+    <div class="legal-wrap">
+        <p class="legal-lang-links">
+            <a href="/privacy">Read in English</a> &middot;
+            <a href="/privacidad">Leer en Español</a>
+        </p>
+
+        <h1>Política de Privacidade</h1>
+        <p class="legal-updated">Última atualização: 14 de março de 2026 — v2</p>
+
+        <h2>1. Quem somos</h2>
+        <p>QuillCV ("nós", "nosso") é um gerador de currículos otimizado para sistemas ATS, operado a partir da Austrália. Esta política explica como tratamos suas informações pessoais quando você usa nosso site em quillcv.com.</p>
+
+        <h2>2. Informações que coletamos</h2>
+        <h3>Informações que você nos fornece</h3>
+        <ul>
+            <li><strong>Dados da conta</strong> — endereço de e-mail e nome (ao se cadastrar ou manifestar interesse)</li>
+            <li><strong>Conteúdo do currículo</strong> — o currículo que você envia e as descrições de vagas que insere, utilizados exclusivamente para gerar seu currículo personalizado</li>
+            <li><strong>Fotos</strong> — se você enviar uma foto para formatos de currículo que a exigem (por exemplo, Alemanha, Japão)</li>
+        </ul>
+
+        <h3>Informações coletadas automaticamente</h3>
+        <ul>
+            <li><strong>Dados de análise</strong> — visualizações de páginas, tipo de dispositivo e localização geral via Google Analytics (somente com seu consentimento). Utilizamos anonimização de IP.</li>
+            <li><strong>Cookies</strong> — cookies de sessão para a funcionalidade de login e um cookie de consentimento de análise para lembrar sua preferência</li>
+        </ul>
+
+        <h2>3. Como usamos suas informações</h2>
+        <ul>
+            <li>Para gerar currículos otimizados para ATS com base em seus dados</li>
+            <li>Para manter sua conta e oferecer suporte ao cliente</li>
+            <li>Para enviar notificações de lançamento (se você manifestou interesse)</li>
+            <li>Para melhorar o serviço por meio de análises anônimas e agregadas</li>
+        </ul>
+        <p><strong>Não</strong> vendemos suas informações pessoais. <strong>Não</strong> usamos o conteúdo do seu currículo para treinar modelos de inteligência artificial.</p>
+
+        <h2>4. Serviços de terceiros</h2>
+        <ul>
+            <li><strong>Google (API Gemini)</strong> — provedor de IA principal. Processa o conteúdo do seu currículo para gerar o resultado personalizado. Sujeito à <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">política de privacidade do Google</a>.</li>
+            <li><strong>Anthropic (API Claude)</strong> — provedor de IA secundário/alternativo. Também processa o conteúdo do seu currículo. Sujeito à <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer">política de privacidade da Anthropic</a>.</li>
+            <li><strong>Stripe</strong> — processa os pagamentos. Nunca vemos nem armazenamos os dados completos do seu cartão.</li>
+            <li><strong>Google Analytics</strong> — análise do site, carregado somente com seu consentimento. A anonimização de IP está habilitada.</li>
+            <li><strong>Cloudflare R2</strong> — armazena com segurança as fotos enviadas.</li>
+        </ul>
+
+        <h2>5. Inteligência artificial e processamento automatizado</h2>
+        <p>O QuillCV usa inteligência artificial para ajudá-lo a criar seu currículo. Veja como isso funciona e o que significa para você:</p>
+        <ul>
+            <li><strong>O que a IA faz</strong> — a IA gera conteúdo de currículo personalizado de acordo com a descrição da vaga que você fornece e avalia o desempenho provável do seu currículo nos sistemas ATS.</li>
+            <li><strong>Revise antes de enviar</strong> — o conteúdo gerado por IA pode conter imprecisões ou omissões. Você deve revisar cuidadosamente todo o resultado antes de enviar seu currículo a qualquer empregador.</li>
+            <li><strong>Sem decisões automatizadas de contratação</strong> — o QuillCV auxilia candidatos a emprego na preparação de suas candidaturas. Não tomamos, influenciamos nem automatizamos nenhuma decisão de contratação ou emprego. Essas decisões são de responsabilidade exclusiva dos potenciais empregadores.</li>
+            <li><strong>A pontuação ATS é orientativa</strong> — nossas análises de pontuação ATS e palavras-chave são ferramentas de orientação. Elas não garantem nenhum resultado em qualquer processo seletivo.</li>
+        </ul>
+
+        <h2>6. Como protegemos seus dados</h2>
+        <p>Usamos uma arquitetura de criptografia em duas camadas para proteger informações sensíveis:</p>
+        <ul>
+            <li><strong>Camada 1 — Cofre de PII (criptografia derivada do usuário)</strong> — campos de identidade como nome, endereço, telefone e e-mail são criptografados usando uma chave derivada da sua senha. Isso significa que não conseguimos ler seus dados de identidade brutos, mesmo que nossos servidores fossem comprometidos. Este é um design de conhecimento zero para seus campos mais sensíveis.</li>
+            <li><strong>Camada 2 — Criptografia de arquivos em repouso</strong> — os arquivos enviados (currículos, fotos) e documentos armazenados são criptografados em repouso usando chaves gerenciadas pelo servidor no Cloudflare R2.</li>
+            <li><strong>Sistema de marcadores</strong> — quando o conteúdo do seu currículo é processado por provedores de IA, as informações de identificação pessoal reais são substituídas por marcadores (por exemplo, <code>[NAME]</code>, <code>[EMAIL]</code>) antes da transmissão. Seus campos de identidade brutos nunca são enviados a APIs de IA de terceiros.</li>
+            <li><strong>HTTPS em trânsito</strong> — todos os dados em trânsito são criptografados via TLS. As senhas são armazenadas com hash usando um algoritmo unidirecional robusto e nunca são guardadas ou transmitidas em texto simples.</li>
+        </ul>
+        <p>Arquivos temporários (como currículos enviados usados durante uma sessão de geração) são excluídos automaticamente após 7 dias.</p>
+
+        <h2>7. Retenção de dados</h2>
+        <ul>
+            <li><strong>Conteúdo do currículo</strong> — mantido enquanto sua conta estiver ativa. Você pode excluir currículos individuais a qualquer momento.</li>
+            <li><strong>Dados da conta</strong> — mantidos até que você solicite a exclusão.</li>
+            <li><strong>E-mails de manifestação de interesse</strong> — mantidos até o lançamento ou até que você cancele a assinatura.</li>
+        </ul>
+
+        <h2>8. Seus direitos</h2>
+        <p>Dependendo da sua localização, você pode ter o direito de:</p>
+        <ul>
+            <li>Acessar, corrigir ou excluir seus dados pessoais</li>
+            <li>Retirar o consentimento para cookies de análise</li>
+            <li>Solicitar uma cópia dos seus dados em formato portátil</li>
+            <li>Registrar uma reclamação junto à sua autoridade local de proteção de dados</li>
+        </ul>
+        <p>Para exercer qualquer um desses direitos, envie um e-mail para <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a>.</p>
+
+        <h2>9. Direitos dos titulares sob a LGPD (Lei 13.709/2018 — Brasil)</h2>
+        <p>Se você é residente no Brasil e nos fornece dados pessoais, o tratamento desses dados está sujeito à <strong>Lei Geral de Proteção de Dados Pessoais (LGPD — Lei 13.709/2018)</strong>. Nos termos do Capítulo III da LGPD, você tem direito a:</p>
+        <ul>
+            <li><strong>Confirmação e acesso</strong> — confirmar a existência de tratamento e acessar seus dados pessoais</li>
+            <li><strong>Correção</strong> — corrigir dados incompletos, inexatos ou desatualizados</li>
+            <li><strong>Anonimização, bloqueio ou eliminação</strong> — de dados desnecessários, excessivos ou tratados em desconformidade com a LGPD</li>
+            <li><strong>Portabilidade</strong> — solicitar a portabilidade dos seus dados a outro fornecedor de serviço ou produto</li>
+            <li><strong>Eliminação</strong> — dos dados pessoais tratados com seu consentimento</li>
+            <li><strong>Informação</strong> — sobre as entidades públicas e privadas com as quais compartilhamos seus dados</li>
+            <li><strong>Revogação do consentimento</strong> — de forma gratuita e facilitada, a qualquer momento</li>
+            <li><strong>Revisão de decisões automatizadas</strong> — solicitar revisão de decisões tomadas com base em tratamento automatizado de dados pessoais</li>
+            <li><strong>Oposição</strong> — ao tratamento quando não observados os requisitos da LGPD</li>
+            <li><strong>Peticionar</strong> — junto à Autoridade Nacional de Proteção de Dados (ANPD)</li>
+        </ul>
+        <p>Para exercer seus direitos como titular de dados, entre em contato com nosso Encarregado pelo Tratamento de Dados Pessoais (DPO) pelo e-mail <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a>. Responderemos à sua solicitação no prazo de <strong>15 dias</strong> contados do recebimento, conforme previsto na LGPD.</p>
+        <p>A autoridade supervisora competente no Brasil é a <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong>, perante a qual você também pode registrar reclamações relacionadas ao tratamento dos seus dados pessoais.</p>
+
+        <h2>10. Medidas de segurança adicionais</h2>
+        <p>Além da criptografia em duas camadas descrita na Seção 6, utilizamos gerenciamento seguro de sessões e seguimos as melhores práticas do setor em todo o serviço. Realizamos revisões periódicas da nossa postura de segurança e atualizamos nossas práticas regularmente.</p>
+
+        <h2>11. Alterações nesta política</h2>
+        <p>Podemos atualizar esta política periodicamente. Notificaremos os titulares de contas sobre alterações significativas por e-mail.</p>
+
+        <h2>12. Contato e Encarregado (DPO)</h2>
+        <p>Para dúvidas relacionadas à privacidade ou para exercer seus direitos sob a LGPD: <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a></p>
+    </div>
+</section>
+{% endblock %}

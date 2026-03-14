@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Política de Privacidad — QuillCV{% endblock %}
+{% block meta_description %}Política de privacidad de QuillCV — cómo recopilamos, usamos y protegemos sus datos personales. Cumplimiento con la Ley 1581 de 2012 (Colombia) y normativas internacionales.{% endblock %}
+
+{% block content %}
+<section class="legal-page">
+    <div class="legal-wrap">
+        <p class="legal-lang-links">
+            <a href="/privacy">Read in English</a> &middot;
+            <a href="/privacidade">Ler em Português</a>
+        </p>
+
+        <h1>Política de Tratamiento de Datos Personales</h1>
+        <p class="legal-updated">Última actualización: 14 de marzo de 2026 — v2</p>
+
+        <h2>1. Quiénes somos</h2>
+        <p>QuillCV ("nosotros", "nuestro") es un generador de hojas de vida optimizado para sistemas ATS, operado desde Australia. Esta política explica cómo tratamos su información personal cuando utiliza nuestro sitio web en quillcv.com.</p>
+
+        <h2>2. Información que recopilamos</h2>
+        <h3>Información que usted nos proporciona</h3>
+        <ul>
+            <li><strong>Datos de cuenta</strong> — dirección de correo electrónico y nombre (al registrarse o manifestar interés)</li>
+            <li><strong>Contenido de la hoja de vida</strong> — la hoja de vida que carga y las descripciones de trabajo que ingresa, utilizados exclusivamente para generar su hoja de vida personalizada</li>
+            <li><strong>Fotografías</strong> — si carga una foto para formatos de hoja de vida que la requieren (por ejemplo, Alemania, Japón)</li>
+        </ul>
+
+        <h3>Información recopilada automáticamente</h3>
+        <ul>
+            <li><strong>Datos de analítica</strong> — visitas a páginas, tipo de dispositivo y ubicación general a través de Google Analytics (solo con su consentimiento). Utilizamos anonimización de IP.</li>
+            <li><strong>Cookies</strong> — cookies de sesión para la funcionalidad de inicio de sesión y una cookie de consentimiento de analítica para recordar su preferencia</li>
+        </ul>
+
+        <h2>3. Cómo utilizamos su información</h2>
+        <ul>
+            <li>Para generar hojas de vida optimizadas para ATS según sus datos</li>
+            <li>Para mantener su cuenta y brindar atención al cliente</li>
+            <li>Para enviarles notificaciones de lanzamiento (si registraron interés)</li>
+            <li>Para mejorar el servicio mediante analítica anónima y agregada</li>
+        </ul>
+        <p><strong>No</strong> vendemos su información personal. <strong>No</strong> utilizamos el contenido de su hoja de vida para entrenar modelos de inteligencia artificial.</p>
+
+        <h2>4. Servicios de terceros</h2>
+        <ul>
+            <li><strong>Google (API de Gemini)</strong> — proveedor de IA principal. Procesa el contenido de su hoja de vida para generar el resultado personalizado. Sujeto a la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">política de privacidad de Google</a>.</li>
+            <li><strong>Anthropic (API de Claude)</strong> — proveedor de IA secundario/alternativo. También procesa el contenido de su hoja de vida. Sujeto a la <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer">política de privacidad de Anthropic</a>.</li>
+            <li><strong>Stripe</strong> — procesa los pagos. Nunca vemos ni almacenamos los datos completos de su tarjeta.</li>
+            <li><strong>Google Analytics</strong> — analítica del sitio web, cargada únicamente con su consentimiento. La anonimización de IP está habilitada.</li>
+            <li><strong>Cloudflare R2</strong> — almacena las fotografías cargadas de forma segura.</li>
+        </ul>
+
+        <h2>5. Inteligencia artificial y procesamiento automatizado</h2>
+        <p>QuillCV utiliza inteligencia artificial para ayudarle a crear su hoja de vida. A continuación explicamos cómo funciona y qué significa para usted:</p>
+        <ul>
+            <li><strong>Qué hace la IA</strong> — la IA genera contenido de hoja de vida adaptado a la descripción del trabajo que usted proporciona y evalúa qué tan bien es probable que su hoja de vida funcione con los sistemas ATS.</li>
+            <li><strong>Revise antes de enviar</strong> — el contenido generado por IA puede contener inexactitudes u omisiones. Debe revisar cuidadosamente todo el resultado antes de enviar su hoja de vida a cualquier empleador.</li>
+            <li><strong>Sin decisiones de contratación automatizadas</strong> — QuillCV ayuda a quienes buscan empleo a preparar sus postulaciones. No tomamos, influimos ni automatizamos ninguna decisión de contratación o empleo. Esas decisiones recaen exclusivamente en los posibles empleadores.</li>
+            <li><strong>La puntuación ATS es orientativa</strong> — nuestros análisis de puntuación ATS y palabras clave son herramientas de orientación. No garantizan ningún resultado en ningún proceso de postulación.</li>
+        </ul>
+
+        <h2>6. Cómo protegemos sus datos</h2>
+        <p>Utilizamos una arquitectura de cifrado de dos capas para proteger la información sensible:</p>
+        <ul>
+            <li><strong>Capa 1 — Bóveda de PII (cifrado derivado del usuario)</strong> — los campos de identidad como nombre, dirección, teléfono y correo electrónico se cifran mediante una clave derivada de su contraseña. Esto significa que no podemos leer sus datos de identidad sin procesar, incluso si nuestros servidores fueran comprometidos. Este es un diseño de conocimiento cero para sus campos más sensibles.</li>
+            <li><strong>Capa 2 — Cifrado de archivos en reposo</strong> — los archivos cargados (hojas de vida, fotografías) y los documentos almacenados se cifran en reposo mediante claves gestionadas por el servidor en Cloudflare R2.</li>
+            <li><strong>Sistema de marcadores de posición</strong> — cuando el contenido de su hoja de vida es procesado por proveedores de IA, la información de identificación personal real es reemplazada por marcadores de posición (por ejemplo, <code>[NAME]</code>, <code>[EMAIL]</code>) antes de la transmisión. Sus campos de identidad sin procesar nunca se envían a APIs de IA de terceros.</li>
+            <li><strong>HTTPS en tránsito</strong> — todos los datos en tránsito se cifran mediante TLS. Las contraseñas se almacenan con hash mediante un algoritmo unidireccional robusto y nunca se guardan ni transmiten en texto plano.</li>
+        </ul>
+        <p>Los archivos temporales (como las hojas de vida cargadas usadas durante una sesión de generación) se eliminan automáticamente después de 7 días.</p>
+
+        <h2>7. Retención de datos</h2>
+        <ul>
+            <li><strong>Contenido de hoja de vida</strong> — conservado mientras su cuenta esté activa. Puede eliminar hojas de vida individuales en cualquier momento.</li>
+            <li><strong>Datos de cuenta</strong> — conservados hasta que solicite su eliminación.</li>
+            <li><strong>Correos de expresión de interés</strong> — conservados hasta el lanzamiento o hasta que cancele su suscripción.</li>
+        </ul>
+
+        <h2>8. Sus derechos</h2>
+        <p>Dependiendo de su ubicación, usted puede tener derecho a:</p>
+        <ul>
+            <li>Acceder, corregir o eliminar sus datos personales</li>
+            <li>Retirar el consentimiento para las cookies de analítica</li>
+            <li>Solicitar una copia de sus datos en un formato portátil</li>
+            <li>Presentar una reclamación ante su autoridad local de protección de datos</li>
+        </ul>
+        <p>Para ejercer cualquiera de estos derechos, envíe un correo electrónico a <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a>.</p>
+
+        <h2>9. Derechos de los titulares bajo la Ley 1581 de 2012 (Colombia)</h2>
+        <p>Si usted es residente en Colombia o Venezuela y nos proporciona datos personales, el tratamiento de esos datos está sujeto a la <strong>Ley 1581 de 2012 (Ley de Habeas Data)</strong> y sus decretos reglamentarios. En virtud de dicha ley, usted tiene derecho a:</p>
+        <ul>
+            <li><strong>Conocer</strong> los datos personales que tenemos sobre usted y la finalidad de su tratamiento</li>
+            <li><strong>Actualizar</strong> sus datos personales cuando estén desactualizados o sean inexactos</li>
+            <li><strong>Rectificar</strong> información incorrecta o incompleta</li>
+            <li><strong>Solicitar prueba</strong> de la autorización otorgada para el tratamiento de sus datos</li>
+            <li><strong>Revocar</strong> la autorización para el tratamiento cuando no se respeten los principios, derechos y garantías constitucionales y legales</li>
+            <li><strong>Presentar peticiones de habeas data</strong> ante QuillCV o ante la Superintendencia de Industria y Comercio (SIC) cuando considere que sus derechos han sido vulnerados</li>
+            <li><strong>Ser informado</strong> sobre el uso que se ha dado a sus datos personales</li>
+        </ul>
+        <p>Las peticiones de habeas data, consultas y reclamos relacionados con el tratamiento de sus datos personales deben enviarse a <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a>. Atenderemos su solicitud dentro de los <strong>15 días hábiles</strong> siguientes a su recepción, conforme a lo establecido en la Ley 1581 de 2012.</p>
+        <p>La autoridad de control competente para Colombia es la <strong>Superintendencia de Industria y Comercio (SIC)</strong>, ante la cual también puede presentar reclamaciones relacionadas con el tratamiento de sus datos.</p>
+
+        <h2>10. Medidas de seguridad adicionales</h2>
+        <p>Además del cifrado de dos capas descrito en la Sección 6, utilizamos gestión segura de sesiones y seguimos las mejores prácticas de la industria en todo el servicio. Realizamos revisiones periódicas de nuestra postura de seguridad y actualizamos nuestras prácticas en consecuencia.</p>
+
+        <h2>11. Cambios a esta política</h2>
+        <p>Es posible que actualicemos esta política de vez en cuando. Notificaremos a los titulares de cuentas sobre cambios significativos por correo electrónico.</p>
+
+        <h2>12. Contacto</h2>
+        <p>Para preguntas relacionadas con privacidad: <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a></p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Do Not Sell or Share My Personal Information — QuillCV{% endblock %}
+{% block meta_description %}Submit a CCPA opt-out request to QuillCV. We do not sell or share your personal information with third parties for cross-context behavioural advertising.{% endblock %}
+
+{% block content %}
+<section class="legal-page">
+    <div class="legal-wrap">
+        <h1>Do Not Sell or Share My Personal Information</h1>
+        <p class="legal-updated">California Consumer Privacy Act (CCPA) &amp; California Privacy Rights Act (CPRA)</p>
+
+        {% if submitted %}
+        <div class="alert alert--success" role="alert">
+            <strong>Request received.</strong> Your opt-out has been recorded. We will process your request within 15 business days as required by the CCPA. If you have questions, email <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a>.
+        </div>
+        {% else %}
+
+        <h2>Our current practice</h2>
+        <p>QuillCV <strong>does not sell</strong> your personal information to third parties. QuillCV <strong>does not share</strong> your personal information with third parties for cross-context behavioural advertising.</p>
+
+        <p>The AI providers we use to generate CV content process your data solely to fulfill your request:</p>
+        <ul>
+            <li><strong>Anthropic (Claude API)</strong> — processes CV content to generate your tailored CV. Anthropic does not use your data for advertising or AI training under our API agreement.</li>
+            <li><strong>Google (Gemini API)</strong> — same scope. Google does not use API data for advertising or training under the API terms of service.</li>
+        </ul>
+
+        <p>Even though we do not currently sell or share personal information, California residents have the right under the CPRA to submit a formal opt-out request for the record. You may do so using the form below.</p>
+
+        <h2>Submit an opt-out request</h2>
+        <form method="post" action="/ccpa-opt-out" class="legal-form">
+            <div class="form-group">
+                <label for="email" class="form-label">Your email address</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    value="{{ prefill_email }}"
+                    required
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                >
+                <p class="form-hint">We use this to identify your account and confirm your request.</p>
+            </div>
+
+            <div class="form-group form-group--checkbox">
+                <label class="checkbox-label">
+                    <input
+                        type="checkbox"
+                        name="opt_out_confirmed"
+                        value="true"
+                        required
+                    >
+                    <span>I request that QuillCV does not sell or share my personal information with third parties for cross-context behavioural advertising.</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Submit opt-out request</button>
+        </form>
+
+        <p class="legal-note">After submitting, you will receive confirmation on this page. For other privacy requests (access, deletion, portability), email <a href="mailto:privacy@quillcv.com">privacy@quillcv.com</a>.</p>
+
+        {% endif %}
+
+        <p><a href="/privacy">&larr; Back to Privacy Policy</a></p>
+    </div>
+</section>
+{% endblock %}
