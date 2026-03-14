@@ -21,9 +21,9 @@ MODEL_PRICING = {
     "gpt-4o": {"input": 2.50, "output": 10.00},
     "gpt-4o-mini": {"input": 0.15, "output": 0.60},
     "gpt-5-mini": {"input": 0.25, "output": 2.00},
-    # Google Gemini
-    "gemini-2.5-pro": {"input": 1.25, "output": 5.00},
-    "gemini-2.5-flash": {"input": 0.15, "output": 0.60},
+    # Google Gemini — current as of March 2026
+    "gemini-2.5-pro": {"input": 1.25, "output": 10.00},
+    "gemini-2.5-flash": {"input": 0.30, "output": 2.50},
     "gemini-2.5-flash-lite": {"input": 0.10, "output": 0.40},
 }
 
@@ -513,12 +513,15 @@ class GeminiClient(LLMClient):
 
             input_tokens = response.usage_metadata.prompt_token_count or 0
             output_tokens = response.usage_metadata.candidates_token_count or 0
-            cost = round(_estimate_cost(self.model, input_tokens, output_tokens), 6)
+            # Gemini 2.5 thinking models bill thinking tokens at the output rate.
+            # thoughts_token_count is absent on non-thinking models, so default to 0.
+            thinking_tokens = getattr(response.usage_metadata, "thoughts_token_count", 0) or 0
+            cost = round(_estimate_cost(self.model, input_tokens, output_tokens + thinking_tokens), 6)
 
             logger.info(
                 "LLM response model=%s input_tokens=%d output_tokens=%d "
-                "cost_usd=$%.4f duration=%.1fs",
-                self.model, input_tokens, output_tokens, cost, duration_s,
+                "thinking_tokens=%d cost_usd=$%.4f duration=%.1fs",
+                self.model, input_tokens, output_tokens, thinking_tokens, cost, duration_s,
             )
 
             result_text = response.text
