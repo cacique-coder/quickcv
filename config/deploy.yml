@@ -40,6 +40,11 @@ env:
     - STRIPE_SECRET_KEY
     - STRIPE_WEBHOOK_SECRET
 
+aliases:
+  console: app exec -i 'python -i console.py'
+  dbconsole: app exec -i 'python -c "import asyncio; from app.database import engine; from sqlalchemy import text; asyncio.run(engine.dispose())" && psql $DATABASE_URL'
+  logs: app logs -f
+
 accessories:
   db:
     image: postgres:18-alpine
