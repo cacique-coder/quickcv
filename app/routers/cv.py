@@ -558,11 +558,12 @@ async def download_docx(request: Request):
 
     cv_data = attempt["cv_data"]
     region_code = attempt.get("region", "AU") or "AU"
+    template_id = attempt.get("template_id", "classic") or "classic"
     cv_name = cv_data.get("name", "CV") or "CV"
     safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
 
     try:
-        docx_bytes = generate_docx(cv_data, region_code=region_code)
+        docx_bytes = generate_docx(cv_data, region_code=region_code, template_id=template_id)
     except Exception:
         logger.exception("DOCX generation failed for attempt=%s", attempt_id)
         return Response("DOCX generation failed. Please try again.", status_code=500)

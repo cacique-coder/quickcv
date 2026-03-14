@@ -443,12 +443,14 @@ async def builder_download_docx(request: Request):
         return Response("No CV preview found. Please preview first.", status_code=400)
 
     cv_data = attempt.get("cv_data", {})
-    region_code = attempt.get("builder_data", {}).get("region", "AU") or "AU"
+    builder_data = attempt.get("builder_data", {})
+    region_code = builder_data.get("region", "AU") or "AU"
+    template_id = builder_data.get("template_id", "classic") or "classic"
     cv_name = cv_data.get("name", "CV") or "CV"
     safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
 
     try:
-        docx_bytes = generate_docx(cv_data, region_code=region_code)
+        docx_bytes = generate_docx(cv_data, region_code=region_code, template_id=template_id)
     except Exception:
         logger.exception("DOCX generation failed for builder attempt=%s", attempt_id)
         return Response("DOCX generation failed. Please try again.", status_code=500)

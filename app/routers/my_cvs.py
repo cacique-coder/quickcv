@@ -112,12 +112,13 @@ async def my_cv_download_docx(request: Request, cv_id: str):
 
     cv_data = json.loads(saved.cv_data_json)
     region_code = saved.region or "AU"
+    template_id = saved.template_id or "classic"
     cv_name = cv_data.get("name", "CV") or "CV"
     safe_name = "".join(c for c in cv_name if c.isalnum() or c in " -_").strip() or "CV"
     label_part = f" - {saved.label}" if saved.label else ""
 
     try:
-        docx_bytes = generate_docx(cv_data, region_code=region_code)
+        docx_bytes = generate_docx(cv_data, region_code=region_code, template_id=template_id)
     except Exception:
         logger.exception("DOCX generation failed for cv_id=%s", cv_id)
         return Response("DOCX generation failed", status_code=500)
