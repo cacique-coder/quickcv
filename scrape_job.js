@@ -32,7 +32,14 @@ const JOB_SELECTORS = [
 (async () => {
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--crash-dumps-dir=/tmp',
+      '--single-process',
+    ],
   });
 
   const page = await browser.newPage();
@@ -41,15 +48,38 @@ const JOB_SELECTORS = [
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
   );
 
+  // Seek URLs with jobId param need to be converted to direct job URLs
+  let targetUrl = url;
+  const seekJobIdMatch = url.match(/seek\.com\.au.*[?&]jobId=(\d+)/);
+  if (seekJobIdMatch) {
+    targetUrl = `https://www.seek.com.au/job/${seekJobIdMatch[1]}`;
+  }
+
   try {
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 15000 });
+    await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 15000 });
   } catch (e) {
     // networkidle2 may time out on some SPAs — proceed with what loaded
     console.error('Navigation warning (proceeding):', e.message);
   }
 
-  // Wait 2s for lazy-loaded content
+  // Wait for content, then click "Show more" / "Read more" buttons if present
   await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  // Expand truncated content (common on Seek, Indeed, LinkedIn)
+  try {
+    await page.evaluate(() => {
+      const expandButtons = document.querySelectorAll(
+        '[data-automation="showMore"], .show-more-less-html__button, ' +
+        'button[aria-label*="Show more"], button[aria-label*="Read more"], ' +
+        '.jobsearch-ViewJobButtons-show-more, .view-more-button'
+      );
+      expandButtons.forEach(btn => btn.click());
+    });
+    // Wait for expanded content to render
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  } catch (e) {
+    // No expand button — content is already fully visible
+  }
 
   const result = await page.evaluate((selectors) => {
     function clean(text) {

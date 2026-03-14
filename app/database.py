@@ -27,19 +27,38 @@ class Base(DeclarativeBase):
 async def init_db():
     """Run Alembic migrations then create_all as safety net.
 
-    1. Alembic handles column additions and schema changes on existing tables.
-    2. create_all handles any new tables not yet covered by migrations.
-       It's idempotent — skips tables that already exist.
+    Uses a Postgres advisory lock so only one gunicorn worker runs
+    migrations — the others wait and skip.
     """
     from alembic import command
     from alembic.config import Config
+    from sqlalchemy import text
 
-    # Step 1: Alembic migrations (sync, run in thread)
+    # Step 1: Alembic migrations with advisory lock (prevents deadlock
+    # when multiple gunicorn workers start simultaneously)
+    MIGRATION_LOCK_ID = 900100  # arbitrary unique int for pg_advisory_lock
+
     def _run_upgrade():
-        alembic_cfg = Config("alembic.ini")
-        logger.info("Running Alembic migrations to head...")
-        command.upgrade(alembic_cfg, "head")
-        logger.info("Alembic migrations complete.")
+        from sqlalchemy import create_engine
+        sync_url = _config["url"].replace("+asyncpg", "")
+        sync_engine = create_engine(sync_url)
+        with sync_engine.connect() as conn:
+            # Try to acquire lock — non-blocking
+            got_lock = conn.execute(
+                text(f"SELECT pg_try_advisory_lock({MIGRATION_LOCK_ID})")
+            ).scalar()
+            if got_lock:
+                try:
+                    alembic_cfg = Config("alembic.ini")
+                    logger.info("Running Alembic migrations to head...")
+                    command.upgrade(alembic_cfg, "head")
+                    logger.info("Alembic migrations complete.")
+                finally:
+                    conn.execute(text(f"SELECT pg_advisory_unlock({MIGRATION_LOCK_ID})"))
+                    conn.commit()
+            else:
+                logger.info("Another worker is running migrations — skipping.")
+        sync_engine.dispose()
 
     await asyncio.to_thread(_run_upgrade)
 

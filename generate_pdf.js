@@ -12,7 +12,14 @@ if (!input || !output) {
 (async () => {
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--crash-dumps-dir=/tmp',
+      '--single-process',
+    ],
   });
 
   const page = await browser.newPage();
