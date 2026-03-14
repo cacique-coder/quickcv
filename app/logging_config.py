@@ -109,7 +109,7 @@ def setup_logging(dev_mode: bool) -> None:
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
-                "stream": "ext://sys.stdout",
+                "stream": "ext://sys.stderr",
                 "formatter": "main",
             },
         },
