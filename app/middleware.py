@@ -1,12 +1,40 @@
 """Application-level middleware for QuillCV."""
 
+import contextvars
 import os
+import uuid
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
 _SKIP_PREFIXES = ("/static/", "/favicon.ico")
 _IS_PRODUCTION = os.environ.get("APP_ENV", "development") == "production"
+
+# ---------------------------------------------------------------------------
+# Request-scoped context vars — accessible from any async code in the stack
+# ---------------------------------------------------------------------------
+
+request_id_var: contextvars.ContextVar[str] = contextvars.ContextVar("request_id", default="-")
+client_ip_var: contextvars.ContextVar[str] = contextvars.ContextVar("client_ip", default="-")
+
+
+class RequestContextMiddleware(BaseHTTPMiddleware):
+    """Assign a short request ID to every request and expose it via context vars.
+
+    The request ID is available as:
+    - request.state.request_id
+    - request_id_var.get() from any async code
+    - X-Request-Id response header
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        rid = uuid.uuid4().hex[:8]
+        request.state.request_id = rid
+        request_id_var.set(rid)
+        client_ip_var.set(request.client.host if request.client else "-")
+        response = await call_next(request)
+        response.headers["X-Request-Id"] = rid
+        return response
 
 
 class AuthContextMiddleware(BaseHTTPMiddleware):

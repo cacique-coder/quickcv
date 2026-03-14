@@ -2,7 +2,6 @@ import asyncio
 import logging
 import re
 import time
-import traceback
 from collections.abc import Callable, Coroutine
 from pathlib import Path
 
@@ -56,12 +55,7 @@ async def _run_generation_pipeline(
     """
     import uuid as _uuid_mod
 
-    def _log(msg: str) -> None:
-        """Print + logger.info — belt and suspenders until logging is proven reliable."""
-        print(f"[PIPELINE] {msg}", flush=True)
-        logger.info("Pipeline[%s] %s", attempt_id, msg)
-
-    _log(f"START attempt={attempt_id} user={user_id}")
+    logger.info("Pipeline[%s] START user=%s", attempt_id, user_id)
 
     pipeline_transaction_id = _uuid_mod.uuid4().hex
     set_llm_context(
@@ -73,14 +67,14 @@ async def _run_generation_pipeline(
 
     attempt = get_attempt(attempt_id)
     if not attempt:
-        _log("FAIL: session expired — attempt not found")
+        logger.info("Pipeline[%s] FAIL: session expired — attempt not found", attempt_id)
         raise ValueError("Session expired. Please start again.")
 
     cv_bytes = get_document_bytes(attempt_id, "cv_file")
     cv_filename = get_document_filename(attempt_id, "cv_file")
-    _log(f"attempt loaded: cv_file={'yes' if cv_bytes else 'NO'} filename={cv_filename}")
+    logger.info("Pipeline[%s] attempt loaded: cv_file=%s filename=%s", attempt_id, "yes" if cv_bytes else "NO", cv_filename)
     if not cv_bytes or not cv_filename:
-        _log("FAIL: no CV file found")
+        logger.info("Pipeline[%s] FAIL: no CV file found", attempt_id)
         raise ValueError("No CV file found. Please go back to step 3 and upload your CV.")
 
     timings = {}
@@ -90,7 +84,7 @@ async def _run_generation_pipeline(
     t0 = time.monotonic()
     cv_text = parse_cv(cv_filename, cv_bytes)
     timings["parse_cv"] = round(time.monotonic() - t0, 2)
-    _log(f"step=parse_cv duration={timings['parse_cv']:.2f}s chars={len(cv_text)}")
+    logger.info("Pipeline[%s] step=parse_cv duration=%.2fs chars=%d", attempt_id, timings["parse_cv"], len(cv_text))
 
     if not cv_text.strip():
         raise ValueError("Could not extract text from the CV file.")
@@ -120,14 +114,14 @@ async def _run_generation_pipeline(
         job_keywords = None
         keyword_categories = None
     timings["keyword_extraction"] = round(time.monotonic() - t0, 2)
-    _log(f"step=keywords duration={timings['keyword_extraction']:.2f}s found={len(job_keywords) if job_keywords else 0}")
+    logger.info("Pipeline[%s] step=keywords duration=%.2fs found=%d", attempt_id, timings["keyword_extraction"], len(job_keywords) if job_keywords else 0)
 
     # 3. ATS analysis on original
     await on_progress("Running ATS check", "Scoring your original CV")
     t0 = time.monotonic()
     ats_result = analyze_ats(cv_text, job_description, keywords_override=job_keywords)
     timings["ats_original"] = round(time.monotonic() - t0, 2)
-    _log(f"step=ats_original duration={timings['ats_original']:.2f}s score={ats_result.score}")
+    logger.info("Pipeline[%s] step=ats_original duration=%.2fs score=%d", attempt_id, timings["ats_original"], ats_result.score)
 
     # Get template and region info
     selected_template = get_template(template_id) or get_template("modern")
@@ -143,7 +137,7 @@ async def _run_generation_pipeline(
         ats_result=ats_result, keyword_categories=keyword_categories,
     )
     timings["ai_generate"] = round(time.monotonic() - t0, 2)
-    _log(f"step=ai_generate duration={timings['ai_generate']:.2f}s success={cv_data is not None}")
+    logger.info("Pipeline[%s] step=ai_generate duration=%.2fs success=%s", attempt_id, timings["ai_generate"], cv_data is not None)
 
     if cv_data is None:
         raise ValueError("CV generation failed. Please try again.")
@@ -167,7 +161,7 @@ async def _run_generation_pipeline(
         f"cv_templates/{template_id}.html"
     ).render(**cv_data)
     cv_data["_llm_usage"] = llm_usage
-    _log(f"step=render template={template_id} html_len={len(rendered_cv)}")
+    logger.info("Pipeline[%s] step=render template=%s html_len=%d", attempt_id, template_id, len(rendered_cv))
 
     # 6. ATS + quality review in parallel
     await on_progress("Final ATS comparison", "Scoring the result and reviewing quality")
@@ -187,7 +181,7 @@ async def _run_generation_pipeline(
 
     ats_generated, quality_review = await asyncio.gather(_ats(), _review())
     timings["ats_generated"] = round(time.monotonic() - t0, 2)
-    _log(f"step=ats_review duration={timings['ats_generated']:.2f}s ats_score={ats_generated.score} review={'ok' if quality_review else 'failed'}")
+    logger.info("Pipeline[%s] step=ats_review duration=%.2fs ats_score=%d review=%s", attempt_id, timings["ats_generated"], ats_generated.score, "ok" if quality_review else "failed")
 
     # Log generation
     log_generation(
@@ -228,7 +222,7 @@ async def _run_generation_pipeline(
     except Exception:
         logger.exception("Failed to save CV to database (attempt=%s)", attempt_id)
 
-    _log(f"COMPLETE timings={timings}")
+    logger.info("Pipeline[%s] COMPLETE timings=%s", attempt_id, timings)
     return {
         "ats_original": ats_result,
         "ats_generated": ats_generated,
@@ -254,7 +248,6 @@ async def ws_analyze(websocket: WebSocket):
         return
 
     await websocket.accept()
-    print(f"\n{'='*60}\n[WS] WEBSOCKET CONNECTED attempt={attempt_id}\n{'='*60}\n", flush=True)
     ws_start = time.monotonic()
     current_step: list[str] = ["(not started)"]  # mutable cell for finally block
 
@@ -275,20 +268,16 @@ async def ws_analyze(websocket: WebSocket):
     try:
         llm = websocket.app.state.llm
         llm_fast = websocket.app.state.llm_fast
-        print(f"[WS] Resolving user...", flush=True)
 
         # WebSocket connections bypass BaseHTTPMiddleware, so resolve user directly
         from app.auth.dependencies import get_current_user
         ws_user = await get_current_user(websocket)
         ws_user_id = ws_user.id if ws_user else None
-        print(f"[WS] User resolved: id={ws_user_id}", flush=True)
 
-        print(f"[WS] Starting pipeline...", flush=True)
         result = await _run_generation_pipeline(
             attempt_id, llm, llm_fast, on_progress=send_progress,
             user_id=ws_user_id,
         )
-        print(f"[WS] Pipeline returned, rendering results...", flush=True)
 
         total_ms = round((time.monotonic() - ws_start) * 1000)
         llm_usage = result.get("quality_review") and (
@@ -325,11 +314,10 @@ async def ws_analyze(websocket: WebSocket):
 
     except WebSocketDisconnect:
         elapsed_ms = round((time.monotonic() - ws_start) * 1000)
-        print(f"[WS] DISCONNECTED attempt={attempt_id} step={current_step[0]} elapsed={elapsed_ms}ms", flush=True)
+        logger.info("WebSocket disconnected attempt=%s step=%r elapsed=%dms", attempt_id, current_step[0], elapsed_ms)
         return
     except ValueError as e:
         elapsed_ms = round((time.monotonic() - ws_start) * 1000)
-        print(f"[WS] VALIDATION ERROR attempt={attempt_id} step={current_step[0]} elapsed={elapsed_ms}ms error={e}", flush=True)
         logger.warning(
             "WebSocket validation error attempt=%s step=%r elapsed=%dms error=%r",
             attempt_id, current_step[0], elapsed_ms, str(e),
@@ -340,9 +328,6 @@ async def ws_analyze(websocket: WebSocket):
             pass
     except Exception:
         elapsed_ms = round((time.monotonic() - ws_start) * 1000)
-        import traceback
-        print(f"[WS] EXCEPTION attempt={attempt_id} step={current_step[0]} elapsed={elapsed_ms}ms", flush=True)
-        print(traceback.format_exc(), flush=True)
         logger.exception(
             "WebSocket generation failed attempt=%s step=%r elapsed=%dms",
             attempt_id, current_step[0], elapsed_ms,
@@ -365,9 +350,7 @@ async def ws_analyze(websocket: WebSocket):
 @router.post("/analyze")
 async def analyze(request: Request):
     """Parse CV from attempt store, run ATS analysis, and generate tailored CV."""
-    print(f"\n[HTTP] POST /analyze hit", flush=True)
     attempt_id = request.session.get("attempt_id")
-    print(f"[HTTP] attempt_id={attempt_id}", flush=True)
     if not attempt_id:
         return templates.TemplateResponse(
             "partials/error.html",

@@ -341,9 +341,9 @@ Skills:
 
     try:
         result = await llm.generate(prompt)
-        print(f"[AI_GEN] LLM returned: text_len={len(result.text) if result.text else 0} tokens={result.output_tokens}", flush=True)
+        logger.info("LLM returned text_len=%d tokens=%d", len(result.text) if result.text else 0, result.output_tokens)
         cv_data = _parse_cv_json(result.text)
-        print(f"[AI_GEN] Parse result: {'OK' if cv_data else 'FAILED'}", flush=True)
+        logger.info("Parse result: %s", "OK" if cv_data else "FAILED")
         if cv_data is not None:
             # Attach LLM usage metadata for logging
             cv_data["_llm_usage"] = {
@@ -362,7 +362,7 @@ Skills:
 
 def _parse_cv_json(raw: str) -> dict | None:
     """Parse the AI response into structured CV data."""
-    print(f"[PARSE] Parsing CV JSON, raw length={len(raw)}, first 200 chars: {raw[:200]}", flush=True)
+    logger.info("Parsing CV JSON raw_len=%d", len(raw))
     raw = raw.strip()
     # Strip markdown fences if present
     if raw.startswith("```"):

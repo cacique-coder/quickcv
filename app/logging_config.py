@@ -29,14 +29,16 @@ class _ColourFormatter(logging.Formatter):
     _DATE_FMT = "%H:%M:%S"
 
     def format(self, record: logging.LogRecord) -> str:
+        from app.middleware import request_id_var
         colour = _COLOURS.get(record.levelname, "")
         level_str = f"{colour}{record.levelname:<5}{_RESET}"
-        # Shorten logger names: app.routers.cv -> app.routers.cv (already short)
-        # but trim the app. prefix to save horizontal space in the terminal
+        # Shorten logger names: app.routers.cv -> routers.cv (trim app. prefix)
         name = record.name.removeprefix("app.")
+        rid = request_id_var.get("-")
         formatted = (
             f"{self.formatTime(record, self._DATE_FMT)} "
             f"{level_str} "
+            f"[{rid}] "
             f"[{name}] "
             f"{record.getMessage()}"
         )
@@ -52,11 +54,15 @@ class _JSONFormatter(logging.Formatter):
         import json
         from datetime import datetime, timezone
 
+        from app.middleware import client_ip_var, request_id_var
+
         payload: dict = {
             "ts": datetime.fromtimestamp(record.created, tz=timezone.utc)
                          .strftime("%Y-%m-%dT%H:%M:%SZ"),
             "level": record.levelname,
             "logger": record.name,
+            "request_id": request_id_var.get("-"),
+            "client_ip": client_ip_var.get("-"),
             "msg": record.getMessage(),
         }
 

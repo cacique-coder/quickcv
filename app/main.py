@@ -31,7 +31,7 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from starlette.middleware.base import BaseHTTPMiddleware  # noqa: E402
 from starlette.middleware.sessions import SessionMiddleware  # noqa: E402
 
-from app.middleware import AuthContextMiddleware  # noqa: E402
+from app.middleware import AuthContextMiddleware, RequestContextMiddleware  # noqa: E402
 from app.routers import account as account_router  # noqa: E402
 from app.routers import admin as admin_router  # noqa: E402
 from app.routers import auth as auth_router  # noqa: E402
@@ -52,7 +52,7 @@ _SKIP_PREFIXES = ("/static/", "/favicon.ico")
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
-    """Log every request with method, path, status, and duration."""
+    """Log every request with method, path, status, duration, and client IP."""
 
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
@@ -63,14 +63,13 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         duration_ms = round((time.monotonic() - t0) * 1000)
 
-        log_level = logging.DEBUG if _dev_mode_for_logging else logging.INFO
-        logger.log(
-            log_level,
-            "%s %s %s %dms",
-            request.method,
-            path,
-            response.status_code,
-            duration_ms,
+        rid = getattr(request.state, "request_id", "-")
+        client_ip = request.client.host if request.client else "-"
+        status = response.status_code
+
+        logger.info(
+            '%s %s → %d (%dms) [ip=%s]',
+            request.method, path, status, duration_ms, client_ip,
         )
         return response
 
@@ -88,6 +87,7 @@ app = FastAPI(title="QuillCV", lifespan=lifespan)
 app.state.dev_mode = _dev_mode_for_logging
 
 app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(RequestContextMiddleware)  # adds request_id context var
 app.add_middleware(AuthContextMiddleware)
 
 # Session middleware for attempt tracking — must be the outermost middleware so
@@ -122,7 +122,6 @@ app.mount(
 # Health check — Kamal requires this to verify the app is running
 @app.get("/up", include_in_schema=False)
 async def health_check():
-    print("[HEALTH] /up endpoint hit", flush=True)
     return {"status": "ok"}
 
 
