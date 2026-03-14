@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import re
+import sys
 import time
 import traceback
 from collections.abc import Callable, Coroutine
@@ -236,10 +237,12 @@ async def ws_analyze(websocket: WebSocket):
         return
 
     await websocket.accept()
+    sys.stderr.write(f"[WS] WebSocket accepted attempt={attempt_id}\n")
+    sys.stderr.flush()
     ws_start = time.monotonic()
     current_step: list[str] = ["(not started)"]  # mutable cell for finally block
 
-    logger.debug("WebSocket connected attempt=%s", attempt_id)
+    logger.info("WebSocket connected attempt=%s", attempt_id)
 
     async def send_progress(step: str, detail: str) -> None:
         current_step[0] = step
@@ -319,6 +322,8 @@ async def ws_analyze(websocket: WebSocket):
             pass
     except Exception:
         elapsed_ms = round((time.monotonic() - ws_start) * 1000)
+        sys.stderr.write(f"[WS] EXCEPTION attempt={attempt_id}: {traceback.format_exc()}\n")
+        sys.stderr.flush()
         logger.exception(
             "WebSocket generation failed attempt=%s step=%r elapsed=%dms",
             attempt_id, current_step[0], elapsed_ms,
