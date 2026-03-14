@@ -1,25 +1,24 @@
 service: quillcv
-image: quillcv
+image: cacique-coder/quillcv
 
 servers:
   web:
     hosts:
       - 209.38.30.185
-    options:
-      network: "kamal"
 
 proxy:
   ssl: true
   host: quillcv.com
   app_port: 8000
   healthcheck:
-    interval: 3
+    interval: 5
     path: /up
-    timeout: 3
+    timeout: 30
 
 registry:
-  server: registry.digitalocean.com
-  username: xzdasx+digitalocean@gmail.com
+  server: ghcr.io
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
     - KAMAL_REGISTRY_PASSWORD
 
@@ -50,5 +49,3 @@ accessories:
         - POSTGRES_PASSWORD
     directories:
       - quillcv-pgdata:/var/lib/postgresql
-    options:
-      network: "kamal"
