@@ -12,5 +12,8 @@
   "type": "commonjs",
   "dependencies": {
     "puppeteer-core": "^24.39.0"
+  },
+  "overrides": {
+    "yauzl": "^3.2.1"
   }
 }
