@@ -1644,14 +1644,15 @@ header a:hover { text-decoration: underline; }
     position: absolute;
     top: 0.4rem;
     right: 0.4rem;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.15rem 0.5rem;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.5rem;
     border-radius: 3px;
-    background: rgba(108, 99, 255, 0.15);
-    color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 1px 4px rgba(108, 99, 255, 0.4);
     z-index: 1;
 }
 
