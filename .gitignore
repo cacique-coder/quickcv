@@ -24,3 +24,6 @@ data/
 
 # SEO audit reports
 .seo-reports/
+
+# Nginx TLS certificates (never commit)
+nginx/ssl/
