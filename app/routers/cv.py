@@ -350,7 +350,7 @@ async def ws_analyze(websocket: WebSocket):
 @router.post("/analyze")
 async def analyze(request: Request):
     """Parse CV from attempt store, run ATS analysis, and generate tailored CV."""
-    attempt_id = request.session.get("attempt_id")
+    attempt_id = request.state.session.get("attempt_id")
     if not attempt_id:
         return templates.TemplateResponse(
             "partials/error.html",
@@ -386,7 +386,7 @@ async def analyze(request: Request):
 @router.post("/apply-fixes")
 async def apply_fixes(request: Request):
     """Apply selected quality review fixes to the generated CV."""
-    attempt_id = request.session.get("attempt_id")
+    attempt_id = request.state.session.get("attempt_id")
     if not attempt_id:
         return templates.TemplateResponse(
             "partials/error.html",
@@ -503,7 +503,7 @@ async def apply_fixes(request: Request):
 @router.get("/download-pdf")
 async def download_pdf(request: Request):
     """Generate and download the CV as PDF."""
-    attempt_id = request.session.get("attempt_id")
+    attempt_id = request.state.session.get("attempt_id")
     if not attempt_id:
         return Response("No active session", status_code=400)
 
@@ -531,7 +531,7 @@ async def download_pdf(request: Request):
 @router.get("/download-docx")
 async def download_docx(request: Request):
     """Generate and download the CV as DOCX."""
-    attempt_id = request.session.get("attempt_id")
+    attempt_id = request.state.session.get("attempt_id")
     if not attempt_id:
         return Response("No active session", status_code=400)
 

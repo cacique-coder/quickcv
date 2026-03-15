@@ -16,7 +16,7 @@ from app.auth.dependencies import get_current_user
 from app.auth.utils import create_access_token, hash_password
 from app.database import async_session
 from app.models import ConsentRecord, ExpressionOfInterest, Invitation, PasswordResetToken, User
-from app.services.credit_service import add_credits
+from app.services.credit_service import add_credits, get_balance
 from app.services.email_service import send_password_reset_email, send_welcome_email
 from app.services.pii_vault import (
     pii_from_user,
@@ -199,16 +199,21 @@ async def signup_submit(
 
         # Log the user in
         token = create_access_token(new_user.id, new_user.email)
-        request.session["auth_token"] = token
+        request.state.session["auth_token"] = token
 
         # Seed the PII vault with password-derived encryption
         async with async_session() as db:
             pii = pii_from_user(new_user)
             await upsert_vault(db, user_id=new_user.id, pii=pii, password=password)
 
-        request.session["pii"] = pii
-        request.session["_pii_password"] = password
-        request.session["pii_onboarded"] = False  # New user — needs onboarding
+        request.state.session["pii"] = pii
+        request.state.session["_pii_password"] = password
+        request.state.session["pii_onboarded"] = False  # New user — needs onboarding
+
+        # Seed credit balance in session so the nav bar reflects the granted credits
+        # without an extra DB hit on every request.
+        async with async_session() as db:
+            request.state.session["cached_balance"] = await get_balance(db, new_user.id)
 
         logger.info("Invited signup: user %s created via invitation %s", new_user.id, invite_code)
 
@@ -279,7 +284,7 @@ async def login_submit(
         })
 
     token = create_access_token(user.id, user.email)
-    request.session["auth_token"] = token
+    request.state.session["auth_token"] = token
 
     # Unlock PII vault and store decrypted PII map in the session.
     # If the vault doesn't exist yet (new user), seed it with minimal data
@@ -292,15 +297,19 @@ async def login_submit(
             pii = pii_from_user(user)
             await upsert_vault(db, user_id=user.id, pii=pii, password=password)
 
-    request.session["pii"] = pii
+    request.state.session["pii"] = pii
     # Store the password temporarily in the session so the onboarding POST
     # handler can re-encrypt with the user's actual password without asking
     # them to type it again.  This is cleared after onboarding completes
     # (or on the next login).
-    request.session["_pii_password"] = password
+    request.state.session["_pii_password"] = password
     # Mark whether onboarding has already been completed.
     # vault_existed == True means they completed onboarding in a prior session.
-    request.session["pii_onboarded"] = vault_existed
+    request.state.session["pii_onboarded"] = vault_existed
+
+    # Seed credit balance in session to avoid a DB hit on every request.
+    async with async_session() as db:
+        request.state.session["cached_balance"] = await get_balance(db, user.id)
 
     # Auto-redeem invite if one was passed through the login flow.
     if invite_code:
@@ -333,8 +342,8 @@ async def login_submit(
 
 @router.get("/logout")
 async def logout(request: Request):
-    request.session.pop("auth_token", None)
-    request.session.pop("pii", None)
+    request.state.session.pop("auth_token", None)
+    request.state.session.pop("pii", None)
     return RedirectResponse("/", status_code=303)
 
 
@@ -389,7 +398,7 @@ async def google_callback(request: Request):
             await update_last_login(db, user)
 
     auth_token = create_access_token(user.id, user.email)
-    request.session["auth_token"] = auth_token
+    request.state.session["auth_token"] = auth_token
 
     # Unlock (or seed) PII vault using server key for OAuth users.
     async with async_session() as db:
@@ -399,8 +408,12 @@ async def google_callback(request: Request):
             pii = pii_from_user(user)
             await upsert_vault(db, user_id=user.id, pii=pii, password=None)
 
-    request.session["pii"] = pii
-    request.session["pii_onboarded"] = vault_existed
+    request.state.session["pii"] = pii
+    request.state.session["pii_onboarded"] = vault_existed
+
+    # Seed credit balance in session.
+    async with async_session() as db:
+        request.state.session["cached_balance"] = await get_balance(db, user.id)
 
     if not vault_existed:
         return RedirectResponse("/onboarding", status_code=303)
@@ -470,7 +483,7 @@ async def github_callback(request: Request):
             await update_last_login(db, user)
 
     auth_token = create_access_token(user.id, user.email)
-    request.session["auth_token"] = auth_token
+    request.state.session["auth_token"] = auth_token
 
     # Unlock (or seed) PII vault using server key for OAuth users.
     async with async_session() as db:
@@ -480,8 +493,12 @@ async def github_callback(request: Request):
             pii = pii_from_user(user)
             await upsert_vault(db, user_id=user.id, pii=pii, password=None)
 
-    request.session["pii"] = pii
-    request.session["pii_onboarded"] = vault_existed
+    request.state.session["pii"] = pii
+    request.state.session["pii_onboarded"] = vault_existed
+
+    # Seed credit balance in session.
+    async with async_session() as db:
+        request.state.session["cached_balance"] = await get_balance(db, user.id)
 
     if not vault_existed:
         return RedirectResponse("/onboarding", status_code=303)

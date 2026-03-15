@@ -65,7 +65,7 @@
             </svg>
             Personal Information (Encrypted)
         </h3>
-        {% set pii = request.session.get("pii", {}) if request.session else {} %}
+        {% set pii = request.state.session.get("pii", {}) if request.state.session is defined else {} %}
         {% if pii and pii.get("full_name") %}
         <div class="vault-account-preview">
             <div class="vault-preview-row">

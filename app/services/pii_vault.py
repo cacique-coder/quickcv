@@ -27,11 +27,11 @@ Usage:
 
     # Decrypt at login
     pii_map = await unlock_vault(db, user_id=user.id, password="hunter2")
-    request.session["pii"] = pii_map
+    request.state.session["pii"] = pii_map
 
     # For OAuth users (no password)
     pii_map = await unlock_vault_server_key(db, user_id=user.id)
-    request.session["pii"] = pii_map
+    request.state.session["pii"] = pii_map
 
     # Read PII from session (returns empty dict if not unlocked)
     pii = get_session_pii(request)
@@ -187,7 +187,7 @@ async def unlock_vault_server_key(
 
 def get_session_pii(request) -> dict:
     """Return the PII map stored in the session, or an empty dict."""
-    return request.session.get("pii") or {}
+    return request.state.session.get("pii") or {}
 
 
 def pii_from_user(user) -> dict:

@@ -12,7 +12,7 @@ from sqlalchemy import select
 from app.auth.dependencies import get_current_user
 from app.database import async_session
 from app.models import Invitation
-from app.services.credit_service import add_credits
+from app.services.credit_service import add_credits, get_balance
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +88,10 @@ async def invite_redeem(request: Request, code: str):
 
         # Grant credits using the credit service
         await add_credits(db, user.id, invitation.credits)
+
+        # Refresh cached balance in session so the nav bar updates immediately.
+        new_balance = await get_balance(db, user.id)
+        request.state.session["cached_balance"] = new_balance
 
     logger.info("Invitation %s redeemed by user %s — %d credits granted", code, user.id, invitation.credits)
 

@@ -16,6 +16,7 @@ from app.services.credit_service import (
     ALPHA_PACK_PRICE_CENTS,
     TOPUP_PACKS,
     add_credits,
+    get_balance,
 )
 from app.services.email_service import send_payment_confirmation_email
 from app.services.user_service import count_alpha_users
@@ -194,6 +195,10 @@ async def checkout_success(request: Request, session_id: str = ""):
                         await db.commit()
 
                         await add_credits(db, user.id, credits_granted)
+
+                        # Refresh cached balance in session so nav bar updates immediately.
+                        new_balance = await get_balance(db, user.id)
+                        request.state.session["cached_balance"] = new_balance
 
                         # Send payment confirmation email — non-fatal on failure
                         try:

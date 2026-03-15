@@ -27,9 +27,9 @@ async def my_cvs_page(request: Request):
 
     # Also check for anonymous CVs tied to builder/wizard sessions
     attempt_ids = []
-    if builder_id := request.session.get("builder_id"):
+    if builder_id := request.state.session.get("builder_id"):
         attempt_ids.append(builder_id)
-    if wizard_id := request.session.get("attempt_id"):
+    if wizard_id := request.state.session.get("attempt_id"):
         attempt_ids.append(wizard_id)
 
     async with async_session() as db:

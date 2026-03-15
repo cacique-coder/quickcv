@@ -142,7 +142,7 @@ async def delete_account(
         await db.commit()
 
     # Clear session
-    request.session.clear()
+    request.state.session.clear()
 
     return HTMLResponse(
         '<p class="account-success">Account deleted.</p>',

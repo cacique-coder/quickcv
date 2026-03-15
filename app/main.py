@@ -29,9 +29,9 @@ logger = logging.getLogger(__name__)
 from fastapi import FastAPI, Request  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from starlette.middleware.base import BaseHTTPMiddleware  # noqa: E402
-from starlette.middleware.sessions import SessionMiddleware  # noqa: E402
 
 from app.middleware import AuthContextMiddleware, RequestContextMiddleware  # noqa: E402
+from app.session import SQLiteSessionMiddleware, init_session_db  # noqa: E402
 from app.routers import account as account_router  # noqa: E402
 from app.routers import admin as admin_router  # noqa: E402
 from app.routers import auth as auth_router  # noqa: E402
@@ -78,6 +78,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 async def lifespan(app: FastAPI):
     from app.database import init_db
     await init_db()
+    await init_session_db()
     yield
 
 
@@ -90,12 +91,9 @@ app.add_middleware(RequestLoggingMiddleware)
 app.add_middleware(RequestContextMiddleware)  # adds request_id context var
 app.add_middleware(AuthContextMiddleware)
 
-# Session middleware for attempt tracking — must be the outermost middleware so
-# that sessions are available when AuthContextMiddleware runs.
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.environ.get("SESSION_SECRET", "quillcv-dev-secret-change-in-prod"),
-)
+# Server-side session middleware backed by SQLite.  Must be outermost so that
+# sessions are available when AuthContextMiddleware runs.
+app.add_middleware(SQLiteSessionMiddleware)
 
 # LLM clients: primary (heavy) for CV generation, fast (light) for lightweight tasks.
 # Set LLM_PROVIDER=anthropic|openai|gemini to switch provider; defaults to "anthropic".

@@ -10,7 +10,7 @@ from app.models import Credit, User
 
 async def get_current_user(request: Request) -> User | None:
     """Get the current authenticated user from session cookie, or None."""
-    token = request.session.get("auth_token")
+    token = request.state.session.get("auth_token")
     if not token:
         return None
 

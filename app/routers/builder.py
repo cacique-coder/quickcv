@@ -43,13 +43,13 @@ templates = Jinja2Templates(directory=Path(__file__).parent.parent / "templates"
 
 def _get_or_create_builder(request: Request) -> dict:
     """Get or create a builder attempt (separate from the AI wizard)."""
-    attempt_id = request.session.get("builder_id")
+    attempt_id = request.state.session.get("builder_id")
     if attempt_id:
         attempt = get_attempt(attempt_id)
         if attempt:
             return attempt
     attempt_id = create_attempt()
-    request.session["builder_id"] = attempt_id
+    request.state.session["builder_id"] = attempt_id
     return get_attempt(attempt_id)
 
 
@@ -200,7 +200,7 @@ async def builder_edit(cv_id: str, request: Request):
 
     # Create a fresh builder attempt for this edit session
     attempt_id = create_attempt()
-    request.session["builder_id"] = attempt_id
+    request.state.session["builder_id"] = attempt_id
     update_attempt(attempt_id, builder_data=builder_data, editing_cv_id=cv_id)
 
     cv_data = _cv_data_from_attempt({"builder_data": builder_data})
@@ -334,7 +334,7 @@ async def builder_preview(request: Request):
 @router.post("/save")
 async def builder_save(request: Request):
     """Save the current CV with a user-chosen name."""
-    attempt_id = request.session.get("builder_id")
+    attempt_id = request.state.session.get("builder_id")
     if not attempt_id:
         return Response('<div class="save-error">No active session.</div>', media_type="text/html")
 
@@ -406,7 +406,7 @@ async def builder_save(request: Request):
 @router.get("/download-pdf")
 async def builder_download_pdf(request: Request):
     """Download the manually built CV as PDF."""
-    attempt_id = request.session.get("builder_id")
+    attempt_id = request.state.session.get("builder_id")
     if not attempt_id:
         return Response("No active session", status_code=400)
 
@@ -434,7 +434,7 @@ async def builder_download_pdf(request: Request):
 @router.get("/download-docx")
 async def builder_download_docx(request: Request):
     """Download the manually built CV as DOCX."""
-    attempt_id = request.session.get("builder_id")
+    attempt_id = request.state.session.get("builder_id")
     if not attempt_id:
         return Response("No active session", status_code=400)
 

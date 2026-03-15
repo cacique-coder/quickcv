@@ -7,7 +7,7 @@ import uuid
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
-_SKIP_PREFIXES = ("/static/", "/favicon.ico")
+_SKIP_PREFIXES = ("/static/", "/favicon.ico", "/demo")
 _IS_PRODUCTION = os.environ.get("APP_ENV", "development") == "production"
 
 # ---------------------------------------------------------------------------
@@ -54,13 +54,10 @@ class AuthContextMiddleware(BaseHTTPMiddleware):
 
         if not any(request.url.path.startswith(p) for p in _SKIP_PREFIXES):
             from app.auth.dependencies import get_current_user
-            from app.database import async_session
-            from app.services.credit_service import get_balance
 
             user = await get_current_user(request)
             request.state.user = user
             if user:
-                async with async_session() as db:
-                    request.state.balance = await get_balance(db, user.id)
+                request.state.balance = request.state.session.get("cached_balance", 0)
 
         return await call_next(request)

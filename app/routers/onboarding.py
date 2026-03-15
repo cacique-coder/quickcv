@@ -42,7 +42,7 @@ def _is_oauth_user(user) -> bool:
 
 async def _save_pii(request: Request, user, pii: dict) -> None:
     """Encrypt and persist PII, then refresh the session cache."""
-    password = request.session.get("_pii_password")
+    password = request.state.session.get("_pii_password")
 
     async with async_session() as db:
         if password:
@@ -52,9 +52,9 @@ async def _save_pii(request: Request, user, pii: dict) -> None:
             await upsert_vault(db, user_id=user.id, pii=pii, password=None)
 
     # Refresh the in-session PII cache
-    request.session["pii"] = pii
+    request.state.session["pii"] = pii
     # Mark onboarding complete so auth redirects stop sending here
-    request.session["pii_onboarded"] = True
+    request.state.session["pii_onboarded"] = True
 
 
 # ---------------------------------------------------------------------------
@@ -70,7 +70,7 @@ async def onboarding_page(request: Request):
         return RedirectResponse("/login", status_code=303)
 
     # If already onboarded in this session, go straight to the app
-    if request.session.get("pii_onboarded"):
+    if request.state.session.get("pii_onboarded"):
         return RedirectResponse("/app", status_code=303)
 
     pii = get_session_pii(request)
@@ -152,7 +152,7 @@ async def account_pii_page(request: Request):
             if _is_oauth_user(user):
                 pii = await unlock_vault_server_key(db, user_id=user.id) or {}
             else:
-                password = request.session.get("_pii_password")
+                password = request.state.session.get("_pii_password")
                 if password:
                     pii = await unlock_vault(db, user_id=user.id, password=password) or {}
 

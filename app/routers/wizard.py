@@ -91,14 +91,14 @@ def _check_pii_completeness(attempt: dict, pii: dict, region_code: str) -> tuple
 
 def _get_or_create_attempt(request: Request) -> dict:
     """Get the current attempt from session, or create a new one."""
-    attempt_id = request.session.get("attempt_id")
+    attempt_id = request.state.session.get("attempt_id")
     if attempt_id:
         attempt = get_attempt(attempt_id)
         if attempt:
             return attempt
     # Create new attempt
     attempt_id = create_attempt()
-    request.session["attempt_id"] = attempt_id
+    request.state.session["attempt_id"] = attempt_id
     return get_attempt(attempt_id)
 
 
@@ -146,7 +146,7 @@ async def step2(request: Request):
     age_already_confirmed = bool(current_user and current_user.age_confirmed_at)
 
     # Merge PII vault values as defaults — attempt values always take priority
-    pii = request.session.get("pii") or {}
+    pii = request.state.session.get("pii") or {}
     pii_prefilled = bool(pii)
     for key in ("full_name", "email", "phone", "dob", "document_id", "nationality", "marital_status"):
         if not attempt.get(key) and pii.get(key):
@@ -215,7 +215,7 @@ async def step2_save(
     region_config = REGIONS.get(region, REGIONS["AU"])
     fields = _region_fields(region)
 
-    pii_prefilled = bool(request.session.get("pii"))
+    pii_prefilled = bool(request.state.session.get("pii"))
 
     def _render_error(error: str, extra: dict | None = None) -> templates.TemplateResponse:
         ctx = {
@@ -363,12 +363,12 @@ async def step2_save(
     # ------------------------------------------------------------------
     if current_user:
         from app.services.pii_vault import upsert_vault
-        pii = request.session.get("pii") or {}
+        pii = request.state.session.get("pii") or {}
         pii["references"] = references
-        password = request.session.get("_pii_password")
+        password = request.state.session.get("_pii_password")
         async with async_session() as db:
             await upsert_vault(db, user_id=current_user.id, pii=pii, password=password or None)
-        request.session["pii"] = pii
+        request.state.session["pii"] = pii
 
     return await step3(request)
 
@@ -529,7 +529,7 @@ async def step5(request: Request):
     cv_filename = get_document_filename(attempt["id"], "cv_file")
 
     # Check PII completeness based on region requirements
-    pii = request.session.get("pii") or {}
+    pii = request.state.session.get("pii") or {}
     pii_complete, pii_missing = _check_pii_completeness(attempt, pii, region)
     pii_incomplete = not pii_complete
 
