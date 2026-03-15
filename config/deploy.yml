@@ -4,7 +4,7 @@ image: cacique-coder/quillcv
 servers:
   web:
     hosts:
-      - 209.38.30.185
+      - 194.195.251.92
 
 proxy:
   ssl: true
@@ -47,10 +47,13 @@ aliases:
   migrate: app exec 'python -c "from alembic.config import Config; from alembic import command; command.upgrade(Config(\"alembic.ini\"), \"head\")"'
   migrate-status: app exec 'python -c "from alembic.config import Config; from alembic import command; command.current(Config(\"alembic.ini\"), verbose=True)"'
 
+ssh:
+  user: deploy
+  
 accessories:
   db:
     image: postgres:18-alpine
-    host: 209.38.30.185
+    host: 194.195.251.92
     env:
       clear:
         POSTGRES_DB: quillcv_production
