@@ -25,7 +25,7 @@ POSTS = {
             "description": "Most CV builders ask for sensitive details — your address, phone, ID number. Here's why that should concern you, and what to look for.",
             "date": "2026-03-15",
             "date_modified": "2026-03-15",
-            "author": "QuillCV Team",
+            "author": "Daniel Zambrano",
             "tags": ["privacy", "cv-tips", "data-protection"],
             "faq": [
                 {
@@ -58,7 +58,7 @@ POSTS = {
             "description": "La mayoría de los creadores de CV piden datos sensibles — tu dirección, teléfono, número de identificación. Aquí te explicamos por qué debería importarte y qué buscar.",
             "date": "2026-03-15",
             "date_modified": "2026-03-15",
-            "author": "QuillCV Team",
+            "author": "Daniel Zambrano",
             "tags": ["privacidad", "consejos-cv", "protección-de-datos"],
             "faq": [
                 {
@@ -91,7 +91,7 @@ POSTS = {
             "description": "A maioria dos criadores de currículo pede dados sensíveis — seu endereço, telefone, número de identificação. Veja por que isso deve te preocupar e o que procurar.",
             "date": "2026-03-15",
             "date_modified": "2026-03-15",
-            "author": "QuillCV Team",
+            "author": "Daniel Zambrano",
             "tags": ["privacidade", "dicas-cv", "proteção-de-dados"],
             "faq": [
                 {
@@ -273,6 +273,10 @@ async def blog_post(request: Request, lang: str, slug: str):
         "datePublished": post["date"],
         "dateModified": post["date_modified"],
         "inLanguage": in_language_map.get(lang, lang),
+        "author": {
+            "@type": "Person",
+            "name": post.get("author", "Daniel Zambrano"),
+        },
         "publisher": {
             "@type": "Organization",
             "name": "QuillCV",

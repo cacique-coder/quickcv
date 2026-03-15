@@ -53,6 +53,16 @@ from app.services.llm_client import ClaudeCodeClient, create_llm_client  # noqa:
 _SKIP_PREFIXES = ("/static/", "/favicon.ico")
 
 
+class StaticCacheMiddleware(BaseHTTPMiddleware):
+    """Set long-lived Cache-Control for versioned static assets."""
+
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith("/static/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        return response
+
+
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
     """Log every request with method, path, status, duration, and client IP."""
 
@@ -94,6 +104,7 @@ app = FastAPI(title="QuillCV", lifespan=lifespan)
 # Dev mode: enabled when using the default session secret (i.e. local development)
 app.state.dev_mode = _dev_mode_for_logging
 
+app.add_middleware(StaticCacheMiddleware)
 app.add_middleware(RequestLoggingMiddleware)
 app.add_middleware(RequestContextMiddleware)  # adds request_id context var
 app.add_middleware(AuthContextMiddleware)

@@ -36,6 +36,8 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
         client_ip_var.set(request.client.host if request.client else "-")
         response = await call_next(request)
         response.headers["X-Request-Id"] = rid
+        if _IS_PRODUCTION:
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         return response
 
 

@@ -79,7 +79,6 @@ async def sitemap_xml():
         ("/pricing", "0.8", "monthly"),
         ("/demo", "0.9", "weekly"),
         ("/about", "0.5", "monthly"),
-        ("/privacy", "0.3", "yearly"),
         ("/terms", "0.3", "yearly"),
     ]
     for path, priority, changefreq in static_pages:
@@ -89,6 +88,29 @@ async def sitemap_xml():
             f"    <lastmod>{today}</lastmod>\n"
             f"    <changefreq>{changefreq}</changefreq>\n"
             f"    <priority>{priority}</priority>\n"
+            f"  </url>"
+        )
+
+    # Privacy pages — multilingual group with hreflang alternates
+    PRIVACY_PAGES = [
+        ("/privacy", "en"),
+        ("/privacidad", "es"),
+        ("/privacidade", "pt-BR"),
+    ]
+    privacy_hreflang_links = (
+        f'    <xhtml:link rel="alternate" hreflang="en" href="{BASE_URL}/privacy"/>\n'
+        f'    <xhtml:link rel="alternate" hreflang="es" href="{BASE_URL}/privacidad"/>\n'
+        f'    <xhtml:link rel="alternate" hreflang="pt-BR" href="{BASE_URL}/privacidade"/>\n'
+        f'    <xhtml:link rel="alternate" hreflang="x-default" href="{BASE_URL}/privacy"/>\n'
+    )
+    for path, _lang in PRIVACY_PAGES:
+        urls.append(
+            f"  <url>\n"
+            f"    <loc>{BASE_URL}{path}</loc>\n"
+            f"    <lastmod>{today}</lastmod>\n"
+            f"    <changefreq>yearly</changefreq>\n"
+            f"    <priority>0.3</priority>\n"
+            f"{privacy_hreflang_links}"
             f"  </url>"
         )
 

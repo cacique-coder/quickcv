@@ -59,6 +59,9 @@ COPY --from=builder /app/node_modules ./node_modules
 # Copy application code
 COPY . .
 
+# Minify CSS for production
+RUN python scripts/minify_css.py
+
 # Non-root user for security
 RUN useradd --system --no-create-home appuser \
     && chown -R appuser:appuser /app
