@@ -5,7 +5,7 @@ APP_ENV = os.environ.get("APP_ENV", "development")
 DATABASE = {
     "development": {
         "url": "postgresql+asyncpg://postgres:postgres@localhost:5432/quillcv_dev",
-        "echo": True,
+        "echo": False,
         "pool_size": 5,
     },
     "test": {

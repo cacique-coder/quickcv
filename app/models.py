@@ -38,8 +38,8 @@ class User(Base):
     # Required by COPPA (US), LGPD Art. 14 (BR), and Ley 1581 (CO).
     age_confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    credits: Mapped[list["Credit"]] = relationship(back_populates="user", lazy="selectin")
-    webauthn_credentials: Mapped[list["WebAuthnCredential"]] = relationship(back_populates="user", lazy="selectin")
+    credits: Mapped[list["Credit"]] = relationship(back_populates="user", lazy="select")
+    webauthn_credentials: Mapped[list["WebAuthnCredential"]] = relationship(back_populates="user", lazy="select")
     consent_records: Mapped[list["ConsentRecord"]] = relationship(back_populates="user", lazy="select")
 
 

@@ -20,7 +20,7 @@ cv_templates = Jinja2Templates(
 )
 
 
-@router.get("/")
+@router.get("")
 async def demo_index(request: Request):
     """Browse all available templates by region."""
     return templates.TemplateResponse("demo_index.html", {
