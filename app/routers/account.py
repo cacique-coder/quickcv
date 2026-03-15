@@ -3,12 +3,12 @@
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import delete, func, select
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import require_auth
 from app.auth.utils import hash_password, verify_password
 from app.database import async_session
 from app.models import Credit, Payment, SavedCV, User, WebAuthnCredential
@@ -20,11 +20,8 @@ templates = Jinja2Templates(directory=Path(__file__).parent.parent / "templates"
 
 
 @router.get("/account")
-async def account_page(request: Request):
+async def account_page(request: Request, user: User = Depends(require_auth)):
     """Main account page — requires authentication."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login", status_code=303)
 
     async with async_session() as db:
         # Credits record
@@ -68,11 +65,9 @@ async def account_page(request: Request):
 async def update_profile(
     request: Request,
     name: str = Form(""),
+    user: User = Depends(require_auth),
 ):
     """HTMX endpoint: update display name."""
-    user = await get_current_user(request)
-    if not user:
-        return HTMLResponse('<p class="account-error">Not authenticated.</p>', status_code=401)
 
     name = name.strip()
     if not name:
@@ -93,11 +88,9 @@ async def change_password(
     request: Request,
     current_password: str = Form(...),
     new_password: str = Form(...),
+    user: User = Depends(require_auth),
 ):
     """HTMX endpoint: change password."""
-    user = await get_current_user(request)
-    if not user:
-        return HTMLResponse('<p class="account-error">Not authenticated.</p>', status_code=401)
 
     if not user.password_hash:
         return HTMLResponse('<p class="account-error">No password set on this account.</p>')
@@ -122,11 +115,9 @@ async def change_password(
 async def delete_account(
     request: Request,
     confirm: str = Form(""),
+    user: User = Depends(require_auth),
 ):
     """Delete account and all associated data after explicit confirmation."""
-    user = await get_current_user(request)
-    if not user:
-        return HTMLResponse('<p class="account-error">Not authenticated.</p>', status_code=401)
 
     if confirm.strip() != "DELETE":
         return HTMLResponse('<p class="account-error">Please type DELETE to confirm.</p>')

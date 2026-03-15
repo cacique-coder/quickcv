@@ -4,13 +4,13 @@ import logging
 import os
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import require_auth
 from app.database import async_session
-from app.models import Payment
+from app.models import Payment, User
 from app.services.credit_service import (
     ALPHA_PACK_CREDITS,
     ALPHA_PACK_PRICE_CENTS,
@@ -56,11 +56,8 @@ async def pricing_page(request: Request):
 
 
 @router.post("/checkout/alpha")
-async def create_alpha_checkout(request: Request):
+async def create_alpha_checkout(request: Request, user: User = Depends(require_auth)):
     """Create a Stripe checkout session for the alpha pack."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login?next=/pricing", status_code=303)
 
     if not STRIPE_SECRET_KEY:
         return RedirectResponse("/pricing?error=payments_not_configured", status_code=303)
@@ -112,11 +109,8 @@ async def create_alpha_checkout(request: Request):
 
 
 @router.post("/checkout/topup/{pack_id}")
-async def create_topup_checkout(request: Request, pack_id: str):
+async def create_topup_checkout(request: Request, pack_id: str, user: User = Depends(require_auth)):
     """Create a Stripe checkout session for a top-up credit pack."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login?next=/pricing", status_code=303)
 
     if not STRIPE_SECRET_KEY:
         return RedirectResponse("/pricing?error=payments_not_configured", status_code=303)
@@ -163,10 +157,13 @@ async def create_topup_checkout(request: Request, pack_id: str):
 
 
 @router.get("/checkout/success")
-async def checkout_success(request: Request, session_id: str = ""):
+async def checkout_success(
+    request: Request,
+    session_id: str = "",
+    user: User = Depends(require_auth),
+):
     """Post-checkout success page. Verify with Stripe and grant credits."""
-    user = await get_current_user(request)
-    if not user or not session_id:
+    if not session_id:
         return RedirectResponse("/", status_code=303)
 
     credits_granted = ALPHA_PACK_CREDITS

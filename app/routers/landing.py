@@ -2,11 +2,12 @@
 
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, require_auth
 from app.database import async_session
+from app.models import User
 from app.services.user_service import count_alpha_users
 
 router = APIRouter()
@@ -34,14 +35,8 @@ async def landing(request: Request):
 
 
 @router.get("/app")
-async def app_page(request: Request):
+async def app_page(request: Request, user: User = Depends(require_auth)):
     """Main app page for authenticated users."""
-    user = await get_current_user(request)
-    if not user:
-        return templates.TemplateResponse("landing.html", {
-            "request": request,
-            "spots_remaining": 200,
-        })
 
     from app.services.template_registry import list_regions, list_templates
     return templates.TemplateResponse("index.html", {

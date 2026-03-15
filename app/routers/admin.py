@@ -5,12 +5,12 @@ import secrets
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import func, literal_column, select, text
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import require_auth
 from app.database import async_session
 from app.models import APIRequestLog, ExpressionOfInterest, Invitation, User
 from app.services.email_service import send_invitation_email
@@ -30,9 +30,8 @@ def _is_admin(user) -> bool:
 
 
 @router.get("/admin")
-async def admin_dashboard(request: Request):
+async def admin_dashboard(request: Request, user: User = Depends(require_auth)):
     """Admin dashboard with summary stats and recent requests."""
-    user = await get_current_user(request)
     if not _is_admin(user):
         # Return 404 — don't reveal the admin section exists
         return HTMLResponse(status_code=404)
@@ -154,9 +153,8 @@ async def admin_dashboard(request: Request):
 
 
 @router.get("/admin/requests")
-async def admin_requests_list(request: Request, page: int = 1):
+async def admin_requests_list(request: Request, page: int = 1, user: User = Depends(require_auth)):
     """Paginated list of all API request logs."""
-    user = await get_current_user(request)
     if not _is_admin(user):
         return HTMLResponse(status_code=404)
 
@@ -193,9 +191,8 @@ async def admin_requests_list(request: Request, page: int = 1):
 
 
 @router.get("/admin/requests/{transaction_id}")
-async def admin_transaction_detail(request: Request, transaction_id: str):
+async def admin_transaction_detail(request: Request, transaction_id: str, user: User = Depends(require_auth)):
     """Detail view for a single transaction — all requests sharing that transaction_id."""
-    user = await get_current_user(request)
     if not _is_admin(user):
         return HTMLResponse(status_code=404)
 
@@ -234,9 +231,8 @@ async def admin_transaction_detail(request: Request, transaction_id: str):
 
 
 @router.get("/admin/invitations")
-async def admin_invitations(request: Request):
+async def admin_invitations(request: Request, user: User = Depends(require_auth)):
     """List all invitations and show the create form."""
-    user = await get_current_user(request)
     if not _is_admin(user):
         return HTMLResponse(status_code=404)
 
@@ -272,9 +268,9 @@ async def admin_create_invitation(
     email: str = Form(""),
     credits: int = Form(...),
     note: str = Form(""),
+    user: User = Depends(require_auth),
 ):
     """Create a new invitation code."""
-    user = await get_current_user(request)
     if not _is_admin(user):
         return HTMLResponse(status_code=404)
 

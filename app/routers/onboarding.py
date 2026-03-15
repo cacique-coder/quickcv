@@ -9,12 +9,13 @@ contains only the minimal seeded data.  The same form is reused at
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import require_auth
 from app.database import async_session
+from app.models import User
 from app.services.phone_utils import normalize_phone
 from app.services.pii_vault import (
     get_session_pii,
@@ -63,11 +64,8 @@ async def _save_pii(request: Request, user, pii: dict) -> None:
 
 
 @router.get("/onboarding")
-async def onboarding_page(request: Request):
+async def onboarding_page(request: Request, user: User = Depends(require_auth)):
     """Show the PII onboarding form."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login", status_code=303)
 
     # If already onboarded in this session, go straight to the app
     if request.state.session.get("pii_onboarded"):
@@ -94,11 +92,9 @@ async def onboarding_submit(
     document_id: str = Form(""),
     nationality: str = Form(""),
     marital_status: str = Form(""),
+    user: User = Depends(require_auth),
 ):
     """Save PII to the vault and redirect to /app."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login", status_code=303)
 
     full_name = full_name.strip()
     if not full_name:
@@ -136,11 +132,8 @@ async def onboarding_submit(
 
 
 @router.get("/account/pii")
-async def account_pii_page(request: Request):
+async def account_pii_page(request: Request, user: User = Depends(require_auth)):
     """Show the PII update form from account settings."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login", status_code=303)
 
     pii = get_session_pii(request)
 
@@ -176,11 +169,9 @@ async def account_pii_submit(
     document_id: str = Form(""),
     nationality: str = Form(""),
     marital_status: str = Form(""),
+    user: User = Depends(require_auth),
 ):
     """Save updated PII to the vault from account settings."""
-    user = await get_current_user(request)
-    if not user:
-        return RedirectResponse("/login", status_code=303)
 
     full_name = full_name.strip()
     if not full_name:

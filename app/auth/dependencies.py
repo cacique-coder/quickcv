@@ -1,6 +1,6 @@
 """Auth dependencies for FastAPI routes."""
 
-from fastapi import Request
+from fastapi import HTTPException, Request
 from sqlalchemy import select
 
 from app.auth.utils import decode_access_token
@@ -35,6 +35,9 @@ async def get_user_credits(user: User) -> int:
         return row or 0
 
 
-async def require_auth(request: Request) -> User | None:
-    """Middleware-style check: returns user or None (routes decide what to do)."""
-    return await get_current_user(request)
+async def require_auth(request: Request) -> User:
+    """Dependency: return the authenticated user or redirect to /login."""
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=303, headers={"Location": "/login"})
+    return user

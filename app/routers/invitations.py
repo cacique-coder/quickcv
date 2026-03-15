@@ -4,14 +4,14 @@ import logging
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, require_auth
 from app.database import async_session
-from app.models import Invitation
+from app.models import Invitation, User
 from app.services.credit_service import add_credits, get_balance
 
 logger = logging.getLogger(__name__)
@@ -46,13 +46,8 @@ async def invite_landing(request: Request, code: str):
 
 
 @router.post("/invite/{code}/redeem")
-async def invite_redeem(request: Request, code: str):
+async def invite_redeem(request: Request, code: str, user: User = Depends(require_auth)):
     """Redeem an invitation for the currently logged-in user."""
-    user = await get_current_user(request)
-
-    if not user:
-        # Preserve the invite code through the auth flow via query param
-        return RedirectResponse(f"/login?invite={code}", status_code=303)
 
     async with async_session() as db:
         result = await db.execute(
