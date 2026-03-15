@@ -1,0 +1,20 @@
+Welcome to QuillCV, {{ name }}!
+
+Your account is ready. You can now generate ATS-optimised CVs tailored to
+specific job descriptions — in formats for AU, US, UK, and 9 more countries.
+
+Your credits have been added to your account. Each generation uses one credit.
+
+Start building: https://quillcv.com/app
+
+---
+What can I do?
+Paste a job description and your existing CV — we'll produce a keyword-matched,
+ATS-friendly CV and score it for you. Download as PDF or Word.
+
+---
+This is a transactional email from QuillCV.
+QuillCV · 123 Example Street, Sydney NSW 2000, Australia
+Privacy Policy: https://quillcv.com/privacy
+Support: support@quillcv.com
+Unsubscribe: https://quillcv.com/unsubscribe?email={{ email }}

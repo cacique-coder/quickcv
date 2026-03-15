@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block subject %}QuillCV — Payment Confirmed{% endblock %}
+{% block body %}
+<h1>Payment confirmed, {{ name }}!</h1>
+<p>
+  Thank you for your purchase. Your credits are ready to use.
+</p>
+
+<div class="info-box">
+  <strong>Order summary</strong><br><br>
+  Amount charged: <strong>{{ amount }}</strong><br>
+  Credits added:  <strong>{{ credits }} credit{% if credits != 1 %}s{% endif %}</strong>
+</div>
+
+<a href="https://quillcv.com/app" class="btn">Start generating CVs</a>
+
+<hr class="divider">
+
+<p style="font-size:14px; color:#71717f;">
+  Credits never expire and can be used for any CV format.<br>
+  If you have questions about your purchase, contact us at
+  <a href="mailto:support@quillcv.com" style="color:#5b52e0;">support@quillcv.com</a>.
+</p>
+{% endblock %}

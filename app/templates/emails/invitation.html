@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block subject %}You're invited to QuillCV{% endblock %}
+{% block body %}
+<h1>You've been invited to QuillCV</h1>
+<p>
+  You've received an invitation to join QuillCV — an ATS-optimised CV builder
+  for job seekers targeting AU, US, UK, and other markets.
+</p>
+
+<div class="info-box">
+  <strong>Your invitation includes {{ credits }} credit{% if credits != 1 %}s{% endif %}.</strong><br>
+  Each credit generates one tailored, ATS-scored CV.
+  {% if note %}
+  <br><br>Note: {{ note }}
+  {% endif %}
+</div>
+
+<a href="{{ invite_url }}" class="btn">Accept invitation &amp; sign up</a>
+
+<p style="font-size:13px; color:#71717f; margin-top:8px;">
+  Or paste this link into your browser:<br>
+  <a href="{{ invite_url }}" style="color:#5b52e0; word-break:break-all;">{{ invite_url }}</a>
+</p>
+
+<hr class="divider">
+
+<p style="font-size:14px; color:#71717f;">
+  This invitation was sent by the QuillCV team. If you didn't expect it,
+  you can safely ignore this email.
+</p>
+{% endblock %}

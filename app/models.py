@@ -196,6 +196,25 @@ class ConsentRecord(Base):
     user: Mapped["User | None"] = relationship(back_populates="consent_records")
 
 
+class PasswordResetToken(Base):
+    """Single-use password reset tokens.
+
+    Tokens are generated as URL-safe random strings and stored hashed.
+    They expire after a short TTL and are invalidated after use.
+    """
+    __tablename__ = "password_reset_tokens"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    user_id: Mapped[str] = mapped_column(String(32), ForeignKey("users.id"), nullable=False, index=True)
+    # SHA-256 hex digest of the raw token (never store the raw token)
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, index=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+    user: Mapped["User"] = relationship("User", foreign_keys=[user_id])
+
+
 class APIRequestLog(Base):
     """Log of every LLM API call for cost tracking and debugging."""
     __tablename__ = "api_request_logs"

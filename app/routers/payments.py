@@ -17,6 +17,7 @@ from app.services.credit_service import (
     TOPUP_PACKS,
     add_credits,
 )
+from app.services.email_service import send_payment_confirmation_email
 from app.services.user_service import count_alpha_users
 
 logger = logging.getLogger(__name__)
@@ -193,6 +194,20 @@ async def checkout_success(request: Request, session_id: str = ""):
                         await db.commit()
 
                         await add_credits(db, user.id, credits_granted)
+
+                        # Send payment confirmation email — non-fatal on failure
+                        try:
+                            await send_payment_confirmation_email(
+                                to_email=user.email,
+                                name=getattr(user, "name", "") or "",
+                                credits=credits_granted,
+                                amount_cents=payment.amount_cents,
+                                currency=payment.currency.upper() if payment.currency else "AUD",
+                            )
+                        except Exception:
+                            logger.exception(
+                                "Failed to send payment confirmation email to %s", user.email
+                            )
         except Exception:
             logger.exception("Error verifying checkout session")
 
@@ -232,6 +247,7 @@ async def stripe_webhook(request: Request):
 
             async with async_session() as db:
                 from sqlalchemy import select
+                from app.models import User as _User
                 result = await db.execute(
                     select(Payment).where(Payment.stripe_session_id == session_id)
                 )
@@ -242,5 +258,25 @@ async def stripe_webhook(request: Request):
                     await db.commit()
 
                     await add_credits(db, user_id, credits_to_grant)
+
+                    # Send payment confirmation email — look up user for name + email
+                    try:
+                        user_result = await db.execute(
+                            select(_User).where(_User.id == user_id)
+                        )
+                        webhook_user = user_result.scalar_one_or_none()
+                        if webhook_user:
+                            await send_payment_confirmation_email(
+                                to_email=webhook_user.email,
+                                name=webhook_user.name or "",
+                                credits=credits_to_grant,
+                                amount_cents=payment.amount_cents,
+                                currency=payment.currency.upper() if payment.currency else "AUD",
+                            )
+                    except Exception:
+                        logger.exception(
+                            "Failed to send payment confirmation email for webhook session %s",
+                            session_id,
+                        )
 
     return {"status": "ok"}

@@ -1,0 +1,21 @@
+Payment confirmed, {{ name }}!
+
+Thank you for your purchase. Your credits are ready to use.
+
+Order summary
+-------------
+Amount charged: {{ amount }}
+Credits added:  {{ credits }} credit{% if credits != 1 %}s{% endif %}
+
+Start generating CVs: https://quillcv.com/app
+
+---
+Credits never expire and can be used for any CV format.
+Questions about your purchase? Contact us: support@quillcv.com
+
+---
+This is a transactional email from QuillCV.
+QuillCV · 123 Example Street, Sydney NSW 2000, Australia
+Privacy Policy: https://quillcv.com/privacy
+Support: support@quillcv.com
+Unsubscribe: https://quillcv.com/unsubscribe?email={{ email }}

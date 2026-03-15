@@ -13,6 +13,7 @@ from sqlalchemy import func, literal_column, select, text
 from app.auth.dependencies import get_current_user
 from app.database import async_session
 from app.models import APIRequestLog, ExpressionOfInterest, Invitation, User
+from app.services.email_service import send_invitation_email
 
 logger = logging.getLogger(__name__)
 
@@ -290,5 +291,19 @@ async def admin_create_invitation(
     async with async_session() as db:
         db.add(invitation)
         await db.commit()
+
+    # Send invitation email if a recipient address was provided
+    if invitation.email:
+        base_url = str(request.base_url).rstrip("/")
+        try:
+            await send_invitation_email(
+                to_email=invitation.email,
+                invite_code=code,
+                credits=credits,
+                note=note.strip(),
+                base_url=base_url,
+            )
+        except Exception:
+            logger.exception("Failed to send invitation email to %s", invitation.email)
 
     return RedirectResponse("/admin/invitations", status_code=303)

@@ -1,8 +1,10 @@
-"""Auth routes: sign up, sign in, sign out, OAuth callbacks."""
+"""Auth routes: sign up, sign in, sign out, OAuth callbacks, password reset."""
 
+import hashlib
 import logging
 import os
-from datetime import UTC, datetime
+import secrets
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi import APIRouter, Form, Request
@@ -11,10 +13,11 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 
 from app.auth.dependencies import get_current_user
-from app.auth.utils import create_access_token
+from app.auth.utils import create_access_token, hash_password
 from app.database import async_session
-from app.models import ConsentRecord, ExpressionOfInterest, Invitation, User
+from app.models import ConsentRecord, ExpressionOfInterest, Invitation, PasswordResetToken, User
 from app.services.credit_service import add_credits
+from app.services.email_service import send_password_reset_email, send_welcome_email
 from app.services.pii_vault import (
     pii_from_user,
     unlock_vault,
@@ -28,6 +31,8 @@ from app.services.user_service import (
     get_user_by_provider,
     update_last_login,
 )
+
+PASSWORD_RESET_TTL_MINUTES = 60
 
 logger = logging.getLogger(__name__)
 
@@ -206,6 +211,14 @@ async def signup_submit(
         request.session["pii_onboarded"] = False  # New user — needs onboarding
 
         logger.info("Invited signup: user %s created via invitation %s", new_user.id, invite_code)
+
+        # Send welcome email — fire-and-forget (failure is non-fatal)
+        try:
+            base_url = str(request.base_url).rstrip("/")
+            await send_welcome_email(to_email=new_user.email, name=new_user.name)
+        except Exception:
+            logger.exception("Failed to send welcome email to %s", new_user.email)
+
         return RedirectResponse("/onboarding", status_code=303)
 
     # ── Expression of Interest (no invite code) ────────────────────────────
@@ -473,3 +486,147 @@ async def github_callback(request: Request):
     if not vault_existed:
         return RedirectResponse("/onboarding", status_code=303)
     return RedirectResponse("/app", status_code=303)
+
+
+# ── Password reset ─────────────────────────────────────────
+
+
+@router.get("/forgot-password")
+async def forgot_password_page(request: Request):
+    """Show the forgot-password form."""
+    user = await get_current_user(request)
+    if user:
+        return RedirectResponse("/app", status_code=303)
+    return templates.TemplateResponse("auth/forgot_password.html", {"request": request})
+
+
+@router.post("/forgot-password")
+async def forgot_password_submit(request: Request, email: str = Form(...)):
+    """Issue a password reset token and email a reset link.
+
+    Always returns the same confirmation page regardless of whether the email
+    exists — prevents user enumeration.
+    """
+    normalized = email.lower().strip()
+    async with async_session() as db:
+        user = await get_user_by_email(db, normalized)
+
+    if user and user.password_hash:
+        raw_token = secrets.token_urlsafe(32)
+        token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
+        expires_at = datetime.now(UTC) + timedelta(minutes=PASSWORD_RESET_TTL_MINUTES)
+
+        async with async_session() as db:
+            db.add(PasswordResetToken(
+                user_id=user.id,
+                token_hash=token_hash,
+                expires_at=expires_at,
+            ))
+            await db.commit()
+
+        base_url = str(request.base_url).rstrip("/")
+        try:
+            await send_password_reset_email(
+                to_email=user.email,
+                name=user.name,
+                reset_token=raw_token,
+                base_url=base_url,
+                expires_minutes=PASSWORD_RESET_TTL_MINUTES,
+            )
+        except Exception:
+            logger.exception("Failed to send password reset email to %s", user.email)
+    else:
+        logger.debug("Password reset requested for unknown/OAuth email: %s", normalized)
+
+    return templates.TemplateResponse(
+        "auth/forgot_password_sent.html",
+        {"request": request},
+    )
+
+
+@router.get("/reset-password")
+async def reset_password_page(request: Request, token: str = ""):
+    """Show the new-password form for a valid reset token."""
+    if not token:
+        return RedirectResponse("/forgot-password", status_code=303)
+
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    now = datetime.now(UTC)
+
+    async with async_session() as db:
+        result = await db.execute(
+            select(PasswordResetToken).where(
+                PasswordResetToken.token_hash == token_hash,
+                PasswordResetToken.used_at.is_(None),
+                PasswordResetToken.expires_at > now,
+            )
+        )
+        reset_token = result.scalar_one_or_none()
+
+    if not reset_token:
+        return templates.TemplateResponse(
+            "auth/reset_password_invalid.html",
+            {"request": request},
+        )
+
+    return templates.TemplateResponse(
+        "auth/reset_password.html",
+        {"request": request, "token": token},
+    )
+
+
+@router.post("/reset-password")
+async def reset_password_submit(
+    request: Request,
+    token: str = Form(...),
+    password: str = Form(...),
+    confirm_password: str = Form(...),
+):
+    """Apply the new password if the reset token is still valid."""
+    errors = []
+
+    if len(password) < 8:
+        errors.append("Password must be at least 8 characters.")
+    elif password != confirm_password:
+        errors.append("Passwords do not match.")
+
+    if errors:
+        return templates.TemplateResponse(
+            "auth/reset_password.html",
+            {"request": request, "token": token, "errors": errors},
+        )
+
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    now = datetime.now(UTC)
+
+    async with async_session() as db:
+        result = await db.execute(
+            select(PasswordResetToken).where(
+                PasswordResetToken.token_hash == token_hash,
+                PasswordResetToken.used_at.is_(None),
+                PasswordResetToken.expires_at > now,
+            )
+        )
+        reset_token = result.scalar_one_or_none()
+
+        if not reset_token:
+            return templates.TemplateResponse(
+                "auth/reset_password_invalid.html",
+                {"request": request},
+            )
+
+        user_result = await db.execute(select(User).where(User.id == reset_token.user_id))
+        user = user_result.scalar_one_or_none()
+
+        if not user:
+            return templates.TemplateResponse(
+                "auth/reset_password_invalid.html",
+                {"request": request},
+            )
+
+        user.password_hash = hash_password(password)
+        reset_token.used_at = now
+        await db.commit()
+
+    logger.info("Password reset completed for user %s", user.id)
+    return RedirectResponse("/login?reset=1", status_code=303)

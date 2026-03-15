@@ -1,0 +1,25 @@
+You've been invited to QuillCV
+==============================
+
+You've received an invitation to join QuillCV — an ATS-optimised CV builder
+for job seekers targeting AU, US, UK, and other markets.
+
+Your invitation includes {{ credits }} credit{% if credits != 1 %}s{% endif %}.
+Each credit generates one tailored, ATS-scored CV.
+{% if note %}
+Note: {{ note }}
+{% endif %}
+
+Accept your invitation and sign up:
+{{ invite_url }}
+
+---
+This invitation was sent by the QuillCV team. If you didn't expect it,
+you can safely ignore this email.
+
+---
+This is a transactional email from QuillCV.
+QuillCV · 123 Example Street, Sydney NSW 2000, Australia
+Privacy Policy: https://quillcv.com/privacy
+Support: support@quillcv.com
+Unsubscribe: https://quillcv.com/unsubscribe?email={{ email }}
