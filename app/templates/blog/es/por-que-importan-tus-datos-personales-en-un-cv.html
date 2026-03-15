@@ -1,0 +1,125 @@
+{% extends "blog_base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_description }}{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.description }}{% endblock %}
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.description }}{% endblock %}
+
+{% block head_extra %}
+{% for l, url in alternate_urls.items() %}
+<link rel="alternate" hreflang="{{ 'pt-BR' if l == 'pt' else l }}" href="https://quillcv.com{{ url }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="https://quillcv.com{{ alternate_urls.get('en', '') }}">
+{% endblock %}
+
+{% block structured_data %}
+{% for schema in structured_data %}
+<script type="application/ld+json">
+{{ schema | tojson(indent=2) }}
+</script>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="blog-post-wrap">
+    <a href="/blog/es" class="blog-back">&larr; Volver al blog</a>
+
+    <div class="blog-lang-switch">
+        {% for l in supported_langs %}
+        <a href="{{ alternate_urls.get(l, '/blog/' + l) }}"{% if l == lang %} class="active"{% endif %}>{{ l | upper }}</a>{% if not loop.last %} <span class="blog-lang-sep">|</span> {% endif %}
+        {% endfor %}
+    </div>
+
+    <article class="blog-post">
+        <header class="blog-post-header">
+            <div class="blog-meta">
+                <time datetime="{{ post.date }}">{{ post.date }}</time>
+                <span class="blog-meta-sep">&middot;</span>
+                <span>{{ post.author }}</span>
+            </div>
+            <h1>{{ post.title }}</h1>
+        </header>
+
+        <p class="blog-answer-capsule"><strong>Los creadores de CV recopilan mucho más que tu nombre y correo electrónico.</strong> Tu dirección completa, historial laboral, fecha de nacimiento, número de identificación y hasta los datos de contacto de tus referencias terminan en servidores de terceros, muchas veces en texto plano, vendidos a reclutadores o usados para entrenar IA. Elegir una herramienta que cifre tus datos, los elimine de verdad cuando se lo pides y no los venda es fundamental.</p>
+
+        <p>Estás a punto de subir tu CV a un sitio web. Tiene tu nombre completo, correo electrónico, número de teléfono, y quizás tu dirección. Tiene tu historial laboral — las empresas donde has trabajado, los cargos que has tenido, las fechas de inicio y salida. Tal vez incluso tu fecha de nacimiento, una foto o los datos de contacto de una referencia.</p>
+
+        <p>¿Alguna vez te has preguntado adónde va todo eso?</p>
+
+        <p>La mayoría de las personas no lo hacen. Estás en modo búsqueda de empleo, vas rápido, y la plataforma se ve lo suficientemente profesional. Entregas tus datos y sigues adelante.</p>
+
+        <p>Es comprensible. Pero vale la pena hacer una pausa un momento.</p>
+
+        <h2>Qué recopilan realmente los creadores de CV</h2>
+
+        <p>Lo obvio: tu nombre, correo y teléfono. Eso es lo que la mayoría de la gente cree que está compartiendo.</p>
+
+        <p>Pero un currículum — o hoja de vida, como se le dice en varios países de América Latina — contiene mucho más. Piensa en lo que realmente incluye:</p>
+
+        <ul>
+            <li>Tu dirección — a veces con calle, número y colonia completa</li>
+            <li>Tu historial laboral — cada empresa, cada cargo, cada fecha de salida</li>
+            <li>Tu formación académica — escuelas, títulos, años de graduación</li>
+            <li>Tu fecha de nacimiento (frecuente en mercados como España, México o Colombia)</li>
+            <li>Número de identificación nacional — como el DNI, CURP o cédula según el país</li>
+            <li>Una foto de perfil profesional — habitual en mercados europeos y de Latinoamérica</li>
+            <li>Referencias — incluyendo nombres, cargos, correos y teléfonos de personas que nunca consintieron compartir su información</li>
+        </ul>
+
+        <p>Es una cantidad significativa de datos. Y cuando los subes a un creador de CV, cada pieza de esa información queda almacenada en los servidores de alguien más.</p>
+
+        <h2>Dónde suelen ocurrir los problemas</h2>
+
+        <p>La historia aterradora es la del hacker que irrumpe y roba tus datos. Eso ocurre, pero no es el problema principal. La versión mundana es más común y mucho más difícil de notar.</p>
+
+        <p>Esto es lo que suele pasar en realidad:</p>
+
+        <ul>
+            <li><strong>Datos vendidos a reclutadores.</strong> Tu CV tiene valor para agencias de empleo y headhunters. Algunas plataformas se financian vendiendo datos de candidatos, ya sea de forma agregada o individual. Los términos de servicio que no leíste probablemente lo permitían.</li>
+            <li><strong>Usado para entrenar IA.</strong> Tu historial profesional, tu forma de redactar, tus logros — si aceptaste términos amplios, tu CV puede haberse convertido en datos de entrenamiento para el modelo de IA de la plataforma. O de otra empresa.</li>
+            <li><strong>Retenido después de eliminar tu cuenta.</strong> Eliminaste tu cuenta, sí. Pero "eliminado" muchas veces significa "eliminado en apariencia" — el registro está oculto para ti, pero sigue existiendo en la base de datos, en copias de seguridad, en sistemas de analítica.</li>
+            <li><strong>Compartido con "socios".</strong> Esa frase vaga en la política de privacidad abarca mucho. Puede significar plataformas publicitarias, herramientas de análisis, socios de integración o subsidiarias que ni conoces.</li>
+            <li><strong>Almacenado en texto plano.</strong> Muchas plataformas pequeñas guardan los documentos subidos sin cifrado. Si hay una brecha de seguridad, tus datos salen en forma legible.</li>
+        </ul>
+
+        <p>Nada de esto requiere mala intención. Es simplemente lo que ocurre cuando la recopilación de datos es el estándar y el borrado es una ocurrencia tardía.</p>
+
+        <h2>Qué buscar en un creador de CV</h2>
+
+        <p>No tienes que dejar de usar herramientas para crear tu CV. Solo quieres usar aquellas que tratan tus datos con respeto. Aquí tienes una lista práctica:</p>
+
+        <ul>
+            <li><strong>¿Puedes eliminar tus datos completamente?</strong> No "desactivar tu cuenta" — eliminarlos de verdad. Todo. ¿Cómo es ese proceso?</li>
+            <li><strong>¿Está cifrada tu información personal?</strong> Específicamente: ¿está cifrada en reposo y de una forma que impida que la propia plataforma pueda leerla?</li>
+            <li><strong>¿Venden datos a terceros?</strong> Lee la política de privacidad. Busca "socios", "afiliados", "servicios de terceros". Si es vaga, asume lo peor.</li>
+            <li><strong>¿Qué pasa después de que cancelas?</strong> ¿Hay un período de retención? ¿Cuánto tiempo conservan tus datos después de que te vas?</li>
+            <li><strong>¿Usan tus CVs para entrenar IA?</strong> Algunas plataformas dicen explícitamente que no. La mayoría guarda silencio. El silencio no es una garantía.</li>
+        </ul>
+
+        <p>Si una plataforma no puede responder estas preguntas de forma clara en su política de privacidad, eso ya es una señal.</p>
+
+        <h2>Cómo abordamos esto en QuillCV</h2>
+
+        <p>No vamos a pretender que somos perfectos, pero aquí está cómo lo hemos construido:</p>
+
+        <ul>
+            <li><strong>Tus datos personales están cifrados con tu contraseña.</strong> Usamos tu contraseña para derivar una clave de cifrado para tu información personal. Eso significa que almacenamos un bloque cifrado — literalmente no podemos leer tu nombre, dirección o teléfono. Si olvidas tu contraseña, esos datos desaparecen. Eso es una característica, no un error.</li>
+            <li><strong>Eliminar significa eliminar.</strong> Cuando eliminas tu cuenta o tus datos, se van. Sin ventana de retención de 30 días, sin borrado suave que persiste en la base de datos. Desaparecen.</li>
+            <li><strong>No vendemos tus datos.</strong> Tu CV existe para ayudarte a conseguir trabajo. Ese es el único uso. No lo vendemos, no lo compartimos con reclutadores, ni lo usamos para entrenar modelos de IA.</li>
+            <li><strong>Puedes exportar y marcharte.</strong> Tus datos son tuyos. Puedes exportarlo todo y llevártelo. Sin ataduras.</li>
+        </ul>
+
+        <p>Construimos estas cosas porque nosotros también las querríamos. No por un requisito legal, sino porque es la forma correcta de manejar la historia profesional de alguien.</p>
+
+        <h2>Tu CV es tu historia profesional</h2>
+
+        <p>Representa años de trabajo, decisiones y crecimiento. Las herramientas que usas para contar esa historia deberían respetar lo que tienen en sus manos. Un poco de diligencia antes de subir tus datos vale mucho — no porque todas las plataformas sean maliciosas, sino porque tu información tiene valor real y merece ser tratada como tal.</p>
+
+        <p>Haz las preguntas. Lee la política de privacidad (o al menos busca "vender" y "entrenar"). Elige herramientas que puedan decirte claramente qué hacen con lo que les das.</p>
+
+        <p>Has invertido mucho en tu carrera. Asegúrate de que las herramientas que usas para compartirla sean dignas de ello.</p>
+    </article>
+</div>
+{% endblock %}

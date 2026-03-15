@@ -27,12 +27,12 @@ async def privacy_page(request: Request):
 
 @router.get("/privacidad")
 async def privacidad_page(request: Request):
-    return templates.TemplateResponse("privacidad.html", {"request": request})
+    return templates.TemplateResponse("privacidad.html", {"request": request, "html_lang": "es"})
 
 
 @router.get("/privacidade")
 async def privacidade_page(request: Request):
-    return templates.TemplateResponse("privacidade.html", {"request": request})
+    return templates.TemplateResponse("privacidade.html", {"request": request, "html_lang": "pt-BR"})
 
 
 @router.get("/terms")

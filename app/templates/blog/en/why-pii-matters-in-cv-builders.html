@@ -1,0 +1,125 @@
+{% extends "blog_base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_description }}{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.description }}{% endblock %}
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.description }}{% endblock %}
+
+{% block head_extra %}
+{% for l, url in alternate_urls.items() %}
+<link rel="alternate" hreflang="{{ 'pt-BR' if l == 'pt' else l }}" href="https://quillcv.com{{ url }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="https://quillcv.com{{ alternate_urls.get('en', '') }}">
+{% endblock %}
+
+{% block structured_data %}
+{% for schema in structured_data %}
+<script type="application/ld+json">
+{{ schema | tojson(indent=2) }}
+</script>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="blog-post-wrap">
+    <a href="/blog/en" class="blog-back">&larr; Back to blog</a>
+
+    <div class="blog-lang-switch">
+        {% for l in supported_langs %}
+        <a href="{{ alternate_urls.get(l, '/blog/' + l) }}"{% if l == lang %} class="active"{% endif %}>{{ l | upper }}</a>{% if not loop.last %} <span class="blog-lang-sep">|</span> {% endif %}
+        {% endfor %}
+    </div>
+
+    <article class="blog-post">
+        <header class="blog-post-header">
+            <div class="blog-meta">
+                <time datetime="{{ post.date }}">{{ post.date }}</time>
+                <span class="blog-meta-sep">&middot;</span>
+                <span>{{ post.author }}</span>
+            </div>
+            <h1>{{ post.title }}</h1>
+        </header>
+
+        <p class="blog-answer-capsule"><strong>CV builders collect far more than your name and email.</strong> Your full address, employment history, date of birth, national ID number, and even your references' contact details all end up on third-party servers — often stored in plaintext, sold to recruiters, or used to train AI. Choosing a CV tool that encrypts your data, truly deletes it when asked, and never sells it is essential.</p>
+
+        <p>You're about to upload your CV to a website. It has your full name, email, phone number, and maybe your home address. It has your employment history — the companies you've worked for, the titles you've held, the dates you started and left. Maybe even your date of birth, a photo, or the name and number of a reference.</p>
+
+        <p>Have you thought about where that goes?</p>
+
+        <p>Most people haven't. You're in job-search mode, you're moving fast, and the CV builder looks professional enough. You hand over your details and get on with it.</p>
+
+        <p>That's understandable. But it's worth pausing for a minute.</p>
+
+        <h2>What CV builders actually collect</h2>
+
+        <p>The obvious stuff: your name, email, phone number. That's what most people think they're sharing.</p>
+
+        <p>But a CV contains much more. Think about what's actually in there:</p>
+
+        <ul>
+            <li>Your home address — sometimes your full street address</li>
+            <li>Your employment history — every company you've worked for, every role, every departure date</li>
+            <li>Your education — schools, degrees, graduation years</li>
+            <li>Your date of birth (common in AU, DE, JP, and other markets)</li>
+            <li>National ID numbers in some country formats (Aadhaar in India, for example)</li>
+            <li>A professional photo — in many European and Asian markets</li>
+            <li>References — including the names, job titles, emails, and phone numbers of other people who haven't consented to anything</li>
+        </ul>
+
+        <p>That's a lot. And when you upload it to a CV builder, every piece of that information lives somewhere on someone's server.</p>
+
+        <h2>Where it usually goes wrong</h2>
+
+        <p>The scary story is hackers breaking in and stealing your data. That happens, but it's not the main issue. The mundane version is more common and harder to notice.</p>
+
+        <p>Here's what actually tends to happen:</p>
+
+        <ul>
+            <li><strong>Data sold to recruiters.</strong> Your CV is valuable to staffing agencies and headhunters. Some platforms fund themselves by selling aggregated or individual candidate data. The terms of service you didn't read probably allowed it.</li>
+            <li><strong>Used to train AI.</strong> Your career history, your phrasing, your achievements — if you agreed to broad terms, your CV may have become training data for the platform's AI model. Or someone else's.</li>
+            <li><strong>Retained after deletion.</strong> You deleted your account. But "deleted" often means "soft deleted" — the record is hidden from you but still exists in the database, in backups, in analytics systems.</li>
+            <li><strong>Shared with "partners".</strong> That vague phrase in the privacy policy covers a lot of ground. It can mean advertising platforms, analytics tools, integration partners, or subsidiaries you've never heard of.</li>
+            <li><strong>Sitting in plaintext.</strong> Smaller platforms often store uploaded documents without encryption. If there's ever a breach, your data goes out in readable form.</li>
+        </ul>
+
+        <p>None of this requires malicious intent. It's just what happens when data collection is the default and deletion is an afterthought.</p>
+
+        <h2>What to look for in a CV builder</h2>
+
+        <p>You don't have to stop using CV tools. You just want to use ones that treat your data with some respect. Here's a practical checklist:</p>
+
+        <ul>
+            <li><strong>Can you delete your data completely?</strong> Not "deactivate your account" — actually delete it. Everything. What does that process look like?</li>
+            <li><strong>Is your personal information encrypted?</strong> Specifically: is it encrypted at rest, and is it encrypted in a way that means the platform itself can't read it?</li>
+            <li><strong>Do they sell data to third parties?</strong> Read the privacy policy. Look for "partners", "affiliates", "third-party services". If it's vague, assume the worst.</li>
+            <li><strong>What happens after you cancel?</strong> Is there a retention period? How long do they keep your data after you're gone?</li>
+            <li><strong>Do they train AI on your CVs?</strong> Some platforms explicitly say they don't. Most stay silent. Silence isn't a guarantee.</li>
+        </ul>
+
+        <p>If a platform can't answer these questions clearly in their privacy policy, that's a signal.</p>
+
+        <h2>How QuillCV approaches this</h2>
+
+        <p>We're not going to pretend we're perfect, but here's how we've built this:</p>
+
+        <ul>
+            <li><strong>Personal details are encrypted with your password.</strong> We use your password to derive an encryption key for your PII. That means we store an encrypted blob — we literally cannot read your name, address, or phone number. If you forget your password, that data is gone. That's a feature, not a bug.</li>
+            <li><strong>Delete means delete.</strong> When you delete your account or your data, it's gone. No 30-day retention window, no soft-delete that lingers in the database. Gone.</li>
+            <li><strong>We don't sell your data.</strong> Your CV exists to help you land a job. That's the only use. We don't sell it, share it with recruiters, or use it to train AI models.</li>
+            <li><strong>You can export and leave.</strong> You own your data. You can export everything and take it with you. No lock-in.</li>
+        </ul>
+
+        <p>We built these things because we'd want them ourselves. Not because of a legal requirement, but because it's the right way to handle someone's professional story.</p>
+
+        <h2>Your CV is your professional story</h2>
+
+        <p>It represents years of work, decisions, growth. The tools you use to tell that story should respect what they're holding. A bit of diligence before you upload goes a long way — not because every platform is malicious, but because your data has real value and deserves to be treated that way.</p>
+
+        <p>Ask the questions. Read the privacy policy (or at least search for "sell" and "train"). Pick tools that can tell you clearly what they do with what you give them.</p>
+
+        <p>You've put a lot of work into your career. Make sure the tools you use to share it are worthy of it.</p>
+    </article>
+</div>
+{% endblock %}

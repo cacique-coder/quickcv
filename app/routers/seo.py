@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse, Response
 
 from app.services.template_registry import list_regions, list_templates
+from app.routers.blog import POSTS
 
 router = APIRouter()
 
@@ -41,6 +42,9 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
 # Block low-value scrapers
 User-agent: CCBot
 Disallow: /
@@ -63,9 +67,13 @@ async def sitemap_xml():
     """Dynamically generate sitemap.xml listing all public pages."""
     today = date.today().isoformat()
 
+    # Derive the most recent post date across all languages for blog index lastmod
+    all_post_dates = [p["date_modified"] for posts in POSTS.values() for p in posts]
+    latest_post_date = max(all_post_dates) if all_post_dates else today
+
     urls: list[str] = []
 
-    # Static public pages
+    # Static public pages (no hreflang)
     static_pages = [
         ("/", "1.0", "weekly"),
         ("/pricing", "0.8", "monthly"),
@@ -83,6 +91,75 @@ async def sitemap_xml():
             f"    <priority>{priority}</priority>\n"
             f"  </url>"
         )
+
+    # Blog index pages — one per language with hreflang alternates
+    BLOG_LANGS = [
+        ("en", "en"),
+        ("es", "es"),
+        ("pt", "pt-BR"),
+    ]
+    for lang_code, hreflang_code in BLOG_LANGS:
+        path = f"/blog/{lang_code}"
+        hreflang_links = ""
+        for alt_lang_code, alt_hreflang_code in BLOG_LANGS:
+            hreflang_links += (
+                f'    <xhtml:link rel="alternate" hreflang="{alt_hreflang_code}"'
+                f' href="{BASE_URL}/blog/{alt_lang_code}"/>\n'
+            )
+        hreflang_links += (
+            f'    <xhtml:link rel="alternate" hreflang="x-default"'
+            f' href="{BASE_URL}/blog/en"/>\n'
+        )
+        urls.append(
+            f"  <url>\n"
+            f"    <loc>{BASE_URL}{path}</loc>\n"
+            f"    <lastmod>{latest_post_date}</lastmod>\n"
+            f"    <changefreq>weekly</changefreq>\n"
+            f"    <priority>0.7</priority>\n"
+            f"{hreflang_links}"
+            f"  </url>"
+        )
+
+    # Blog posts with hreflang alternates linking to translations
+    # Build slug -> date_modified lookup per lang
+    POSTS_BY_LANG_SLUG = {
+        lang: {p["slug"]: p for p in posts}
+        for lang, posts in POSTS.items()
+    }
+    BLOG_POST_TRANSLATIONS = [
+        {
+            "en": "/blog/en/why-pii-matters-in-cv-builders",
+            "es": "/blog/es/por-que-importan-tus-datos-personales-en-un-cv",
+            "pt": "/blog/pt/por-que-seus-dados-pessoais-importam-em-um-curriculo",
+        },
+    ]
+    LANG_HREFLANG = {"en": "en", "es": "es", "pt": "pt-BR"}
+    for translation_set in BLOG_POST_TRANSLATIONS:
+        for lang_code, path in translation_set.items():
+            slug = path.rsplit("/", 1)[-1]
+            post_data = POSTS_BY_LANG_SLUG.get(lang_code, {}).get(slug)
+            post_lastmod = post_data["date_modified"] if post_data else today
+            hreflang_links = ""
+            for alt_lang_code, alt_path in translation_set.items():
+                alt_hreflang = LANG_HREFLANG[alt_lang_code]
+                hreflang_links += (
+                    f'    <xhtml:link rel="alternate" hreflang="{alt_hreflang}"'
+                    f' href="{BASE_URL}{alt_path}"/>\n'
+                )
+            # x-default points to English
+            hreflang_links += (
+                f'    <xhtml:link rel="alternate" hreflang="x-default"'
+                f' href="{BASE_URL}{translation_set["en"]}"/>\n'
+            )
+            urls.append(
+                f"  <url>\n"
+                f"    <loc>{BASE_URL}{path}</loc>\n"
+                f"    <lastmod>{post_lastmod}</lastmod>\n"
+                f"    <changefreq>monthly</changefreq>\n"
+                f"    <priority>0.6</priority>\n"
+                f"{hreflang_links}"
+                f"  </url>"
+            )
 
     # Country code to hreflang mapping
     HREFLANG_MAP = {
@@ -163,6 +240,11 @@ QuillCV is a web application that helps job seekers create CVs optimized for App
 - Website: https://quillcv.com
 - Templates: https://quillcv.com/demo
 - Pricing: https://quillcv.com/pricing
+
+## Blog
+- [Why Your PII Matters in CV Builders](https://quillcv.com/blog/en/why-pii-matters-in-cv-builders)
+- [Por Qué Importan Tus Datos Personales](https://quillcv.com/blog/es/por-que-importan-tus-datos-personales-en-un-cv)
+- [Por Que Seus Dados Pessoais Importam](https://quillcv.com/blog/pt/por-que-seus-dados-pessoais-importam-em-um-curriculo)
 """
 
 

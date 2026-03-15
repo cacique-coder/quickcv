@@ -6071,3 +6071,217 @@ select.input-field {
         text-align: center;
     }
 }
+
+/* ── Landing: Trust Section ─────────────────────────────── */
+.trust-section {
+    padding: 5rem 2rem;
+    max-width: 1040px;
+    margin: 0 auto;
+    text-align: center;
+    animation: landingFadeUp 0.8s ease-out both;
+    animation-delay: 0.25s;
+}
+.trust-tagline {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    display: block;
+}
+.trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.trust-card {
+    padding: 1.75rem;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+.trust-card h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.trust-card p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 0;
+}
+.trust-learn-more {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+.trust-learn-more a {
+    color: var(--accent);
+    text-decoration: none;
+}
+.trust-learn-more a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+    .trust-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Blog: Index ─────────────────────────────────────────── */
+.blog-index {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+.blog-index-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.blog-index-tagline {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.5rem;
+}
+.blog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+.blog-card {
+    padding: 1.75rem;
+    transition: all 0.3s ease;
+}
+.blog-card h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0.5rem 0 0.6rem;
+}
+.blog-card h2 a {
+    color: var(--text);
+    text-decoration: none;
+}
+.blog-card h2 a:hover {
+    color: var(--accent);
+}
+.blog-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.blog-read-more {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+.blog-read-more:hover {
+    text-decoration: underline;
+}
+
+/* ── Blog: Post ──────────────────────────────────────────── */
+.blog-post-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+.blog-back {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+}
+.blog-back:hover {
+    color: var(--accent);
+}
+.blog-post-header {
+    margin-bottom: 2.5rem;
+}
+.blog-post-header h1 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-top: 0.75rem;
+}
+.blog-post h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 2.5rem 0 0.75rem;
+    letter-spacing: -0.01em;
+}
+.blog-post p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+}
+.blog-post ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1.2rem;
+}
+.blog-post li {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+.blog-post strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* ── Blog: Meta (date / author / tags) ───────────────────── */
+.blog-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.blog-meta time { font-variant-numeric: tabular-nums; }
+.blog-meta-sep { opacity: 0.4; }
+
+/* ── Blog: Language switcher ─────────────────────────────── */
+.blog-lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+.blog-lang-switch a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    transition: color 0.15s;
+}
+.blog-lang-switch a:hover {
+    color: var(--accent);
+}
+.blog-lang-switch a.active {
+    color: var(--accent);
+    font-weight: 700;
+}
+.blog-lang-sep {
+    color: var(--border);
+    user-select: none;
+}
+/* Give the post-level switcher a little breathing room */
+.blog-post-wrap .blog-lang-switch {
+    margin-bottom: 2rem;
+}
+/* Answer capsule: direct-answer summary for AI extraction */
+.blog-answer-capsule {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text);
+}

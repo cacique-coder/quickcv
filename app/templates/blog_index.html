@@ -1,0 +1,56 @@
+{% extends "blog_base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_description }}{% endblock %}
+{% block og_title %}{{ strings.title }}{% endblock %}
+{% block og_description %}{{ page_description }}{% endblock %}
+{% block twitter_title %}{{ strings.title }}{% endblock %}
+{% block twitter_description %}{{ page_description }}{% endblock %}
+
+{% block head_extra %}
+{% for l, url in alternate_urls.items() %}
+<link rel="alternate" hreflang="{{ 'pt-BR' if l == 'pt' else l }}" href="https://quillcv.com{{ url }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="https://quillcv.com/blog/en">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{{ structured_data | tojson(indent=2) }}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="blog-index">
+    <div class="blog-index-hero">
+        <h1 class="section-title">
+            {{ strings.title }}
+            <svg class="title-scribble" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 4 C20 1, 45 7, 70 3 S110 7, 140 3 S175 6, 200 3" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            </svg>
+        </h1>
+        <p class="handwritten blog-index-tagline">{{ strings.tagline }}</p>
+
+        <div class="blog-lang-switch">
+            {% for l in supported_langs %}
+            <a href="/blog/{{ l }}"{% if l == lang %} class="active"{% endif %}>{{ l | upper }}</a>{% if not loop.last %} <span class="blog-lang-sep">|</span> {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="blog-list">
+        {% for post in posts %}
+        <article class="blog-card sticky-note sticky-note--{% if loop.index % 3 == 1 %}blue{% elif loop.index % 3 == 2 %}yellow{% else %}green{% endif %}">
+            <div class="blog-meta">
+                <time datetime="{{ post.date }}">{{ post.date }}</time>
+                <span class="blog-meta-sep">&middot;</span>
+                <span>{{ post.author }}</span>
+            </div>
+            <h2><a href="/blog/{{ lang }}/{{ post.slug }}">{{ post.title }}</a></h2>
+            <p>{{ post.description }}</p>
+            <a href="/blog/{{ lang }}/{{ post.slug }}" class="blog-read-more">{{ strings.read_more }}</a>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

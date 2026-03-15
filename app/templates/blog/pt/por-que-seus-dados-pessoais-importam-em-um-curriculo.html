@@ -1,0 +1,131 @@
+{% extends "blog_base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_description }}{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.description }}{% endblock %}
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.description }}{% endblock %}
+
+{% block head_extra %}
+{% for l, url in alternate_urls.items() %}
+<link rel="alternate" hreflang="{{ 'pt-BR' if l == 'pt' else l }}" href="https://quillcv.com{{ url }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="https://quillcv.com{{ alternate_urls.get('en', '') }}">
+{% endblock %}
+
+{% block structured_data %}
+{% for schema in structured_data %}
+<script type="application/ld+json">
+{{ schema | tojson(indent=2) }}
+</script>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="blog-post-wrap">
+    <a href="/blog/pt" class="blog-back">&larr; Voltar ao blog</a>
+
+    <div class="blog-lang-switch">
+        {% for l in supported_langs %}
+        <a href="{{ alternate_urls.get(l, '/blog/' + l) }}"{% if l == lang %} class="active"{% endif %}>{{ l | upper }}</a>{% if not loop.last %} <span class="blog-lang-sep">|</span> {% endif %}
+        {% endfor %}
+    </div>
+
+    <article class="blog-post">
+        <header class="blog-post-header">
+            <div class="blog-meta">
+                <time datetime="{{ post.date }}">{{ post.date }}</time>
+                <span class="blog-meta-sep">&middot;</span>
+                <span>{{ post.author }}</span>
+            </div>
+            <h1>{{ post.title }}</h1>
+        </header>
+
+        <p class="blog-answer-capsule"><strong>Os criadores de currículo coletam muito mais do que seu nome e e-mail.</strong> Seu endereço completo, histórico profissional, data de nascimento, número de documento e até os dados de contato das suas referências vão parar em servidores de terceiros — muitas vezes armazenados sem criptografia, vendidos para recrutadores ou usados para treinar IA. Escolher uma ferramenta que criptografe seus dados, os exclua de verdade quando você pedir e nunca os venda é essencial.</p>
+
+        <p>Você está prestes a enviar seu currículo para um site. Nele constam seu nome completo, e-mail, telefone e talvez seu endereço. Tem seu histórico profissional — as empresas em que trabalhou, os cargos que ocupou, as datas de entrada e saída. Talvez até sua data de nascimento, uma foto ou os dados de uma referência profissional.</p>
+
+        <p>Você já parou para pensar aonde tudo isso vai?</p>
+
+        <p>A maioria das pessoas não pensa. Você está no modo busca de emprego, se movendo rápido, e a plataforma parece profissional o suficiente. Você entrega seus dados e segue em frente.</p>
+
+        <p>Faz todo sentido. Mas vale a pena parar um minuto.</p>
+
+        <h2>O que os criadores de currículo realmente coletam</h2>
+
+        <p>O óbvio: nome, e-mail e telefone. É o que a maioria das pessoas acha que está compartilhando.</p>
+
+        <p>Mas um currículo contém muito mais do que isso. Pense no que está realmente ali:</p>
+
+        <ul>
+            <li>Seu endereço — às vezes o endereço completo com rua e CEP</li>
+            <li>Seu histórico profissional — todas as empresas, todos os cargos, todas as datas de saída</li>
+            <li>Sua formação acadêmica — instituições, diplomas, anos de conclusão</li>
+            <li>Sua data de nascimento (comum no Brasil e em outros mercados)</li>
+            <li>Número de documento de identidade — CPF, RG ou equivalente em outros países</li>
+            <li>Foto profissional — exigida em vários mercados ao redor do mundo</li>
+            <li>Referências — incluindo nomes, cargos, e-mails e telefones de pessoas que nunca consentiram em ter seus dados compartilhados</li>
+        </ul>
+
+        <p>É muita coisa. E quando você envia tudo isso para um criador de currículo, cada pedaço dessas informações fica armazenado nos servidores de outra pessoa.</p>
+
+        <h2>Onde as coisas costumam dar errado</h2>
+
+        <p>A história assustadora é a do hacker que invade o sistema e rouba seus dados. Isso acontece, mas não é o principal problema. A versão mundana é mais comum e muito mais difícil de perceber.</p>
+
+        <p>Veja o que costuma acontecer na prática:</p>
+
+        <ul>
+            <li><strong>Dados vendidos para recrutadores.</strong> Seu currículo tem valor para agências de emprego e headhunters. Algumas plataformas se financiam vendendo dados de candidatos — de forma agregada ou individual. Os termos de serviço que você não leu provavelmente permitiam isso.</li>
+            <li><strong>Usado para treinar IA.</strong> Seu histórico profissional, seu jeito de escrever, suas conquistas — se você aceitou termos genéricos, seu currículo pode ter virado dado de treinamento para o modelo de IA da plataforma. Ou de outra empresa.</li>
+            <li><strong>Retido após a exclusão.</strong> Você excluiu sua conta. Mas "excluído" muitas vezes significa "excluído na aparência" — o registro fica oculto para você, mas ainda existe no banco de dados, nos backups, nos sistemas de análise.</li>
+            <li><strong>Compartilhado com "parceiros".</strong> Essa frase vaga na política de privacidade cobre muita coisa. Pode significar plataformas de anúncios, ferramentas de análise, parceiros de integração ou subsidiárias que você nunca ouviu falar.</li>
+            <li><strong>Armazenado em texto aberto.</strong> Plataformas menores frequentemente guardam documentos sem criptografia. Se houver uma violação de segurança, seus dados saem em forma legível.</li>
+        </ul>
+
+        <p>Nada disso exige má intenção. É simplesmente o que acontece quando a coleta de dados é o padrão e a exclusão é uma ideia que vem depois.</p>
+
+        <h2>O que a LGPD garante — e o que não garante</h2>
+
+        <p>No Brasil, a Lei Geral de Proteção de Dados (LGPD) entrou em vigor em 2020 e trouxe direitos importantes: você pode solicitar acesso, correção e exclusão dos seus dados. As empresas precisam justificar por que coletam cada informação e por quanto tempo vão guardá-la.</p>
+
+        <p>Mas a LGPD não resolve tudo. Ela exige conformidade e dá a você o direito de pedir, mas não impede que a coleta aconteça. Muitas plataformas ainda operam com brechas, e aplicar a lei contra empresas estrangeiras é complexo. Seus direitos existem, mas depende de você os exercer — e de escolher ferramentas que já nasceram respeitando-os.</p>
+
+        <h2>O que procurar em um criador de currículo</h2>
+
+        <p>Você não precisa parar de usar ferramentas de currículo. Só precisa usar as que tratam seus dados com respeito. Aqui vai uma lista prática:</p>
+
+        <ul>
+            <li><strong>Você consegue excluir seus dados completamente?</strong> Não "desativar a conta" — excluir de verdade. Tudo. Como é esse processo?</li>
+            <li><strong>Suas informações pessoais são criptografadas?</strong> Especificamente: estão criptografadas em repouso e de uma forma que impede que a própria plataforma as leia?</li>
+            <li><strong>Eles vendem dados para terceiros?</strong> Leia a política de privacidade. Procure por "parceiros", "afiliados", "serviços de terceiros". Se estiver vago, assuma o pior.</li>
+            <li><strong>O que acontece depois que você cancela?</strong> Existe um período de retenção? Por quanto tempo eles guardam seus dados depois que você vai embora?</li>
+            <li><strong>Eles treinam IA com seus currículos?</strong> Algumas plataformas dizem explicitamente que não. A maioria fica em silêncio. Silêncio não é garantia.</li>
+        </ul>
+
+        <p>Se uma plataforma não consegue responder essas perguntas com clareza na política de privacidade, isso já é um sinal.</p>
+
+        <h2>Como o QuillCV trata isso</h2>
+
+        <p>Não vamos fingir que somos perfeitos, mas aqui está como construímos a plataforma:</p>
+
+        <ul>
+            <li><strong>Seus dados pessoais são criptografados com sua senha.</strong> Usamos sua senha para derivar uma chave de criptografia para suas informações pessoais. Isso significa que armazenamos um bloco criptografado — literalmente não conseguimos ler seu nome, endereço ou telefone. Se você esquecer a senha, esses dados somem. Isso é um recurso, não um bug.</li>
+            <li><strong>Excluir é excluir de verdade.</strong> Quando você exclui sua conta ou seus dados, eles vão embora. Sem janela de retenção de 30 dias, sem exclusão suave que persiste no banco. Foram.</li>
+            <li><strong>Não vendemos seus dados.</strong> Seu currículo existe para ajudar você a conseguir emprego. Esse é o único uso. Não vendemos, não compartilhamos com recrutadores e não usamos para treinar modelos de IA.</li>
+            <li><strong>Você pode exportar e ir embora.</strong> Seus dados são seus. Você pode exportar tudo e levar consigo. Sem dependência de plataforma.</li>
+        </ul>
+
+        <p>Construímos assim porque gostaríamos que as ferramentas que usamos funcionassem da mesma forma. Não por exigência legal, mas porque é a maneira certa de lidar com a história profissional de alguém.</p>
+
+        <h2>Seu currículo é a sua história profissional</h2>
+
+        <p>Ele representa anos de trabalho, decisões e crescimento. As ferramentas que você usa para contar essa história deveriam respeitar o que estão guardando. Um pouco de atenção antes de fazer o upload vale muito — não porque todas as plataformas têm má intenção, mas porque seus dados têm valor real e merecem ser tratados assim.</p>
+
+        <p>Faça as perguntas. Leia a política de privacidade (ou pelo menos pesquise por "vender" e "treinar"). Escolha ferramentas que consigam dizer com clareza o que fazem com o que você entrega a elas.</p>
+
+        <p>Você dedicou muito esforço à sua carreira. Certifique-se de que as ferramentas que usa para compartilhá-la são dignas disso.</p>
+    </article>
+</div>
+{% endblock %}
