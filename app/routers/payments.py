@@ -299,4 +299,34 @@ async def stripe_webhook(request: Request):
                             session_id,
                         )
 
+    elif event["type"] in ("checkout.session.expired", "checkout.session.async_payment_failed"):
+        session = event["data"]["object"]
+        session_id = session["id"]
+        user_id = session.get("metadata", {}).get("user_id")
+        new_status = "expired" if event["type"] == "checkout.session.expired" else "failed"
+
+        logger.warning(
+            "Stripe payment %s for session %s user_id=%s",
+            event["type"],
+            session_id,
+            user_id,
+        )
+
+        async with async_session() as db:
+            from sqlalchemy import select
+            result = await db.execute(
+                select(Payment).where(Payment.stripe_session_id == session_id)
+            )
+            payment = result.scalar_one_or_none()
+            if payment and payment.status == "pending":
+                payment.status = new_status
+                await db.commit()
+                logger.info(
+                    "Payment %s marked %s (session %s user_id=%s)",
+                    payment.id,
+                    new_status,
+                    session_id,
+                    user_id,
+                )
+
     return {"status": "ok"}
