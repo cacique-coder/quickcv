@@ -37,7 +37,7 @@ _IS_SANDBOX = MAILGUN_DOMAIN.startswith("sandbox") if MAILGUN_DOMAIN else False
 FROM_ADDRESS = (
     f"QuillCV <postmaster@{MAILGUN_DOMAIN}>"
     if _IS_SANDBOX
-    else "QuillCV <noreply@quillcv.com>"
+    else f"QuillCV <noreply@{MAILGUN_DOMAIN}>"
 )
 
 # Dev mode: True when using the default development session secret.
