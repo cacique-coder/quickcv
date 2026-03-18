@@ -1,15 +1,4 @@
 services:
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl/:/etc/nginx/ssl/:ro
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - app
-
   app:
     build:
       context: .
@@ -19,6 +8,8 @@ services:
     environment:
       APP_ENV: development
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/quillcv_dev
+    ports:
+      - "8000:8000"
     env_file:
       - path: ./.env
         required: false
